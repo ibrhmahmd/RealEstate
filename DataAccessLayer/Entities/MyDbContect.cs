@@ -10,6 +10,7 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
         : base(options)
     {
     }
+    //mariam
 
     // Define DbSets here
     public DbSet<Admin> Admins { get; set; }
