@@ -24,5 +24,5 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
         modelBuilder.Entity<Admin>().ToTable("Admins");
         modelBuilder.Entity<Resident>().ToTable("Residents");
     }
-    //commit
+    //commit on ibrahim bransh
 }
