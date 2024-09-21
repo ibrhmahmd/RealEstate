@@ -8,24 +8,18 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class Payment
+    public class Payment : BaseEntity<Guid>
     {
-        [Key]
-        public Guid PaymentID { get; set; }
-
         [Required]
         public Guid ContractId { get; set; }
 
         [ForeignKey("ContractId")]
-        public virtual Contract Contract { get; set; }
+        public virtual Contract? Contract { get; set; }
 
         [Required, Range(0, double.MaxValue)]
-        public float Amount { get; set; }
-
-        [Required]
-        public DateTime PaymentDate { get; set; }
+        public decimal Amount { get; set; }
 
         [StringLength(50)]
-        public string PaymentMethod { get; set; }  // e.g., CreditCard, BankTransfer, etc.
+        public string? PaymentMethod { get; set; }  // e.g., CreditCard, BankTransfer, etc.
     }
 }
