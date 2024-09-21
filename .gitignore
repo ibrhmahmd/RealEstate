@@ -2,6 +2,7 @@
 .vs/
 *.user
 *.suo
+*.appsettings.json
 
 # Ignore build output directories
 bin/

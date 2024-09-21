@@ -8,29 +8,31 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class Property
+    public class Property : BaseEntity<Guid>
     {
-        [Key]
-        public Guid PropertyID { get; set; }
-
         [Required, StringLength(100)]
         public string Name { get; set; }
 
         [Required]
         public Guid AddressID { get; set; }
-        public virtual Address Address { get; set; }
+        public virtual Address? Address { get; set; }
 
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 
         [Required, Range(0, double.MaxValue)]
-        public float Area { get; set; }
+        public decimal Area { get; set; }
 
         [Required, Range(0, double.MaxValue)]
-        public float Price { get; set; }
+        public decimal Price { get; set; }
+
+        [Required]
+        public bool IsAvailable { get; set; }
+
+        [Required]
+        public bool IsOccupied{ get; set; }
 
         // Navigation property
-        public virtual ICollection<Contract> Contracts { get; set; }
-
+        public virtual ICollection<Contract>? Contracts { get; set; }
     }
 }
