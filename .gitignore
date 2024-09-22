@@ -2,6 +2,7 @@
 .vs/
 *.user
 *.suo
+*.appsettings.json
 
 # Ignore build output directories
 bin/
@@ -9,3 +10,4 @@ obj/
 
 # Ignore log files
 *.log
+/DataAccessLayer/appsettings.json
