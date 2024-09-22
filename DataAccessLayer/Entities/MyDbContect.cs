@@ -10,6 +10,7 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
         : base(options)
     {
     }
+   
 
     // Define DbSets here
     public DbSet<Admin> Admins { get; set; }
@@ -17,12 +18,11 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
     public DbSet<Property> Properties { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Address> Addresse { get; set; }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Admin>().ToTable("Admins");
         modelBuilder.Entity<Resident>().ToTable("Residents");
     }
-    //commit
 }
