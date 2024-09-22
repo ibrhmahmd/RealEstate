@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class Resident : IdentityUser<Guid>
+    public class User : IdentityUser<Guid>
     {
         [Required]
         public string Role { get; set; }
+        public virtual ICollection<Contract>? Contracts { get; set; }
     }
 }
