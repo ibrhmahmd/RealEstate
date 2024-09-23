@@ -22,8 +22,5 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<User>().ToTable("Users");
     }
-<<<<<<< Updated upstream
-    //commit on ibrahim bransh
-=======
->>>>>>> Stashed changes
+
 }
