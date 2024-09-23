@@ -11,9 +11,9 @@ namespace DataAccessLayer.Entities
     public class Address: BaseEntity<Guid>
     {
         [StringLength(50)]
-        public string City{ get; set; }
+        public string City { get; set; }
         [StringLength(50)]
-        public string State{ get; set; }
+        public string State { get; set; }
 
         // Navigation 
         public IEnumerable<Property>? Properties { get; set; }
