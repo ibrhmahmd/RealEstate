@@ -11,15 +11,10 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
     {
     }
    
-
- 
     public DbSet<User> Users { get; set; }
     public DbSet<Property> Properties { get; set; }
     public DbSet<Payment> Payments { get; set; }
-
     public DbSet<Contract> Contracts { get; set; }
-    
-
     public DbSet<Address> Addresses { get; set; }
 
 
@@ -28,5 +23,4 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<User>().ToTable("Users");
     }
-
 }
