@@ -10,7 +10,7 @@ namespace DataAccessLayer.Repository
     {
         Task<IQueryable<T>> GetAllAsync();
         Task<T> GetByIdAsync(Guid Id);
-        Task<T> GetByNameAsync(string name);
+        Task<IQueryable<T>> GetByNameAsync(string name);
         Task InsertAsync(T entity);
         Task UpdateAsync(T entity);
         Task SoftDeleteAsync(Guid id);

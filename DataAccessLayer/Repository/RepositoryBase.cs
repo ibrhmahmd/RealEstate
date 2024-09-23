@@ -11,66 +11,139 @@ namespace DataAccessLayer.Repository
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected MyDbContext Context;
+
         public RepositoryBase(MyDbContext _Context)
         {
             Context = _Context;
         }
+
         public async Task<IQueryable<T>> GetAllAsync()
         {
-            var list = await Context.Set<T>().ToListAsync();
-            return list.AsQueryable();
+            try
+            {
+                var list = await Context.Set<T>().ToListAsync();
+                return list.AsQueryable();
+            }
+            catch (Exception ex)
+            {
+              
+                throw new Exception("An error occurred while retrieving all records.", ex);
+            }
         }
 
         public async Task<T> GetByIdAsync(Guid Id)
         {
-            return await Context.Set<T>().FindAsync(Id);
-        }
-
-        public async Task<T> GetByNameAsync(string name)
-        {
-             return await Context.Set<T>().FindAsync(name);
-            //return await Context.Set<T>().FirstOrDefaultAsync(e => EF.Property<string>(e, "Name") == name);
+            try
+            {
+                return await Context.Set<T>().FindAsync(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the record with ID {Id}.", ex);
+            }
         }
 
         public async Task HardDeleteAsync(Guid Id)
         {
-            var delete = await GetByIdAsync(Id);
-            Context.Remove(delete);
-            await Context.SaveChangesAsync(); ;
+            try
+            {
+                var delete = await GetByIdAsync(Id);
+                if (delete != null)
+                {
+                    Context.Remove(delete);
+                    await Context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Entity not found for deletion.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while deleting the record with ID {Id}.", ex);
+            }
         }
 
         public async Task InsertAsync(T entity)
         {
-            await Context.AddAsync(entity);
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.AddAsync(entity);
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while inserting the entity.", ex);
+            }
         }
 
         public async Task SaveChangesAsync()
         {
-            await Context.SaveChangesAsync();
+            try
+            {
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while saving changes to the database.", ex);
+            }
         }
 
         public async Task SoftDeleteAsync(Guid id)
         {
-            if (typeof(T) == typeof(Property))
+            try
             {
-                var entity = await Context.Set<Property>().FindAsync(id);
-                if (entity != null)
+                if (typeof(T) == typeof(Property))
                 {
-                    entity.IsAvailable = false; 
-                    await SaveChangesAsync();
+                    var entity = await Context.Set<Property>().FindAsync(id);
+                    if (entity != null)
+                    {
+                        entity.IsAvailable = false;
+                        await SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Property not found for soft deletion.");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Soft delete is not supported for this entity type.");
                 }
             }
-            else
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Soft delete is not supported for this entity type.");
+                throw new Exception($"An error occurred during soft deletion for entity with ID {id}.", ex);
             }
         }
 
         public async Task UpdateAsync(T entity)
         {
-            Context.Set<T>().Update(entity);
-            await SaveChangesAsync();
+            try
+            {
+                Context.Set<T>().Update(entity);
+                await SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while updating the entity.", ex);
+            }
+        }
+
+        public async Task<IQueryable<T>> GetByNameAsync(string name)
+        {
+            try
+            {
+                /*var list = await Context.Set<T>().ToListAsync();
+                return list.AsQueryable();*/
+                return Context.Set<T>().Where(e => EF.Property<string>(e, "Name") == name).AsQueryable();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the entity by name: {name}.", ex);
+            }
         }
     }
 }
+
+
