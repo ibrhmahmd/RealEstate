@@ -3,8 +3,16 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="container mt-5">
+    <h2>Property Management Dashboard</h2>
 
-<!DOCTYPE html>
+    <div class="list-group">
+        <a href="@Url.Action("Index", "Properties")" class="list-group-item list-group-item-action">View All Properties</a>
+        <a href="@Url.Action("Create", "Properties")" class="list-group-item list-group-item-action">Add New Property</a>
+    </div>
+</div>
+
+@* <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -125,7 +133,9 @@
                                                 <option @if (property.PropertyType == "House") { <text>selected</text> }>House</option>
                                                 <option @if (property.PropertyType == "Commercial") { <text>selected</text> }>Commercial</option>
                                             </select>
-                                        </div> *@
+                                        </div> 
+                                        *@
+                                        @*
                                         <button type="submit" class="btn btn-primary">Save changes</button>
                                     </form>
                                 </div>
@@ -208,4 +218,4 @@
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/assets/js/main.js"></script>
 </body>
-</html>
+</html> *@
