@@ -5,37 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - My Real Estate App</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS (Ensure that this path is correct and Bootstrap exists in this location) -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <!-- Custom CSS -->
+    <!-- Custom CSS (Make sure your site.css and main.css files are in the correct folder) -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
 
-    <!-- Optional page-specific styles -->
+    <!-- Optional page-specific styles (for adding styles that vary by page) -->
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header with Navigation -->
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PresentationLayer</a>
+                <!-- Navbar Brand Link (Make sure the "Index" action exists in HomeController) -->
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">My Real Estate App</a>
+
+                <!-- Navbar Toggler (for mobile devices) -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Navbar Links -->
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
+                        <!-- Link to Home Page -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
+                        <!-- Link to Privacy Page (Make sure Privacy action exists in HomeController) -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <!-- Dynamic Links for New Pages -->
+
+                        <!-- Dynamic Links for Other Pages (Ensure the actions are defined in the controller) -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="NewPage">New Page</a>
+                            <a class="nav-link text-dark" asp-controller="Home" asp-action="NewPage">New Page</a>
                         </li>
                     </ul>
                 </div>
@@ -53,15 +62,15 @@
     <!-- Footer -->
     <footer class="border-top footer text-muted mt-4">
         <div class="container">
-            &copy; 2024 - PresentationLayer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - My Real Estate App - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
-    <!-- jQuery and Bootstrap JS -->
+    <!-- jQuery and Bootstrap JS (Ensure the paths to JS files are correct) -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom JS -->
+    <!-- Custom JS Files (Ensure these files exist in the wwwroot/js folder) -->
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/main.js" asp-append-version="true"></script>
 
