@@ -118,14 +118,14 @@
                                             <label for="Price" class="form-label">Price</label>
                                             <input type="number" class="form-control" id="Price" name="Price" value="@property.Price" required>
                                         </div>
-                                        <div class="mb-3">
+                                       @*  <div class="mb-3">
                                             <label for="PropertyType" class="form-label">Property Type</label>
                                             <select class="form-control" id="PropertyType" name="PropertyType">
                                                 <option @if (property.PropertyType == "Apartment") { <text>selected</text> }>Apartment</option>
                                                 <option @if (property.PropertyType == "House") { <text>selected</text> }>House</option>
                                                 <option @if (property.PropertyType == "Commercial") { <text>selected</text> }>Commercial</option>
                                             </select>
-                                        </div>
+                                        </div> *@
                                         <button type="submit" class="btn btn-primary">Save changes</button>
                                     </form>
                                 </div>
