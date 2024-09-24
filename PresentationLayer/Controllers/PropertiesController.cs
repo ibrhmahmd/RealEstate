@@ -26,6 +26,10 @@ namespace WebAPI.Controllers
             return Ok(properties);
         }
 
+
+
+
+
         // GET: api/Property/deleted
         [HttpGet("deleted")]
         public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllPropertiesIncludingDeleted()
@@ -33,6 +37,10 @@ namespace WebAPI.Controllers
             var properties = await _propertyService.GetAllPropertiesIncludingDeletedAsync();
             return Ok(properties);
         }
+
+
+
+
 
         // GET: api/Property/{id}
         [HttpGet("{id}")]
@@ -49,6 +57,9 @@ namespace WebAPI.Controllers
             }
         }
 
+
+
+
         // POST: api/Property
         [HttpPost]
         public async Task<ActionResult<PropertyDTO>> CreateProperty([FromBody] PropertyDTO propertyDto)
@@ -61,6 +72,9 @@ namespace WebAPI.Controllers
             var createdProperty = await _propertyService.CreatePropertyAsync(propertyDto);
             return CreatedAtAction(nameof(GetPropertyById), new { id = createdProperty.ID }, createdProperty); // Returns 201 status with location header
         }
+
+
+
 
         // PUT: api/Property/{id}
         [HttpPut("{id}")]
@@ -81,6 +95,10 @@ namespace WebAPI.Controllers
                 return NotFound(new { message = e.Message });
             }
         }
+
+
+
+
 
         // DELETE: api/Property/{id}
         [HttpDelete("{id}")]
@@ -104,7 +122,7 @@ namespace WebAPI.Controllers
             try
             {
                 await _propertyService.HardDeletePropertyAsync(id);
-                return NoContent(); // Returns 204 status
+                return NoContent(); 
             }
             catch (KeyNotFoundException e)
             {
@@ -119,7 +137,7 @@ namespace WebAPI.Controllers
             try
             {
                 await _propertyService.RestorePropertyAsync(id);
-                return NoContent(); // Returns 204 status
+                return NoContent(); 
             }
             catch (KeyNotFoundException e)
             {

@@ -16,6 +16,7 @@ namespace PresentationLayer.Controllers
             _userService = userService;
         }
 
+
         // GET: Users
         public async Task<IActionResult> Index()
         {
@@ -44,11 +45,16 @@ namespace PresentationLayer.Controllers
         }
 
 
+
+
         // GET: Users/Create
         public IActionResult Create()
         {
             return View();
         }
+
+
+
 
         // POST: Users/Create
         [HttpPost]
@@ -69,6 +75,10 @@ namespace PresentationLayer.Controllers
             }
             return View(userDto);
         }
+
+
+
+
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(Guid? id)

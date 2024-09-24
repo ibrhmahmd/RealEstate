@@ -12,11 +12,11 @@ namespace BusinessLayer.UnitOfWork.Interface
 {
     public interface IUnitOfWork
     {
-        IRepositoryBase<User> UserRepository { get; }
-        IRepositoryBase<Property> PropertiesRepository {  get; }
-        IRepositoryBase<Contract> ContractsRepository { get; }
-        IRepositoryBase<Address> AddressesRepository { get; }
-        IRepositoryBase<Payment> PaymentsRepository { get; }
+        IRepositoryBase<UserDTO> UserRepository { get; }
+        IRepositoryBase<PropertyDTO> PropertiesRepository {  get; }
+        IRepositoryBase<ContractDTO> ContractsRepository { get; }
+        IRepositoryBase<AddressDTO> AddressesRepository { get; }
+        IRepositoryBase<PaymentDTO> PaymentsRepository { get; }
         Task SaveAsync();
     }
 }

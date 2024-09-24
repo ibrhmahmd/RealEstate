@@ -11,56 +11,54 @@ namespace DataAccessLayer.UnitOfWork
     {
         private readonly MyDbContext _context;
 
-        // Repositories for entity types
-        private IRepositoryBase<Address> _addresses;
-        private IRepositoryBase<Contract> _contracts;
-        private IRepositoryBase<Payment> _payments;
-        private IRepositoryBase<Property> _properties;
-        private IRepositoryBase<User> _users;
+        private IRepositoryBase<AddressDTO> _addresses;
+        private IRepositoryBase<ContractDTO> _contracts;
+        private IRepositoryBase<PaymentDTO> _payments;
+        private IRepositoryBase<PropertyDTO> _properties;
+        private IRepositoryBase<UserDTO> _users;
 
         public UnitOfWork(MyDbContext context)
         {
             _context = context;
         }
 
-        // Repositories for DTO types
-        public IRepositoryBase<User> UserRepository
+        public IRepositoryBase<UserDTO> UserRepository
         {
             get
             {
-                return _users ??= new RepositoryBase<User>(_context); // Lazy initialization
+                return _users ??= new RepositoryBase<UserDTO>(_context); 
             }
         }
 
-        public IRepositoryBase<Property> PropertiesRepository
+        public IRepositoryBase<PropertyDTO> PropertiesRepository
         {
             get
             {
-                return _properties ??= new RepositoryBase<Property>(_context); // Lazy initialization
+                return _properties ??= new RepositoryBase<PropertyDTO>(_context); 
             }
         }
 
-        public IRepositoryBase<Contract> ContractsRepository
+        public IRepositoryBase<ContractDTO> ContractsRepository
         {
             get
             {
-                return _contracts ??= new RepositoryBase<Contract>(_context); // Lazy initialization
+                return _contracts ??= new RepositoryBase<ContractDTO>(_context); 
             }
         }
 
-        public IRepositoryBase<Address> AddressesRepository
+        public IRepositoryBase<AddressDTO> AddressesRepository
         {
             get
             {
-                return _addresses ??= new RepositoryBase<Address>(_context); // Lazy initialization
+                return _addresses ??= new RepositoryBase<AddressDTO>(_context); 
             }
         }
 
-        public IRepositoryBase<Payment> PaymentsRepository
+        public IRepositoryBase<PaymentDTO> PaymentsRepository
         {
             get
             {
-                return _payments ??= new RepositoryBase<Payment>(_context); // Lazy initialization
+                return _payments ??= new RepositoryBase<PaymentDTO>(_context); 
             }
         }
 
