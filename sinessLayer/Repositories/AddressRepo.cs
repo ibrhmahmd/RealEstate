@@ -1,13 +1,8 @@
 ﻿using AutoMapper;
-using BusinessLayer.DTOModels;
 using DataAccessLayer.Entities;
 using DataAccessLayer.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BusinessLayer.DTOModels;
 
 namespace DataAccessLayer.Repositories
 {

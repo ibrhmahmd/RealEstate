@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using BusinessLayer.DTOModels;
 using DataAccessLayer.Entities;
-using PresentationLayer.Models;
 
-namespace ServicesLayer.MappingProfiles
+namespace BusinessLayer.MappingProfiles
 {
     public class MappingProfile : Profile
     {
@@ -11,7 +10,9 @@ namespace ServicesLayer.MappingProfiles
         {
             // Define mapping between User and UserDTO
             CreateMap<User, UserDTO>()
-                .ReverseMap();
+                    .ReverseMap();
+            //CreateMap<UserDTO, User>();
+
 
 
             CreateMap<Property, PropertyDTO>()
@@ -24,7 +25,6 @@ namespace ServicesLayer.MappingProfiles
 
             CreateMap<Payment, PaymentDTO>()             
                 .ReverseMap();
-
 
             CreateMap<AddressDTO, Address>()
              .ReverseMap();
