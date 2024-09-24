@@ -154,5 +154,6 @@ namespace BusinessLayer.Services
             var existingUser = await _unitOfWork.UserRepository.GetByUniqueAsync(email,"Email");
             return existingUser != null;
         }
+
     }
 }

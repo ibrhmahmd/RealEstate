@@ -16,7 +16,6 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Contract> Contracts { get; set; }
     public DbSet<Address> Addresses { get; set; }
-    public DbSet<Contract> Contracts { get; set; }
     
 
 
