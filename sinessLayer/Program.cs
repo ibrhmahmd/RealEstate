@@ -1,4 +1,4 @@
-﻿namespace sinessLayer
+﻿namespace BusinessLayer
 {
     internal class Program
     {
