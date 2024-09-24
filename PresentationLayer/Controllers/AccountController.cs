@@ -1,64 +1,35 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using System.Threading.Tasks;
 
-namespace PresentationLayer.Controllers
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    private readonly UserService _userService;
+
+    public AccountController(UserService userService)
     {
-        private readonly UserService _userService;
+        _userService = userService;
+    }
 
-        public AccountController(UserService userService)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(UserDTO userDto)
+    {
+        if (ModelState.IsValid)
         {
-            _userService = userService;
-        }
-
-        // GET: Account/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        // POST: Account/Login
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Login(UserDTO userDto)
-        {
-            if (ModelState.IsValid)
+            // Validate user credentials
+            bool isValidUser = await _userService.ValidateUserAsync(userDto.Email, userDto.Password);
+            if (isValidUser)
             {
-                // Logic for logging the user in
-                // Here you can directly check the email and password if needed
-                // Currently just redirecting as an example
-                return RedirectToAction("Index", "Home"); // Redirect to a suitable page
+                // Handle successful login (e.g., set authentication cookie, redirect to home page)
+                return RedirectToAction("Index", "Home");
             }
-            return View(userDto);
-        }
-
-        // GET: Account/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        // POST: Account/Register
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(UserDTO userDto)
-        {
-            if (ModelState.IsValid)
+            else
             {
-                try
-                {
-                    var createdUser = await _userService.CreateUserAsync(userDto);
-                    return RedirectToAction("Login"); // Redirect to login after successful registration
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Email", ex.Message);
-                }
+                ModelState.AddModelError("", "Invalid login attempt.");
             }
-            return View(userDto);
         }
+        return View(userDto); // Return view with model errors
     }
 }

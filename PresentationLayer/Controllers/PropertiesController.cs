@@ -1,134 +1,74 @@
-﻿using BusinessLayer.DTOModels;
-using BusinessLayer.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using BusinessLayer.DTOModels;
+using DataAccessLayer.Repositories.Interface;
 using System.Threading.Tasks;
 
-namespace WebAPI.Controllers
+namespace WebApplication.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PropertyController : ControllerBase
+    public class PropertyController : Controller
     {
-        private readonly PropertyService _propertyService;
+        private readonly IRepository<PropertyDTO> _propertyRepo;
 
-        public PropertyController(PropertyService propertyService)
+        public PropertyController(IRepository<PropertyDTO> propertyRepo)
         {
-            _propertyService = propertyService;
+            _propertyRepo = propertyRepo;
         }
 
-        // GET: api/Property
-        [HttpGet]
-        public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllProperties()
+        // GET: Property
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return Ok(properties);
+            var properties = await _propertyRepo.GetAllAsync();
+            var paginatedProperties = properties.Skip((page - 1) * 10).Take(10);
+            return View(paginatedProperties.ToList());
         }
 
-        // GET: api/Property/deleted
-        [HttpGet("deleted")]
-        public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllPropertiesIncludingDeleted()
+        // GET: Property/Create
+        public IActionResult Create()
         {
-            var properties = await _propertyService.GetAllPropertiesIncludingDeletedAsync();
-            return Ok(properties);
+            return PartialView("_CreateOrEdit", new PropertyDTO());
         }
 
-        // GET: api/Property/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PropertyDTO>> GetPropertyById(Guid id)
-        {
-            try
-            {
-                var property = await _propertyService.GetPropertyByIdAsync(id);
-                return Ok(property);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
-        }
-
-        // POST: api/Property
+        // POST: Property/Create
         [HttpPost]
-        public async Task<ActionResult<PropertyDTO>> CreateProperty([FromBody] PropertyDTO propertyDto)
+        public async Task<IActionResult> Create(PropertyDTO property)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                await _propertyRepo.InsertAsync(property);
+                return RedirectToAction(nameof(Index));
             }
-
-            var createdProperty = await _propertyService.CreatePropertyAsync(propertyDto);
-            return CreatedAtAction(nameof(GetPropertyById), new { id = createdProperty.ID }, createdProperty); // Returns 201 status with location header
+            return PartialView("_CreateOrEdit", property);
         }
 
-        // PUT: api/Property/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult<PropertyDTO>> UpdateProperty(Guid id, [FromBody] PropertyDTO propertyDto)
+        // GET: Property/Edit/5
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id != propertyDto.ID)
+            var property = await _propertyRepo.GetByIdAsync(id);
+            if (property == null)
             {
-                return BadRequest("Property ID mismatch.");
+                return NotFound();
             }
-
-            try
-            {
-                var updatedProperty = await _propertyService.UpdatePropertyAsync(propertyDto);
-                return Ok(updatedProperty);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            return PartialView("_CreateOrEdit", property);
         }
 
-        // DELETE: api/Property/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> SoftDeleteProperty(Guid id)
+        // POST: Property/Edit/5
+        [HttpPost]
+        public async Task<IActionResult> Edit(PropertyDTO property)
         {
-            try
+            if (ModelState.IsValid)
             {
-                await _propertyService.SoftDeletePropertyAsync(id);
-                return NoContent(); // Returns 204 status
+                await _propertyRepo.UpdateAsync(property);
+                return RedirectToAction(nameof(Index));
             }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            return PartialView("_CreateOrEdit", property);
         }
 
-        // DELETE: api/Property/hard/{id}
-        [HttpDelete("hard/{id}")]
-        public async Task<ActionResult> HardDeleteProperty(Guid id)
+        // POST: Property/Delete/5
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                await _propertyService.HardDeletePropertyAsync(id);
-                return NoContent(); // Returns 204 status
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
-        }
-
-        // POST: api/Property/restore/{id}
-        [HttpPost("restore/{id}")]
-        public async Task<ActionResult> RestoreProperty(Guid id)
-        {
-            try
-            {
-                await _propertyService.RestorePropertyAsync(id);
-                return NoContent(); // Returns 204 status
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(new { message = e.Message });
-            }
+            await _propertyRepo.SoftDeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

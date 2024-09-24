@@ -1,36 +1,39 @@
-﻿
-@model Property
+﻿@model BusinessLayer.DTOModels.PropertyDTO
 
-<h2>Add New Property</h2>
+<div class="container mt-5">
+    <h2>Create New Property</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="Name">Name</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="Address">Address</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="Area">Area</label>
-        <input asp-for="Area" class="form-control" />
-        <span asp-validation-for="Area" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="Price">Price</label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="PropertyType">Property Type</label>
-        <se`lect asp-for="PropertyType" class="form-control">
-            <option value="Apartment">Apartment</option>
-            <option value="House">House</option>
-            <option value="Commercial">Commercial</option>
-        </se`lect>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Property Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Address" class="form-label">Address</label>
+            <input asp-for="AddressID" class="form-control" />
+            <span asp-validation-for="AddressID" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Area" class="form-label">Area (in square meters)</label>
+            <input asp-for="Area" class="form-control" />
+            <span asp-validation-for="Area" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Price" class="form-label">Price</label>
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label for="Type" class="form-label">Property Type</label>
+            <select asp-for="Type" class="form-select">
+                <option value="">Select Type</option>
+                <option value="Apartment">Apartment</option>
+                <option value="House">House</option>
+                <option value="Commercial">Commercial</option>
+            </select>
+            <span asp-validation-for="Type" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</div>

@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -155,5 +156,25 @@ namespace BusinessLayer.Services
             return existingUser != null;
         }
 
+        private readonly UserManager<UserDTO> _userManager;
+
+        //public UserService(UserManager<UserDTO> userManager)
+        //{
+        //    _userManager = userManager;
+        //}
+
+        public async Task<bool> ValidateUserAsync(string email, string password)
+        {
+            // Find the user by email
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return false; // User not found
+            }
+
+            // Check the password
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, password);
+            return passwordCheck; // Returns true if password is correct, false otherwise
+        }
     }
 }
