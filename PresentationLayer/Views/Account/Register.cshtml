@@ -1,23 +1,10 @@
-﻿@{
+﻿@model BusinessLayer.DTOModels.UserDTO
+@{
     ViewData["Title"] = "Register";
-    Layout = "_Layout"; // Specify your layout file here
+    Layout = "_Layout1";
+    // Specify your layout file here
 }
 
-<!-- Styles Section -->
-@section Styles {
-    <link rel="stylesheet" href="~/assets/css/style.css">
-}
-
-<!-- Content Section -->
-@section Content {
-    <img src="~/assets/img/wave.png" class="wave" alt="">
-    <div class="container">
-        <div class="img">
-            <img src="~/assets/img/bg.svg" alt="">
-        </div>
-
-        <!-- Register Content -->
-        <div class="login-content">
             <form asp-action="Register" method="post">
                 <img src="~/assets/img/avatar.svg" alt="">
                 <h2 class="title">Welcome</h2>
@@ -68,15 +55,6 @@
                 <input type="submit" class="btn" value="Register">
 
                 <div class="text-center mt-3">
-                    <p style="color: #999;">Already have an account? <a asp-controller="User" asp-action="Login">Log in here</a></p>
+                    <p style="color: #999;">Already have an account? <a asp-controller="Account" asp-action="Login">Log in here</a></p>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <script type="text/javascript" src="~/assets/js/main.js"></script>
-}
-
-@section Scripts {
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
-}
