@@ -11,3 +11,4 @@ obj/
 # Ignore log files
 *.log
 /DataAccessLayer/appsettings.json
+/DataAccessLayer/appsettings.json
