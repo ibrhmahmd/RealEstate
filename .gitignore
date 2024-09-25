@@ -12,3 +12,4 @@ obj/
 *.log
 /DataAccessLayer/appsettings.json
 /DataAccessLayer/appsettings.json
+/PresentationLayer/appsettings.json
