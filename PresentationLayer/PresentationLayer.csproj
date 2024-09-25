@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\AccountAssests\css\style.css" />
+    <None Include="wwwroot\AccountAssests\img\avatar.svg" />
+    <None Include="wwwroot\AccountAssests\img\bg.svg" />
+    <None Include="wwwroot\AccountAssests\img\wave.png" />
+    <None Include="wwwroot\AccountAssests\js\main.js" />
     <None Include="wwwroot\fonts\.DS_Store" />
     <None Include="wwwroot\fonts\flaticon\.DS_Store" />
     <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />

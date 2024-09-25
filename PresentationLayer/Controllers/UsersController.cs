@@ -54,8 +54,6 @@ namespace PresentationLayer.Controllers
         }
 
 
-
-
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
