@@ -1,3 +1,9 @@
+using BusinessLayer.MappingProfiles;
+using BusinessLayer.Services;
+using BusinessLayer.UnitOfWork.Interface;
+using DataAccessLayer.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
+
 namespace PresentationLayer
 {
     public class Program
@@ -9,22 +15,30 @@ namespace PresentationLayer
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Register DbContext
+            builder.Services.AddDbContext<MyDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register the UnitOfWork and services
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<PropertyService>();
+
+            // Add AutoMapper and mapping profile
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
