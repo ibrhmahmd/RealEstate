@@ -60,7 +60,7 @@ namespace PresentationLayer.Controllers
 				try
 				{
 					await _userService.CreateUserAsync(userDto);
-					return RedirectToAction("Index", "Home");
+					return RedirectToAction("Login", "Account");
 				}
 				catch (InvalidOperationException ex)
 				{

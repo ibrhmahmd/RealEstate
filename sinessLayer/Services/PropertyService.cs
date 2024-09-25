@@ -59,7 +59,7 @@ namespace BusinessLayer.Services
             // Use AutoMapper to map PropertyDTO to Property entity
             var property = _mapper.Map<Property>(propertyDto);
 
-            await _unitOfWork.PropertiesRepository.InsertAsync(propertyDto);
+            await _unitOfWork.PropertiesRepository.InsertAsync(property);
             await _unitOfWork.SaveAsync();
 
             // Return the mapped PropertyDTO (this might return a property with an ID if needed)

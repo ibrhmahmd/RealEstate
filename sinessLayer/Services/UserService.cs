@@ -62,7 +62,7 @@ namespace BusinessLayer.Services
             // Use AutoMapper to map UserDTO to User entity
             var user = _mapper.Map<User>(userDto);
 
-            await _unitOfWork.UserRepository.InsertAsync(userDto);
+            await _unitOfWork.UserRepository.InsertAsync(user);
             await _unitOfWork.SaveAsync();
 
             // Return the mapped UserDTO (this might return a user with an ID if you need it)

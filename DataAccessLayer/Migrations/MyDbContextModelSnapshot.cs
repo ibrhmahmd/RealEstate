@@ -57,7 +57,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
@@ -109,7 +109,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Contracts");
+                    b.ToTable("Contract", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Payment", b =>
@@ -150,7 +150,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("ContractId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
@@ -205,7 +205,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("AddressID");
 
-                    b.ToTable("Properties");
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
