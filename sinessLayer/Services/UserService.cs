@@ -156,68 +156,69 @@ namespace BusinessLayer.Services
             var existingUser = await _unitOfWork.UserRepository.GetByUniqueAsync(email,"Email");
             return existingUser != null;
         }
-        public async Task<UserDTO> AuthenticateUserAsync(string email, string password)
-        {
-            // First await the GetAllAsync method to get the IQueryable<UserDTO>
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
-            var user = await users.FirstOrDefaultAsync(u => u.Email == email);
+		public async Task<UserDTO> AuthenticateUserAsync(string email, string password)
+		{
+			// First await the GetAllAsync method to get the IQueryable<UserDTO>
+			var users = await _unitOfWork.UserRepository.GetAllAsync();
+			var user = await users.FirstOrDefaultAsync(u => u.Email == email);
 
-            if (user == null)
-            {
-                return null; // User not found
-            }
+			if (user == null)
+			{
+				return null; // User not found
+			}
 
-            // Verify the password
-            if (VerifyPassword(password, user.PasswordHash))
-            {
-                // Password is correct, return the user DTO
-                return new UserDTO
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber
-                    // Add any other properties you want to return
-                };
-            }
+			// Verify the password
+			if (VerifyPassword(password, user.PasswordHash))
+			{
+				// Password is correct, return the user DTO
+				return new UserDTO
+				{
+					Id = user.Id,
+					UserName = user.UserName,
+					Email = user.Email,
+					PhoneNumber = user.PhoneNumber
+					// Add any other properties you want to return
+				};
+			}
 
-            return null; // Password is incorrect
-        }
-        private bool VerifyPassword(string password, string storedHash)
-        {
-            // Extract the salt from the stored hash
-            byte[] saltBytes = Convert.FromBase64String(storedHash.Split('.')[0]);
+			return null; // Password is incorrect
+		}
+		private bool VerifyPassword(string password, string storedHash)
+		{
+			// Extract the salt from the stored hash
+			byte[] saltBytes = Convert.FromBase64String(storedHash.Split('.')[0]);
 
-            // Hash the input password with the extracted salt
-            string inputHash = HashPassword(password, saltBytes);
+			// Hash the input password with the extracted salt
+			string inputHash = HashPassword(password, saltBytes);
 
-            // Compare the computed hash with the stored hash
-            return inputHash == storedHash;
-        }
+			// Compare the computed hash with the stored hash
+			return inputHash == storedHash;
+		}
 
-        private string HashPassword(string password, byte[] salt = null)
-        {
-            if (salt == null)
-            {
-                // Generate a new salt if one is not provided
-                salt = new byte[128 / 8];
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
-            }
+		private string HashPassword(string password, byte[] salt = null)
+		{
+			if (salt == null)
+			{
+				// Generate a new salt if one is not provided
+				salt = new byte[128 / 8];
+				using (var rng = RandomNumberGenerator.Create())
+				{
+					rng.GetBytes(salt);
+				}
+			}
 
-            // Derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 100000,
-                numBytesRequested: 256 / 8));
+			// Derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
+			string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+				password: password,
+				salt: salt,
+				prf: KeyDerivationPrf.HMACSHA256,
+				iterationCount: 100000,
+				numBytesRequested: 256 / 8));
 
-            // Combine the salt and hash
-            return $"{Convert.ToBase64String(salt)}.{hashed}";
-        }
+			// Combine the salt and hash
+			return $"{Convert.ToBase64String(salt)}.{hashed}";
+		}
 
-    }
+	}
 }
+

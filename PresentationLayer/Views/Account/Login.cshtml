@@ -6,7 +6,7 @@
 }
 
 
-            <form asp-action="Login" method="post">
+<form asp-controller="Account" asp-action="Login" method="post">
                 <img src="~/assets/img/avatar.svg" alt="">
                 <h2 class="title">Welcome</h2>
 
@@ -17,7 +17,7 @@
                     </div>
                     <div class="div">
                         <h5>Email</h5>
-                        <input type="email" class="input" name="Email" required>
+            <input asp-for="Email" type="email" class="input" name="Email" required>
                     </div>
                 </div>
                 <!-- End Input Email -->
@@ -28,7 +28,7 @@
                     </div>
                     <div class="div">
                         <h5>Password</h5>
-                        <input type="password" class="input" name="Password" required>
+            <input asp-for="PasswordHash" type="password" class="input" name="Password" required>
                     </div>
                 </div>
                 <!-- End Input Password -->
