@@ -1,9 +1,3 @@
-using BusinessLayer.Services;
-using BusinessLayer.UnitOfWork.Interface;
-using DataAccessLayer.GenericRepository;
-using DataAccessLayer.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
-
 namespace PresentationLayer
 {
     public class Program
@@ -12,30 +6,8 @@ namespace PresentationLayer
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddControllersWithViews();
-
-            // Register AutoMapper
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-
-
-
-            builder.Services.AddScoped<PropertyService>();  
-            builder.Services.AddScoped<UserService>();      
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
-
-            // Register the generic repository for different entities like User and Property
-            builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
-
-
-
-
-
-            builder.Services.AddDbContext<MyDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
@@ -43,14 +15,16 @@ namespace PresentationLayer
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            app.UseAuthorization();
 
+            app.UseRouting();
+
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",

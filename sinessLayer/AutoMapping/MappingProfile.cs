@@ -13,15 +13,11 @@ namespace BusinessLayer.MappingProfiles
                     .ReverseMap();
             //CreateMap<UserDTO, User>();
 
-
-
             CreateMap<Property, PropertyDTO>()
                 .ReverseMap();
 
-
             CreateMap<Contract, ContractDTO>()
              .ReverseMap();
-
 
             CreateMap<Payment, PaymentDTO>()             
                 .ReverseMap();

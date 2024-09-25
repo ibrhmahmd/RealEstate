@@ -20,7 +20,6 @@ namespace BusinessLayer.Services
         }
 
 
-
         // Get all properties
         public async Task<IQueryable<PropertyDTO>> GetAllPropertiesAsync()
         {

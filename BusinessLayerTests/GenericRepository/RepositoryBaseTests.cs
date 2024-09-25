@@ -1,4 +1,4 @@
-﻿using BusinessLayer.GenericRepository;
+﻿using DataAccessLayer.GenericRepository;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
