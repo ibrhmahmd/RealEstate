@@ -63,7 +63,7 @@ namespace BusinessLayer.Services
             // Use AutoMapper to map UserDTO to User entity
             var user = _mapper.Map<User>(userDto);
 
-            await _unitOfWork.UserRepository.InsertAsync(userDto);
+            await _unitOfWork.UserRepository.InsertAsync(user);
             await _unitOfWork.SaveAsync();
 
             // Return the mapped UserDTO (this might return a user with an ID if you need it)
@@ -155,6 +155,7 @@ namespace BusinessLayer.Services
         private async Task<bool> IsEmailTakenAsync(string email)
         {
             var existingUser = await _unitOfWork.UserRepository.GetByUniqueAsync(email,"Email");
+
             return existingUser != null;
         }
 

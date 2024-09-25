@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - YourAppName</title>
+    <link rel="stylesheet" href="~/assets/css/style.css"> <!-- Include your CSS here -->
+    @* Additional Head Content (if any) *@
+    @RenderSection("Styles", required: false) <!-- Allow individual views to add more styles if needed -->
+</head>
+<body>
+    <div class="wave-container">
+        <img src="~/assets/img/wave.png" class="wave" alt="">
+        <div class="container">
+            <div class="img">
+                <img src="~/assets/img/bg.svg" alt="">
+            </div>
+
+            <!-- Main Content Section -->
+            <div class="login-content">
+                @RenderBody() <!-- This is where the view content will be injected -->
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/assets/js/main1.js"></script> <!-- Include your JavaScript here -->
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    @RenderSection("Scripts", required: false) <!-- Allow individual views to add more scripts if needed -->
+</body>
+</html>

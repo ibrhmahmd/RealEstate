@@ -60,8 +60,6 @@ namespace PresentationLayer.Controllers
                 try
                 {
                     await _userService.CreateUserAsync(userDto);
-                    // Here you would typically set up a session or authentication cookie
-                    // For now, we'll just redirect to home
                     return RedirectToAction("Index", "Home");
                 }
                 catch (InvalidOperationException ex)

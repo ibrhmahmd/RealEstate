@@ -11,54 +11,54 @@ namespace DataAccessLayer.UnitOfWork
     {
         private readonly MyDbContext _context;
 
-        private IRepositoryBase<AddressDTO> _addresses;
-        private IRepositoryBase<ContractDTO> _contracts;
-        private IRepositoryBase<PaymentDTO> _payments;
-        private IRepositoryBase<PropertyDTO> _properties;
-        private IRepositoryBase<UserDTO> _users;
+        private IRepositoryBase<Address> _addresses;
+        private IRepositoryBase<Contract> _contracts;
+        private IRepositoryBase<Payment> _payments;
+        private IRepositoryBase<Property> _properties;
+        private IRepositoryBase<User> _users;
 
         public UnitOfWork(MyDbContext context)
         {
             _context = context;
         }
 
-        public IRepositoryBase<UserDTO> UserRepository
+        public IRepositoryBase<User> UserRepository
         {
             get
             {
-                return _users ??= new RepositoryBase<UserDTO>(_context); 
+                return _users ??= new RepositoryBase<User>(_context); 
             }
         }
 
-        public IRepositoryBase<PropertyDTO> PropertiesRepository
+        public IRepositoryBase<Property> PropertiesRepository
         {
             get
             {
-                return _properties ??= new RepositoryBase<PropertyDTO>(_context); 
+                return _properties ??= new RepositoryBase<Property>(_context); 
             }
         }
 
-        public IRepositoryBase<ContractDTO> ContractsRepository
+        public IRepositoryBase<Contract> ContractsRepository
         {
             get
             {
-                return _contracts ??= new RepositoryBase<ContractDTO>(_context); 
+                return _contracts ??= new RepositoryBase<Contract>(_context); 
             }
         }
 
-        public IRepositoryBase<AddressDTO> AddressesRepository
+        public IRepositoryBase<Address> AddressesRepository
         {
             get
             {
-                return _addresses ??= new RepositoryBase<AddressDTO>(_context); 
+                return _addresses ??= new RepositoryBase<Address>(_context); 
             }
         }
 
-        public IRepositoryBase<PaymentDTO> PaymentsRepository
+        public IRepositoryBase<Payment> PaymentsRepository
         {
             get
             {
-                return _payments ??= new RepositoryBase<PaymentDTO>(_context); 
+                return _payments ??= new RepositoryBase<Payment>(_context); 
             }
         }
 
