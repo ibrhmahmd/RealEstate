@@ -18,14 +18,20 @@ namespace BusinessLayer.Services
         private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly MyDbContext _context;
 
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork, IMapper mapper, MyDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
+
+
+
+
 
         // Get all users
         public async Task<IQueryable<UserDTO>> GetAllUsersAsync()
@@ -34,12 +40,19 @@ namespace BusinessLayer.Services
             return _mapper.Map<IQueryable<UserDTO>>(users);
         }
 
+
+
+
         // Get all users including soft deleted
         public async Task<IQueryable<UserDTO>> GetAllUsersIncludingDeletedAsync()
         {
             var users = await _unitOfWork.UserRepository.GetAllIncludingDeletedAsync();
             return _mapper.Map<IQueryable<UserDTO>>(users);
         }
+
+
+
+
 
         // Get user by ID
         public async Task<UserDTO> GetUserByIdAsync(Guid id)
@@ -51,6 +64,9 @@ namespace BusinessLayer.Services
             }
             return _mapper.Map<UserDTO>(user);
         }
+
+
+
 
         // Create a new user
         public async Task<UserDTO> CreateUserAsync(UserDTO userDto)
@@ -137,6 +153,8 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+
+
         // Restore a soft deleted user
         public async Task RestoreUserAsync(Guid id)
         {
@@ -155,6 +173,10 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+
+
+
+
         // Helper method to check if an email is already taken
         private async Task<bool> IsEmailTakenAsync(string email)
         {
@@ -162,33 +184,39 @@ namespace BusinessLayer.Services
 
             return existingUser != null;
         }
+
+
+        public async Task<User?> GetByEmail(string email)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+            return user;
+
+        }
+
+
+
         public async Task<UserDTO> AuthenticateUserAsync(string email, string password)
         {
-            // Find the user by email using UserManager
-            var userDto = await _userManager.FindByEmailAsync(email);
-
-            // Check if user is found
-            if (userDto == null)
+            // Find the user by email
+            var user = await GetByEmail(email);
+            if (user == null)
             {
                 throw new KeyNotFoundException($"User with email {email} not found."); // Throw an exception if user not found
             }
 
-            var user = _mapper.Map<User>(userDto);
-
-            // Verify password using SignInManager
-            var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
+            // Verify the password using the custom VerifyPassword method
+            var isPasswordValid = VerifyPassword(password, user.PasswordHash);
 
             // Check if the password is correct
-            if (result.Succeeded)
+            if (isPasswordValid)
             {
-                // Map to UserDTO and return
+                // Map the User entity to UserDTO and return
                 return _mapper.Map<UserDTO>(user);
             }
 
-            throw new UnauthorizedAccessException("Invalid password."); // Throw an exception if password is incorrect
+            // Throw an exception if the password is incorrect
+            throw new UnauthorizedAccessException("Invalid password.");
         }
-
-
 
 
 
@@ -213,6 +241,9 @@ namespace BusinessLayer.Services
             }
         }
 
+
+
+
         private string HashPassword(string password, byte[] salt = null)
         {
             if (salt == null)
@@ -233,5 +264,10 @@ namespace BusinessLayer.Services
 
             return $"{Convert.ToBase64String(salt)}.{hashed}";
         }
+
+
+
+
+
     }
 }

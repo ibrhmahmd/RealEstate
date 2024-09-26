@@ -47,10 +47,10 @@ namespace PresentationLayer.Controllers
                 new Claim(ClaimTypes.Email, user.Email)
                 // Add other claims if necessary
             };
-                    var claimsIdentity = new ClaimsIdentity(claims, "YourCookieScheme");
+                    var claimsIdentity = new ClaimsIdentity(claims, "CookieScheme");
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    await HttpContext.SignInAsync("YourCookieScheme", claimsPrincipal); // Sign in the user
+                    await HttpContext.SignInAsync("CookieScheme", claimsPrincipal); // Sign in the user
 
                     return RedirectToAction("Index", "Home"); // Redirect to home or desired page
                 }
