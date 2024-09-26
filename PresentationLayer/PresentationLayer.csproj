@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\AccountAssests\css\style.css" />
     <None Include="wwwroot\AccountAssests\img\avatar.svg" />
     <None Include="wwwroot\AccountAssests\img\bg.svg" />
