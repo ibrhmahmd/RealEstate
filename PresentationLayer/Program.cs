@@ -26,14 +26,14 @@ public class Program
             .AddDefaultTokenProviders();
 
         // Add authentication services
-        builder.Services.AddAuthentication("CookieScheme")
-            .AddCookie("CookieScheme", options =>
-            {
-                options.LoginPath = "/Account/Login"; // Redirect to Login if not authenticated
-                options.AccessDeniedPath = "/Account/AccessDenied"; // Set your access denied path
-                options.ExpireTimeSpan = TimeSpan.FromDays(14); // Set expiration time for the cookie
-                options.SlidingExpiration = true; // Reset the cookie expiration time on each request
-            });
+        //builder.Services.AddAuthentication("CookieScheme")
+        //    .AddCookie("CookieScheme", options =>
+        //    {
+        //        options.LoginPath = "/Account/Login"; // Redirect to Login if not authenticated
+        //        options.AccessDeniedPath = "/Account/AccessDenied"; // Set your access denied path
+        //        options.ExpireTimeSpan = TimeSpan.FromDays(14); // Set expiration time for the cookie
+        //        options.SlidingExpiration = true; // Reset the cookie expiration time on each request
+        //    });
 
         // Register the UnitOfWork and services
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -60,8 +60,8 @@ public class Program
         app.UseRouting();
 
         // Use Authentication and Authorization
-        app.UseAuthentication(); // Add this line
-        app.UseAuthorization(); // Add this line
+        //app.UseAuthentication(); // Add this line
+        //app.UseAuthorization(); // Add this line
 
         app.MapControllerRoute(
             name: "default",

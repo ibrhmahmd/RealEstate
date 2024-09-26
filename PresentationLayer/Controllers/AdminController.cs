@@ -151,7 +151,7 @@ using BusinessLayer.DTOModels;
 
 namespace PresentationLayer.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
