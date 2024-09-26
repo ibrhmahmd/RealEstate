@@ -147,7 +147,11 @@
                             <td>@item.Id</td>
                             <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
-                            <td><span class="status-label @statusClass">@item.IsDeleted</span></td>
+                            <td>
+                                <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
+                                    @(item.IsDeleted ? "Deleted" : "Active")
+                                </span>
+                            </td>
                             <td>
                                 <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
                                     <i class="fas fa-trash"></i> Delete
