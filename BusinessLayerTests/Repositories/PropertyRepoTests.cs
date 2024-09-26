@@ -49,7 +49,6 @@ namespace DataAccessLayer.Repositories.Tests
             {
                 ID = Guid.NewGuid(),
                 Name = "Test Property",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100.5m,
                 Price = 250000m,
@@ -61,7 +60,6 @@ namespace DataAccessLayer.Repositories.Tests
 
             Assert.IsNotNull(propertyInDb);
             Assert.AreEqual(propertyDTO.Name, propertyInDb.Name);
-            Assert.AreEqual(propertyDTO.AddressID, propertyInDb.AddressID);
             Assert.AreEqual(propertyDTO.Type, propertyInDb.Type);
             Assert.AreEqual(propertyDTO.Area, propertyInDb.Area);
             Assert.AreEqual(propertyDTO.Price, propertyInDb.Price);
@@ -79,7 +77,6 @@ namespace DataAccessLayer.Repositories.Tests
             {
                 ID = Guid.NewGuid(),
                 Name = "Test Property",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100.5m,
                 Price = 250000m,

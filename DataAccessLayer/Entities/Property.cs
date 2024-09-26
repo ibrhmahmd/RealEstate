@@ -13,10 +13,10 @@ namespace DataAccessLayer.Entities
         [Required, StringLength(100)]
         public string Name { get; set; }
 
-        [Required]
-        public Guid AddressID { get; set; }
-        public virtual Address? Address { get; set; }
-
+        [MaxLength(200)]
+        public string Description { get; set; }
+        [MaxLength(50)]
+        public string Location { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 

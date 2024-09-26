@@ -15,6 +15,13 @@ namespace PresentationLayer.Controllers
             _userService = userService;
         }
 
+        // GET: /Account/Admin
+        public IActionResult Admin()
+        {
+            return View("../Admin/view");
+        }
+
+
         // GET: /Account/Login
         public IActionResult Login()
         {

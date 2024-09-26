@@ -40,7 +40,7 @@ namespace DataAccessLayer.Repositories
         public async Task<PropertyDTO> GetByIdAsync(Guid id)
         {
             var property = await _dbset
-                .Include(p => p.Address) // Include Address if necessary
+                .Include(p => p.Location) // Include Address if necessary
                 .Include(p => p.Contracts) // Include Contracts if necessary
                 .SingleOrDefaultAsync(p => p.ID == id && !p.IsDeleted);
             return _mapper.Map<PropertyDTO>(property);
@@ -52,7 +52,7 @@ namespace DataAccessLayer.Repositories
         public async Task<PropertyDTO> GetByNameAsync(string name)
         {
             var property = await _dbset
-                .Include(p => p.Address) // Include Address if necessary
+                .Include(p => p.Location) // Include Address if necessary
                 .Include(p => p.Contracts) // Include Contracts if necessary
                 .SingleOrDefaultAsync(p => p.Name == name && !p.IsDeleted);
             return _mapper.Map<PropertyDTO>(property);

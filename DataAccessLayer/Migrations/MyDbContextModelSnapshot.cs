@@ -159,7 +159,7 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AddressID")
+                    b.Property<Guid?>("AddressID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Area")
@@ -174,6 +174,11 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
@@ -182,6 +187,11 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<bool>("IsOccupied")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -452,13 +462,9 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Address", "Address")
+                    b.HasOne("DataAccessLayer.Entities.Address", null)
                         .WithMany("Properties")
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
+                        .HasForeignKey("AddressID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
