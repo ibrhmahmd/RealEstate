@@ -62,6 +62,8 @@ namespace PresentationLayer.Controllers
             return View();
         }
 
+
+
         // GET: /Account/Register
         public IActionResult Register()
         {
@@ -72,7 +74,7 @@ namespace PresentationLayer.Controllers
         // POST: /Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("UserName,Email,PasswordHash,PhoneNumber")] UserDTO userDto)
+        public async Task<IActionResult> Register([Bind("UserName,Email,PasswordHash, Role")] UserDTO userDto)
         {
             if (ModelState.IsValid)
             {

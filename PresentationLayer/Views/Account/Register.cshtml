@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Register";
-    Layout = "_Layout"; 
+    Layout = "_Layout";
 }
 
 <!-- Styles Section -->
@@ -52,7 +52,7 @@
                 <div class="input-div pass">
                     <div class="i">
                         <i class="fas fa-lock"></i>
-                    </div>
+                    </div>      
                     <div class="div">
                         <h5>Password</h5>
                         <input type="password" class="input" asp-for="PasswordHash" required>
@@ -69,6 +69,23 @@
                         <h5>Confirm Password</h5>
                         <input type="password" class="input" id="confirmPassword" required>
                         <span id="confirmPasswordError" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Input Role (Dropdown) -->
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user-tag"></i>
+                    </div>
+                    <div class="div">
+                        <h5>Role</h5>
+                        <select class="input" asp-for="Role" required>
+                            <option value="" disabled selected>Select a role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                            <option value="Manager">Manager</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
                     </div>
                 </div>
 

@@ -30,9 +30,6 @@ namespace BusinessLayer.Services
         }
 
 
-
-
-
         // Get all users
         public async Task<IQueryable<UserDTO>> GetAllUsersAsync()
         {
