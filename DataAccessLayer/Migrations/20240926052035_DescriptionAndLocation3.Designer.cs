@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240926052035_DescriptionAndLocation3")]
+    partial class DescriptionAndLocation3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,6 +162,9 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AddressID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Area")
                         .HasColumnType("decimal(18,2)");
 
@@ -209,6 +215,8 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("AddressID");
 
                     b.ToTable("Properties");
                 });
@@ -455,6 +463,13 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Contract");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Address", null)
+                        .WithMany("Properties")
+                        .HasForeignKey("AddressID");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -513,6 +528,11 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("DataAccessLayer.Entities.User", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Address", b =>
+                {
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>

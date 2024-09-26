@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
@@ -38,9 +40,19 @@ namespace PresentationLayer.Controllers
                 var user = await _userService.AuthenticateUserAsync(email, password);
                 if (user != null)
                 {
-                    // Here you would typically set up a session or authentication cookie
-                    // For now, we'll just redirect to home
-                    return RedirectToAction("Index", "Home");
+                    // Create the claims for the user
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email)
+                // Add other claims if necessary
+            };
+                    var claimsIdentity = new ClaimsIdentity(claims, "YourCookieScheme");
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync("YourCookieScheme", claimsPrincipal); // Sign in the user
+
+                    return RedirectToAction("Index", "Home"); // Redirect to home or desired page
                 }
                 else
                 {
@@ -81,11 +93,18 @@ namespace PresentationLayer.Controllers
         // POST: /Account/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            // Here you would typically clear the session or authentication cookie
-            // For now, we'll just redirect to login
-            return RedirectToAction("Login", "Account");
+            await HttpContext.SignOutAsync("YourCookieScheme"); 
+            return RedirectToAction("Login", "Account"); 
         }
+
+
+        // GET: /Account/AccessDenied
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }
