@@ -3,6 +3,7 @@ using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,15 @@ namespace BusinessLayer.Services
 {
     public class UserService
     {
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -102,6 +107,8 @@ namespace BusinessLayer.Services
             return _mapper.Map<UserDTO>(existingUser);
         }
 
+
+
         // Soft delete a user
         public async Task SoftDeleteUserAsync(Guid id)
         {
@@ -114,6 +121,8 @@ namespace BusinessLayer.Services
             await _unitOfWork.UserRepository.SoftDeleteAsync(id);
             await _unitOfWork.SaveAsync();
         }
+
+
 
         // Hard delete a user
         public async Task HardDeleteUserAsync(Guid id)
@@ -153,32 +162,36 @@ namespace BusinessLayer.Services
 
             return existingUser != null;
         }
-
         public async Task<UserDTO> AuthenticateUserAsync(string email, string password)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
-            var user = await users.FirstOrDefaultAsync(u => u.Email == email);
+            // Find the user by email using UserManager
+            var userDto = await _userManager.FindByEmailAsync(email);
 
-            if (user == null)
+            // Check if user is found
+            if (userDto == null)
             {
-                return null; // User not found
+                throw new KeyNotFoundException($"User with email {email} not found."); // Throw an exception if user not found
             }
 
-            // Verify the password
-            if (VerifyPassword(password, user.PasswordHash))
+            var user = _mapper.Map<User>(userDto);
+
+            // Verify password using SignInManager
+            var result = await _signInManager.CheckPasswordSignInAsync(user, password, lockoutOnFailure: false);
+
+            // Check if the password is correct
+            if (result.Succeeded)
             {
-                return new UserDTO
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    PhoneNumber = user.PhoneNumber
-                    // Add any other properties you want to return
-                };
+                // Map to UserDTO and return
+                return _mapper.Map<UserDTO>(user);
             }
 
-            return null; // Password is incorrect
+            throw new UnauthorizedAccessException("Invalid password."); // Throw an exception if password is incorrect
         }
+
+
+
+
+
 
         private bool VerifyPassword(string password, string storedHash)
         {

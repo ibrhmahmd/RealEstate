@@ -16,6 +16,5 @@ namespace DataAccessLayer.Entities
         public string State { get; set; }
 
         // Navigation 
-        public IEnumerable<Property>? Properties { get; set; }
     }
 }
