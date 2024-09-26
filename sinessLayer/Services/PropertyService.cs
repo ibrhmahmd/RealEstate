@@ -21,10 +21,10 @@ namespace BusinessLayer.Services
 
 
         // Get all properties
-        public async Task<IQueryable<PropertyDTO>> GetAllPropertiesAsync()
+        public async Task<List<PropertyDTO>> GetAllPropertiesAsync()
         {
             var properties = await _unitOfWork.PropertiesRepository.GetAllAsync();
-            return _mapper.Map<IQueryable<PropertyDTO>>(properties);
+            return _mapper.Map<List<PropertyDTO>>(properties);
         }
 
 

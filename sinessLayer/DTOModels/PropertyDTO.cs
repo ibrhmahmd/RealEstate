@@ -9,9 +9,6 @@ namespace BusinessLayer.DTOModels
         public string Name { get; set; }
 
         [Required]
-        public Guid AddressID { get; set; }
-
-        [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 
         [Required, Range(0, double.MaxValue)]
@@ -19,6 +16,12 @@ namespace BusinessLayer.DTOModels
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
+
+        [MaxLength(200)]
+        public string? Description { get; set; }
+
+        [MaxLength(50)]
+        public string? Location { get; set; }
 
         [Required]
         public bool IsAvailable { get; set; }

@@ -34,7 +34,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = Guid.NewGuid(),
                 Name = "Property1",
-                AddressID = Guid.NewGuid(), // Mock Address ID
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -67,7 +66,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = Guid.NewGuid(),
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -79,7 +77,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = Guid.NewGuid(),
                 Name = "Property2",
-                AddressID = Guid.NewGuid(),
                 Type = "House",
                 Area = 150,
                 Price = 300000,
@@ -111,7 +108,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = id,
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -143,7 +139,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = id,
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -174,7 +169,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = id,
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -206,7 +200,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = id,
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,
@@ -238,7 +231,6 @@ namespace UnitTests.RepositoryTests
             {
                 ID = Guid.NewGuid(),
                 Name = "Property1",
-                AddressID = Guid.NewGuid(),
                 Type = "Apartment",
                 Area = 100,
                 Price = 200000,

@@ -23,6 +23,10 @@ namespace PresentationLayer
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<PropertyService>();
+            builder.Services.AddScoped<ContractService>();
+            builder.Services.AddScoped<PaymentService>();
+            builder.Services.AddScoped<AddressService>();
+
 
             // Add AutoMapper and mapping profile
             builder.Services.AddAutoMapper(typeof(MappingProfile));
