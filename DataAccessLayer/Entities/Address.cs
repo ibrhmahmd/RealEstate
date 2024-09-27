@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class Address: BaseEntity<Guid>
+    public class Address : BaseEntity<Guid>
     {
         [StringLength(50)]
         public string City { get; set; }

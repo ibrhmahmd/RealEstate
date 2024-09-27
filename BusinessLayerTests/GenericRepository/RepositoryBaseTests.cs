@@ -32,7 +32,7 @@ namespace UnitTests.RepositoryTests
 
             var property = new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -64,7 +64,7 @@ namespace UnitTests.RepositoryTests
 
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -75,7 +75,7 @@ namespace UnitTests.RepositoryTests
             });
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property2",
                 Type = "House",
                 Area = 150,
@@ -103,10 +103,10 @@ namespace UnitTests.RepositoryTests
             using var context = GetInMemoryDbContext();
             var repository = new RepositoryBase<Property>(context);
 
-            var id = Guid.NewGuid();
+            var Id = Guid.NewGuid();
             context.Properties.Add(new Property
             {
-                ID = id,
+                Id = Id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -118,7 +118,7 @@ namespace UnitTests.RepositoryTests
             await context.SaveChangesAsync();
 
             // Act
-            var result = await repository.GetByIdAsync(id);
+            var result = await repository.GetByIdAsync(Id);
 
             // Assert
             Assert.IsNotNull(result);
@@ -134,10 +134,10 @@ namespace UnitTests.RepositoryTests
             using var context = GetInMemoryDbContext();
             var repository = new RepositoryBase<Property>(context);
 
-            var id = Guid.NewGuid();
+            var Id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = Id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -150,7 +150,7 @@ namespace UnitTests.RepositoryTests
             await context.SaveChangesAsync();
 
             // Act
-            await repository.HardDeleteAsync(id);
+            await repository.HardDeleteAsync(Id);
             var result = await repository.GetAllAsync();
 
             // Assert
@@ -164,10 +164,10 @@ namespace UnitTests.RepositoryTests
             using var context = GetInMemoryDbContext();
             var repository = new RepositoryBase<Property>(context);
 
-            var id = Guid.NewGuid();
+            var Id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = Id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -180,8 +180,8 @@ namespace UnitTests.RepositoryTests
             await context.SaveChangesAsync();
 
             // Act
-            await repository.SoftDeleteAsync(id);
-            var result = await repository.GetByIdAsync(id);
+            await repository.SoftDeleteAsync(Id);
+            var result = await repository.GetByIdAsync(Id);
 
             // Assert
             Assert.IsNotNull(result);
@@ -195,10 +195,10 @@ namespace UnitTests.RepositoryTests
             using var context = GetInMemoryDbContext();
             var repository = new RepositoryBase<Property>(context);
 
-            var id = Guid.NewGuid();
+            var Id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = Id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -213,7 +213,7 @@ namespace UnitTests.RepositoryTests
             // Act
             property.Name = "UpdatedProperty";
             await repository.UpdateAsync(property);
-            var result = await repository.GetByIdAsync(id);
+            var result = await repository.GetByIdAsync(Id);
 
             // Assert
             Assert.IsNotNull(result);
@@ -229,7 +229,7 @@ namespace UnitTests.RepositoryTests
 
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,

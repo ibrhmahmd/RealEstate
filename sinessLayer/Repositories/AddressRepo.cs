@@ -33,7 +33,7 @@ namespace DataAccessLayer.Repositories
         public async Task<AddressDTO> GetByIdAsync(Guid Id)
         {
             var adress = await _dbset
-                .SingleOrDefaultAsync(a=>a.ID == Id && !a.IsDeleted);
+                .SingleOrDefaultAsync(a=>a.Id == Id && !a.IsDeleted);
             return _mapper.Map<AddressDTO>(adress);
         }
 

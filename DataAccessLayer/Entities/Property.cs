@@ -30,7 +30,7 @@ namespace DataAccessLayer.Entities
         public bool IsAvailable { get; set; }
 
         [Required]
-        public bool IsOccupied{ get; set; }
+        public bool IsOccupied { get; set; }
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }

@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
             }
 
             var createdProperty = await _propertyService.CreatePropertyAsync(propertyDto);
-            return CreatedAtAction(nameof(GetPropertyById), new { id = createdProperty.ID }, createdProperty); // Returns 201 status with location header
+            return CreatedAtAction(nameof(GetPropertyById), new { id = createdProperty.Id }, createdProperty); // Returns 201 status with location header
         }
 
 
@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<PropertyDTO>> UpdateProperty(Guid id, [FromBody] PropertyDTO propertyDto)
         {
-            if (id != propertyDto.ID)
+            if (id != propertyDto.Id)
             {
                 return BadRequest("Property ID mismatch.");
             }

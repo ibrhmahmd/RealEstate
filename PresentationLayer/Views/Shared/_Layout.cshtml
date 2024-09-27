@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>@ViewBag.Title - EstateAgency</title>
@@ -26,6 +27,89 @@
 
     <!-- Main CSS File -->
     <link href="~/assets/css/main.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .btn-add {
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-add:hover {
+                background-color: #002244;
+            }
+
+        .table th {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #e0f7fa;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-details {
+            background-color: #17a2b8;
+        }
+
+        .btn-custom i {
+            margin-right: 5px;
+        }
+    </style>
 
 </head>
 
@@ -50,7 +134,6 @@
                     <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
                     <li><a href="@Url.Action("Login", "Account")">Account</a></li>
                     <li><a href="@Url.Action("Admin", "Account")">Admin</a></li>
-
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
