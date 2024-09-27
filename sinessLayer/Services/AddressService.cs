@@ -67,10 +67,10 @@ namespace BusinessLayer.Services
         // Update a address
         public async Task<AddressDTO> UpdateContractAsync(AddressDTO addressDto)
         {
-            var existingAddress = await _unitOfWork.AddressesRepository.GetByIdAsync(addressDto.ID);
+            var existingAddress = await _unitOfWork.AddressesRepository.GetByIdAsync(addressDto.Id);
             if (existingAddress == null)
             {
-                throw new KeyNotFoundException($"Address with ID {addressDto.ID} not found.");
+                throw new KeyNotFoundException($"Address with ID {addressDto.Id} not found.");
             }
 
             // Address AutoMapper to update the existing Address entity

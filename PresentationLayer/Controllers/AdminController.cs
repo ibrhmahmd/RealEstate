@@ -63,7 +63,7 @@ namespace PresentationLayer.Controllers
         {
             if (ModelState.IsValid)
             {
-                propertyDto.ID = Guid.NewGuid();
+                propertyDto.Id = Guid.NewGuid();
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }

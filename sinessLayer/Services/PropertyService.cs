@@ -71,10 +71,10 @@ namespace BusinessLayer.Services
         // Update an existing property
         public async Task<PropertyDTO> UpdatePropertyAsync(PropertyDTO propertyDto)
         {
-            var existingProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyDto.ID);
+            var existingProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyDto.Id);
             if (existingProperty == null)
             {
-                throw new KeyNotFoundException($"Property with ID {propertyDto.ID} not found.");
+                throw new KeyNotFoundException($"Property with ID {propertyDto.Id} not found.");
             }
 
             _mapper.Map(propertyDto, existingProperty);

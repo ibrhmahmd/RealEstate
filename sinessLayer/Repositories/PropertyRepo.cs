@@ -42,7 +42,7 @@ namespace DataAccessLayer.Repositories
             var property = await _dbset
                 .Include(p => p.Location) // Include Address if necessary
                 .Include(p => p.Contracts) // Include Contracts if necessary
-                .SingleOrDefaultAsync(p => p.ID == id && !p.IsDeleted);
+                .SingleOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
             return _mapper.Map<PropertyDTO>(property);
         }
 
@@ -82,7 +82,7 @@ namespace DataAccessLayer.Repositories
         public async Task UpdateAsync(PropertyDTO entity)
         {
             var existingProperty = await _dbset
-                .SingleOrDefaultAsync(p => p.ID == entity.ID && !p.IsDeleted);
+                .SingleOrDefaultAsync(p => p.Id == entity.Id && !p.IsDeleted);
             if (existingProperty != null)
             {
                 _mapper.Map(entity, existingProperty);
@@ -94,7 +94,7 @@ namespace DataAccessLayer.Repositories
         public async Task SoftDeleteAsync(Guid id)
         {
             var property = await _dbset
-                .SingleOrDefaultAsync(p => p.ID == id && !p.IsDeleted);
+                .SingleOrDefaultAsync(p => p.Id == id && !p.IsDeleted);
             if (property != null)
             {
                 property.IsDeleted = true;
@@ -106,7 +106,7 @@ namespace DataAccessLayer.Repositories
         public async Task HardDeleteAsync(Guid id)
         {
             var property = await _dbset
-                .SingleOrDefaultAsync(p => p.ID == id);
+                .SingleOrDefaultAsync(p => p.Id == id);
             if (property != null)
             {
                 _dbset.Remove(property);
