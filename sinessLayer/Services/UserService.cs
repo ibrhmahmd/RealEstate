@@ -32,10 +32,10 @@ namespace BusinessLayer.Services
 
 
         // Get all users
-        public async Task<IQueryable<UserDTO>> GetAllUsersAsync()
+        public async Task<List<UserDTO>> GetAllUsersAsync()
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
-            return _mapper.Map<IQueryable<UserDTO>>(users);
+            return _mapper.Map<List<UserDTO>>(users);
         }
 
 

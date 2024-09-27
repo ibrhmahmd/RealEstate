@@ -30,12 +30,34 @@ namespace PresentationLayer.Controllers
             _paymentService = paymentService;
         }
 
+
+        // User Listing
+        public async Task<IActionResult> ListUsers()
+        {
+            var users = await _userService.GetAllUsersAsync();
+            return View("UsersOperation/ListUsers", users);
+        }
+
+        // User Details
+        public async Task<IActionResult> UserDetails(Guid id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties()
         {
             var properties = await _propertyService.GetAllPropertiesAsync();
-            return View("AdminListProperties", properties);
+            return View("Properties/AdminListProperties", properties);
         }
+
+
+
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
@@ -46,7 +68,7 @@ namespace PresentationLayer.Controllers
                 return RedirectToAction("ListProperties");
             }
 
-            return View("AdminListProperties");
+            return View("Properties/AdminListProperties");
         }
 
         [HttpGet]
@@ -68,7 +90,7 @@ namespace PresentationLayer.Controllers
                 await _propertyService.UpdatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
-            return View("AdminListProperties");
+            return View("Properties/AdminListProperties");
         }
 
         public async Task<IActionResult> SoftDeleteProperty(Guid id)
@@ -82,7 +104,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
-            return View(user);
+            return View("UsersOperation/Delete", user);
         }
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -93,14 +115,6 @@ namespace PresentationLayer.Controllers
 
 
 
-        // Hard Delete User
-        [HttpPost, ActionName("HardDelete")]
-        public async Task<IActionResult> HardDeleteConfirmed(Guid id)
-        {
-            await _userService.HardDeleteUserAsync(id);
-            return RedirectToAction("ListUsers");
-        }
-
         public async Task<IActionResult> ShowProperty(Guid id)
         {
             var property = await _propertyService.GetPropertyByIdAsync(id);
@@ -109,13 +123,6 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
             return View(property);
-        }
-
-        // User Listing
-        public async Task<IActionResult> ListUsers()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return View("AdminListUsers.cshtml", users);
         }
 
 

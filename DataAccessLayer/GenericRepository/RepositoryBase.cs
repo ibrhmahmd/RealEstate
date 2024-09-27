@@ -22,6 +22,20 @@ namespace DataAccessLayer.GenericRepository
 
 
 
+        // Get a record by ID, excluding soft-deleted entities
+        public async Task<T> GetByIdAsync(Guid ID)
+        {
+            try
+            {
+                return await Context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "ID") == ID && EF.Property<bool>(e, "IsDeleted") == false);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the record with ID {ID}.", ex);
+            }
+        }
+
+
         // Get all records excluding soft-deleted entities
         public async Task<IQueryable<T>> GetAllAsync()
         {
@@ -66,29 +80,15 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-        public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
+        public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid ID)
         {
             try
             {
-                return (Task<IQueryable<T>>)Context.Set<T>().Where(e => EF.Property<Guid>(e, "Id") == Id);
+                return (Task<IQueryable<T>>)Context.Set<T>().Where(e => EF.Property<Guid>(e, "Id") == ID);
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while retrieving the entity by name: {Id}.", ex);
-            }
-        }
-
-
-        // Get a record by ID, excluding soft-deleted entities
-        public async Task<T> GetByIdAsync(Guid id)
-        {
-            try
-            {
-                return await Context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id && EF.Property<bool>(e, "IsDeleted") == false);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the record with ID {id}.", ex);
+                throw new Exception($"An error occurred while retrieving the entity by name: {ID}.", ex);
             }
         }
 

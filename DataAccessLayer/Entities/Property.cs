@@ -14,11 +14,22 @@ namespace DataAccessLayer.Entities
         public string Name { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
+
+        [Required]
         [MaxLength(50)]
         public string Location { get; set; }
+
+        [MaxLength(50)]
+        public string? Status { get; set; } // Rent, Sale , Hotel  
+
+        [Required]
+        [MaxLength(50)]
+        public string Developer { get; set; } // Rent, Sale , Hotel  
+
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
+
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
