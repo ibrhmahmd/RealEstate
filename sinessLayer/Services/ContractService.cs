@@ -67,10 +67,10 @@ namespace BusinessLayer.Services
         // Update a contract
         public async Task<ContractDTO> UpdateContractAsync(ContractDTO contractDto)
         {
-            var existingContract = await _unitOfWork.ContractsRepository.GetByIdAsync(contractDto.ID);
+            var existingContract = await _unitOfWork.ContractsRepository.GetByIdAsync(contractDto.Id);
             if (existingContract == null)
             {
-                throw new KeyNotFoundException($"Contract with ID {contractDto.ID} not found.");
+                throw new KeyNotFoundException($"Contract with ID {contractDto.Id} not found.");
             }
 
             // Contract AutoMapper to update the existing Contract entity

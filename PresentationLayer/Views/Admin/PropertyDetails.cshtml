@@ -81,7 +81,7 @@
 
                             <!-- Edit Property Form -->
                             <form method="post" action="@Url.Action("EditProperty", "Admin")">
-                                <input type="hidden" name="Id" value="@Model.ID" />
+                                <input type="hidden" name="Id" value="@Model.Id" />
 
                                 <!-- Property Name -->
                                 <div class="mb-3">
@@ -133,7 +133,7 @@
                         <div class="portfolio-info">
                             <h3>Quick Summary</h3>
                             <ul>
-                                <li><strong>Property ID:</strong> @Model.ID</li>
+                                <li><strong>Property ID:</strong> @Model.Id</li>
                                 <li><strong>Location:</strong> @Model.Location</li>
                                 <li><strong>Property Type:</strong> @Model.Type</li>
                                 <li><strong>Status:</strong> @Model.Type</li>

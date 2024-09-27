@@ -67,10 +67,10 @@ namespace BusinessLayer.Services
         // Update a payment
         public async Task<PaymentDTO> UpdateContractAsync(PaymentDTO paymentDto)
         {
-            var existingPayment = await _unitOfWork.PaymentsRepository.GetByIdAsync(paymentDto.ID);
+            var existingPayment = await _unitOfWork.PaymentsRepository.GetByIdAsync(paymentDto.Id);
             if (existingPayment == null)
             {
-                throw new KeyNotFoundException($"Payment with ID {paymentDto.ID} not found.");
+                throw new KeyNotFoundException($"Payment with ID {paymentDto.Id} not found.");
             }
 
             // Payment AutoMapper to update the existing Payment entity
