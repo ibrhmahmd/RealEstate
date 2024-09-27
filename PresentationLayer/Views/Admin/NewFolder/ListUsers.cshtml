@@ -1,6 +1,6 @@
-﻿@model List<BusinessLayer.DTOModels.UserDTO>
+﻿@model IEnumerable<BusinessLayer.DTOModels.UserDTO>
 @{
-    Layout = "_AdminLayout";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -126,7 +126,7 @@
 <body>
 
     <div class="container table-container">
-
+  
         <form method="post" asp-action="ListUsers" asp-controller="Admin">
             <table class="table table-hover table-bordered">
                 <thead>
@@ -147,12 +147,16 @@
                             <td>@item.Id</td>
                             <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
-                            <td><span class="status-label @statusClass">@item.IsDeleted</span></td>
+                            <td>
+                                <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
+                                    @(item.IsDeleted ? "Deleted" : "Active")
+                                </span>
+                            </td>
                             <td>
                                 <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
                                     <i class="fas fa-trash"></i> Delete
                                 </a>
-                            </td>
+                                </td>
                             <td>
                                 <a asp-action="Details" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-details">
                                     <i class="fas fa-info-circle"></i> Details

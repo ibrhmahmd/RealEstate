@@ -46,14 +46,13 @@
                     <input asp-for="PasswordHash" class="form-control" readonly />
                     <span asp-validation-for="PasswordHash" class="text-danger"></span>
                 </div>
-
                 <br />
+                <input asp-action="Delete" asp-controller="admin" type="submit" value="Delete" class="btn btn-success w-100" />
 
-                <input asp-action="Delete" asp-controller="admin" type="submit" value="Delete" class="btn btn-danger w-100" />
             </form>
         </div>
         <br />
-        <a asp-action="ListUsers" class="btn btn-outline-danger">GO to List</a> 
+        <a asp-action="ListUsers" class="btn btn-outline-success">GO to List</a>
     </div>
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
