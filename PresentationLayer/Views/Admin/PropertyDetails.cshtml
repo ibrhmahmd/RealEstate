@@ -1,0 +1,155 @@
+﻿@model BusinessLayer.DTOModels.PropertyDTO
+
+@{
+    ViewData["Title"] = "Edit Property";
+    Layout = "_AdminLayout"; // Ensure the correct layout file is used
+}
+
+@section Styles {
+    <!-- Add your CSS styles here -->
+    <link rel="stylesheet" href="~/assets/css/property-details.css">
+}
+
+@section Content {
+    <main class="main">
+        <!-- Page Title -->
+        <div class="page-title" data-aos="fade">
+            <div class="heading">
+                <div class="container">
+                    <div class="row d-flex justify-content-center text-center">
+                        <div class="col-lg-8">
+                            <h1>@ViewData["Title"]</h1>
+                            <p class="mb-0">Edit the property details below.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="breadcrumbs">
+                <div class="container">
+                    <ol>
+                        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                        <li class="current">Edit Property</li>
+                    </ol>
+                </div>
+            </nav>
+        </div><!-- End Page Title -->
+        <!-- Real Estate Edit Section -->
+        <section id="real-estate-edit" class="real-estate-edit section">
+            <div class="container" data-aos="fade-up">
+                <!-- Property Image Slider (No changes here) -->
+                <div class="portfolio-details-slider swiper init-swiper">
+                    <script type="application/json" class="swiper-config">
+                        {
+                            "loop": true,
+                            "speed": 600,
+                            "autoplay": {
+                                "delay": 5000
+                            },
+                            "slidesPerView": "auto",
+                            "navigation": {
+                                "nextEl": ".swiper-button-next",
+                                "prevEl": ".swiper-button-prev"
+                            },
+                            "pagination": {
+                                "el": ".swiper-pagination",
+                                "type": "bullets",
+                                "clickable": true
+                            }
+                        }
+                    </script>
+                    <div class="swiper-wrapper align-items-center">
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/property-slide/property-slide-1.jpg" alt="Property Image 1">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/property-slide/property-slide-2.jpg" alt="Property Image 2">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="~/assets/img/property-slide/property-slide-3.jpg" alt="Property Image 3">
+                        </div>
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
+                </div>
+
+                <div class="row justify-content-between gy-4 mt-4">
+                    <!-- Editable Form Section -->
+                    <div class="col-lg-8" data-aos="fade-up">
+                        <div class="portfolio-description">
+                            <h2>Edit Property Details</h2>
+
+                            <!-- Edit Property Form -->
+                            <form method="post" action="@Url.Action("EditProperty", "Admin")">
+                                <input type="hidden" name="Id" value="@Model.ID" />
+
+                                <!-- Property Name -->
+                                <div class="mb-3">
+                                    <label for="Name" class="form-label">Property Name</label>
+                                    <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                                </div>
+
+                                <!-- Property Address -->
+                                <div class="mb-3">
+                                    <label for="Address" class="form-label">Property Address</label>
+                                    <input type="text" class="form-control" id="Address" name="Address" value="@Model.Location" required />
+                                </div>
+
+                                <!-- Property Description -->
+                                <div class="mb-3">
+                                    <label for="Description" class="form-label">Property Description</label>
+                                    <textarea class="form-control" id="Description" name="Description" rows="3" required>@Model.Description</textarea>
+                                </div>
+
+                                <!-- Property Area -->
+                                <div class="mb-3">
+                                    <label for="Area" class="form-label">Property Area (sqft)</label>
+                                    <input type="number" class="form-control" id="Area" name="Area" value="@Model.Area" required />
+                                </div>
+
+                                <!-- Property Price -->
+                                <div class="mb-3">
+                                    <label for="Price" class="form-label">Property Price ($)</label>
+                                    <input type="number" class="form-control" id="Price" name="Price" value="@Model.Price" required />
+                                </div>
+
+                                <!-- Property Type -->
+                                <div class="mb-3">
+                                    <label for="Type" class="form-label">Property Type</label>
+                                    <select class="form-select" asp-for="Type" required>
+                                        <option value="Apartment">Apartment</option>
+                                        <option value="House">House</option>
+                                        <option value="Commercial">Commercial</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+
+                        </div><!-- End Portfolio Description -->
+                    </div>
+
+                    <!-- Property Summary Sidebar (Still Static) -->
+                    <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                        <div class="portfolio-info">
+                            <h3>Quick Summary</h3>
+                            <ul>
+                                <li><strong>Property ID:</strong> @Model.ID</li>
+                                <li><strong>Location:</strong> @Model.Location</li>
+                                <li><strong>Property Type:</strong> @Model.Type</li>
+                                <li><strong>Status:</strong> @Model.Type</li>
+                                <li><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
+                                <@* li><strong>Beds:</strong> @Model.Beds</li>
+                                <li><strong>Baths:</strong> @Model.Baths</li> *@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- End Real Estate Edit Section -->
+    </main>
+}
+
+@section Scripts {
+    <!-- Add your JS scripts here -->
+    <script src="~/assets/js/property-details.js"></script>
+}
