@@ -1,0 +1,95 @@
+﻿@model BusinessLayer.DTOModels.PropertyDTO
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
+    <style>
+        .custom-card-container {
+            max-width: 400px; /* Set a custom width for the card */
+            margin-top: 20px; /* Add space after the header */
+        }
+    </style>
+}
+
+@section content {
+   
+        <!-- Page Title -->
+<br />
+<br />
+<br />
+<br />
+<br />
+        <!-- Edit Property Card -->
+       
+            <div class="row justify-content-center">
+                <div class="col-md-6 custom-card-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Add New Property</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="editPropertyForm" asp-action="EditProperty" asp-controller="Admin" method="post">
+                                <!-- Hidden input for Property Id -->
+                                <input type="hidden" asp-for="Id" />
+
+                                <!-- Property Name -->
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label"></label>
+                                    <input asp-for="Name" class="form-control" id="editPropertyName" required>
+                                </div>
+
+                                <!-- Property Address -->
+                                <div class="mb-3">
+                                    <label asp-for="Location" class="form-label"></label>
+                                    <input asp-for="Location" class="form-control" id="editPropertyAddress" required>
+                                </div>
+
+                                <!-- Property Description -->
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea asp-for="Description" class="form-control" id="editPropertyDescription" required></textarea>
+                                </div>
+
+                                <!-- Property Area (sqft) -->
+                                <div class="mb-3">
+                                    <label asp-for="Area" class="form-label"></label>
+                                    <input asp-for="Area" class="form-control" id="editPropertyArea" type="number" required>
+                                </div>
+
+                                <!-- Property Price ($) -->
+                                <div class="mb-3">
+                                    <label asp-for="Price" class="form-label"></label>
+                                    <input asp-for="Price" class="form-control" id="editPropertyPrice" type="number" required>
+                                </div>
+
+                                <!-- Property Type -->
+                                <div class="mb-3">
+                                    <label asp-for="Type" class="form-label"></label>
+                                    <select asp-for="Type" class="form-select" id="editPropertyType" required>
+                                        <option value="">Select Type</option>
+                                        <option value="Apartment">Apartment</option>
+                                        <option value="House">House</option>
+                                        <option value="Commercial">Commercial</option>
+                                    </select>
+                                </div>
+
+                                <!-- Update Button -->
+                                <button type="submit" class="btn btn-success">Update Property</button>
+                        <a style="margin-left:480px" asp-action="ListProperties" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+          
+            </div>
+   
+    
+    <br />
+}
+
+@section scripts {
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+}

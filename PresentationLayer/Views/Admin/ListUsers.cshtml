@@ -1,129 +1,22 @@
 ﻿@model IEnumerable<BusinessLayer.DTOModels.UserDTO>
-@{
-    Layout = null;
-}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
+    
+@section Styles {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .table-container {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .header-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #003366;
-        }
-
-        .search-bar {
-            flex: 1;
-            margin-right: 10px;
-            padding: 10px 15px;
-            border: 2px solid #003366;
-            border-radius: 20px;
-            outline: none;
-            transition: box-shadow 0.3s ease-in-out;
-        }
-
-            .search-bar:focus {
-                box-shadow: 0 0 10px rgba(0, 51, 102, 0.5);
-            }
-
-        .btn-add {
-            background-color: #003366;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 20px;
-            transition: background-color 0.3s ease;
-        }
-
-            .btn-add:hover {
-                background-color: #002244;
-            }
-
-        .table th {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-        }
-
-        .table td {
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        .table tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table tbody tr:nth-child(even) {
-            background-color: #e0f7fa;
-        }
-
-        .status-label {
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .status-active {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .status-deleted {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-custom {
-            display: inline-block;
-            margin: 0 5px;
-            font-size: 14px;
-            border-radius: 5px;
-            color: white;
-        }
-
-        .btn-edit {
-            background-color: #0056b3;
-        }
-
-        .btn-delete {
-            background-color: #dc3545;
-        }
-
-        .btn-details {
-            background-color: #17a2b8;
-        }
-
-        .btn-custom i {
-            margin-right: 5px;
-        }
-    </style>
-</head>
-<body>
+   
+}
+@section content {
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="container">
+        <div class="header-container">
+            <h2 class="header-title">User Management</h2>
+          
+        </div>
 
     <div class="container table-container">
   
@@ -131,7 +24,7 @@
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                      
                         <th>Email</th>
                         <th>Phone Number</th>
                         <th>Is Deleted</th>
@@ -144,7 +37,7 @@
                     {
                         var statusClass = item.IsDeleted == true ? "status-deleted" : "status-active"; // Inverted logic
                         <tr>
-                            <td>@item.Id</td>
+                        
                             <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
                             <td>
@@ -166,26 +59,18 @@
                     }
                 </tbody>
             </table>
-            <a asp-action="Index" asp-controller="Home" class="btn btn-custom btn-details">
-                <i class="fas fa-info-circle"></i> GO To Home
+            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                    <i class="fas fa-rotate-back"></i> Back
             </a>
         </form>
     </div>
-
+    </div>
+    <br />
+    }
+    @section scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Search function
-            $('#searchInput').on('keyup', function () {
-                var value = $(this).val().toLowerCase();
-                $('#employeeTable tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+    }
+     

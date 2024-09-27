@@ -14,9 +14,12 @@ namespace PresentationLayer.Controllers
 		{
 			_userService = userService;
 		}
-
-		// GET: /Account/Login
-		public IActionResult Login()
+        public IActionResult Admin()
+        {
+            return View("../Admin/view");
+        }
+        // GET: /Account/Login
+        public IActionResult Login()
 		{
 			return View();
 		}
@@ -80,5 +83,11 @@ namespace PresentationLayer.Controllers
 			// For now, we'll just redirect to login
 			return RedirectToAction("Login", "Account");
 		}
-	}
+        // GET: /Account/AccessDenied
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+    }
 }

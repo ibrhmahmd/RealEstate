@@ -10,11 +10,13 @@ namespace PresentationLayer.Controllers
     {
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
+  
 
         public AdminController(PropertyService propertyService, UserService userService)
         {
             _propertyService = propertyService;
             _userService = userService;
+
         }
 
         // Property CRUD Operations
@@ -54,7 +56,8 @@ namespace PresentationLayer.Controllers
             }
             return View(propertyDto);
         }
-
+    
+       
         public async Task<IActionResult> SoftDeleteProperty(Guid id)
         {
             await _propertyService.SoftDeletePropertyAsync(id);
@@ -110,5 +113,6 @@ namespace PresentationLayer.Controllers
             }
             return View(user);
         }
+    
     }
 }
