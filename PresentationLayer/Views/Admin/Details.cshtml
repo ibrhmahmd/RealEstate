@@ -1,0 +1,146 @@
+﻿@*
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .card-container {
+            max-width: 500px;
+            margin: 30px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #003366; /* Dark blue */
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-img-top {
+            width: 100%;
+            border-bottom: 2px solid #003366; /* Border to match the header */
+            object-fit: cover;
+            height: 300px; /* Fixed height for the image */
+        }
+
+        .employee-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #003366;
+            margin-top: 10px;
+        }
+
+        .employee-info {
+            font-size: 16px;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .btn-back {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-back:hover {
+                background-color: #002244;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card-header">User Details</div>
+        <div class="card-body">
+            <div class="employee-id">ID: @Model.Id </div>
+            <div class="employee-info">Email: @Model.Email</div>
+            <div class="employee-info">Phone Number: @Model.PhoneNumber</div>
+            <div class="employee-info">Password: @Model.PasswordHash</div>
+            <div class="employee-info">Is Deleted: @Model.IsDeleted</div>
+            <a asp-action="HardDelete" asp-controller="Admin" class="btn btn-back mt-3">Delete</a>
+            <a asp-action="ListUsers" asp-controller="Admin" class="btn btn-back mt-3">Back to List</a>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+*@
+
+
+@model BusinessLayer.DTOModels.UserDTO
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+ 
+    <div class="container table-container">
+
+        <div class="container mt-3">
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+       
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" readonly />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+    
+
+                <br />
+
+                <input asp-action="ListUsers" asp-controller="Admin" type="submit" value="GO to List" class="btn btn-success w-100" />
+            </form>
+        </div>
+        <br />
+     
+      
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+</body>
+</html>

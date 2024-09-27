@@ -1,0 +1,193 @@
+﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+
+@section Styles {
+	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+}
+
+@section content {
+    <br />
+    <br />
+    <br />
+    <br />
+  
+    <div class="container">
+		<div class="header-container">
+			
+            <h2 class="header-title">Property Management</h2>
+            <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add mb-3">Add Property</a>
+        </div>
+          <div class="container table-container">
+  
+            <table class="table table-hover table-bordered">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Description</th>
+                    <th>Area</th>
+                    <th>Price</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody Id="UserTable">
+                @foreach (var property in Model)
+                {
+                    <tr>
+                        <td>@property.Name</td>
+                        <td>@property.Location</td>
+                        <td>@property.Description</td>
+                        <td>@property.Area</td>
+                        <td>@property.Price</td>
+                        <td>@property.Type</td>
+                        <td>
+                  
+                            <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                        Edit
+                                    </a>
+                      
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal"
+                                    data-Id="@property.Id">
+										<i class="fas fa-trash"></i>     Delete
+									</button>
+                                    <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
+										<i class="fas fa-info-circle"></i> Details
+									</a>
+                        </td>
+                    </tr>
+                    
+                }
+            </tbody>
+        </table>
+                <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                    <i class="fas fa-rotate-back"></i> Back
+                </a>
+  
+    </div>
+  
+    
+    </div>
+    <br />
+    @foreach (var property in Model)
+    {
+        <!-- Delete Property Modal -->
+        <div class="modal fade" Id="deletePropertyModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" Id="deletePropertyModalLabel">Delete Property</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this property?
+                        <input type="hidden" Id="deletePropertyId" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <a asp-action="SoftDeleteProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-danger">Delete</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Show loading spinner
+            function showLoading() {
+                // Your logic to show a loading spinner
+            }
+
+            // Hide loading spinner
+            function hideLoading() {
+                // Your logic to hide the loading spinner
+            }
+
+            $('#addPropertyForm').submit(function (e) {
+                e.preventDefault();
+                showLoading();
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        $('#addPropertyModal').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while saving the property. Please try again.');
+                        console.error(error);
+                    },
+                    complete: hideLoading
+                });
+            });
+
+            $('#editPropertyModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var propertyId = button.data('id');
+
+                $.ajax({
+                    url: '@Url.Action("EditProperty", "Admin")',
+                    type: 'GET',
+                    data: { id: propertyId },
+                    success: function (response) {
+                        $('#editPropertyId').val(response.id);
+                        $('#editPropertyName').val(response.name);
+                        $('#editPropertyAddress').val(response.location);
+                        $('#editPropertyDescription').val(response.description);
+                        $('#editPropertyArea').val(response.area);
+                        $('#editPropertyPrice').val(response.price);
+                        $('#editPropertyType').val(response.type);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error retrieving property details.');
+                        console.error(error);
+                    }
+                });
+            });
+
+            $('#deletePropertyModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                $('#deletePropertyId').val(id);
+            });
+
+            $('#confirmDeleteButton').click(function () {
+                var id = $('#deletePropertyId').val();
+                showLoading();
+                $.ajax({
+                    url: '@Url.Action("SoftDeleteProperty", "Admin")',
+                    type: 'POST',
+                    data: { id: id },
+                    success: function (result) {
+                        $('#deletePropertyModal').modal('hide');
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while deleting the property. Please try again.');
+                        console.error(error);
+                    },
+                    complete: hideLoading
+                });
+            });
+        });
+    </script>
+}

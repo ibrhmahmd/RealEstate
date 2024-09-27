@@ -1,25 +1,12 @@
-﻿@model BusinessLayer.DTOModels.UserDTO
+@model BusinessLayer.DTOModels.UserDTO
 
 @{
     ViewData["Title"] = "Register";
-    Layout = "_Layout"; 
+    Layout = "_Layout1"; 
 }
 
 <!-- Styles Section -->
-@section Styles {
-    <link rel="stylesheet" href="~/assets/css/style.css">
-}
 
-<!-- Content Section -->
-@section Content {
-    <img src="~/assets/img/wave.png" class="wave" alt="">
-    <div class="container">
-        <div class="img">
-            <img src="~/assets/img/bg.svg" alt="">
-        </div>
-
-        <!-- Register Content -->
-        <div class="login-content">
             <form id="registrationForm" asp-controller="Account" asp-action="Register" method="post">
                 <img src="~/assets/img/avatar.svg" alt="">
                 <h2 class="title">Welcome</h2>
@@ -48,6 +35,18 @@
                     </div>
                 </div>
 
+    <!-- Input Phone Number -->
+    <div class="input-div pass">
+        <div class="i">
+            <i class="fas fa-phone"></i>
+        </div>
+        <div class="div">
+            <h5>Phone Number</h5>
+            <input type="tel" class="input" asp-for="PhoneNumber" required>
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
+
                 <!-- Input Password -->
                 <div class="input-div pass">
                     <div class="i">
@@ -60,27 +59,14 @@
                     </div>
                 </div>
 
-                <!-- Input Confirm Password -->
-                <div class="input-div pass">
-                    <div class="i">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Confirm Password</h5>
-                        <input type="password" class="input" id="confirmPassword" required>
-                        <span id="confirmPasswordError" class="text-danger"></span>
-                    </div>
-                </div>
-
+         
                 <input type="submit" class="btn" value="Register">
 
                 <div class="text-center mt-3">
-                    <p style="color: #999;">Already have an account? <a asp-controller="User" asp-action="Login">Log in here</a></p>
+                    <p style="color: #999;">Already have an account? <a asp-controller="Account" asp-action="Login">Log in here</a></p>
                 </div>
             </form>
-        </div>
-    </div>
-
+@*
     <script type="text/javascript" src="~/assets/js/main.js"></script>
     <script>
         document.getElementById('registrationForm').addEventListener('submit', function (event) {
@@ -98,8 +84,4 @@
             }
         });
     </script>
-}
-
-@section Scripts {
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
-}
+*@

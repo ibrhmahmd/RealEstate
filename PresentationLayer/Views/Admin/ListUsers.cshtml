@@ -1,0 +1,76 @@
+﻿@model IEnumerable<BusinessLayer.DTOModels.UserDTO>
+
+    
+@section Styles {
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+   
+}
+@section content {
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="container">
+        <div class="header-container">
+            <h2 class="header-title">User Management</h2>
+          
+        </div>
+
+    <div class="container table-container">
+  
+        <form method="post" asp-action="ListUsers" asp-controller="Admin">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                      
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Is Deleted</th>
+                        <th>Delete</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="UserTable">
+                    @foreach (var item in Model)
+                    {
+                        var statusClass = item.IsDeleted == true ? "status-deleted" : "status-active"; // Inverted logic
+                        <tr>
+                        
+                            <td>@item.Email</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>
+                                <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
+                                    @(item.IsDeleted ? "Deleted" : "Active")
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                                </td>
+                            <td>
+                                <a asp-action="Details" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                    <i class="fas fa-rotate-back"></i> Back
+            </a>
+        </form>
+    </div>
+    </div>
+    <br />
+    }
+    @section scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    }
+     

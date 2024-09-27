@@ -77,6 +77,7 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception($"An error occurred while retrieving the entity by name: {Id}.", ex);
             }
         }
+ 
 
 
         // Get a record by ID, excluding soft-deleted entities
