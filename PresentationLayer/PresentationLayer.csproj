@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Admin\NewFolder\" />
     <Folder Include="wwwroot\lib\assets\css\" />
     <Folder Include="wwwroot\lib\assets\img\hero-carousel\" />
     <Folder Include="wwwroot\lib\assets\img\properties\" />
