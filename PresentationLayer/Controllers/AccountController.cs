@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PresentationLayer.Controllers
 {
@@ -10,7 +12,8 @@ namespace PresentationLayer.Controllers
 	{
 		private readonly UserService _userService;
 
-		public AccountController(UserService userService)
+
+        public AccountController(UserService userService)
 		{
 			_userService = userService;
 		}
@@ -19,8 +22,8 @@ namespace PresentationLayer.Controllers
         {
             return View("../Admin/view");
         }
-        
-        
+
+
         // GET: /Account/Login
         public IActionResult Login()
 		{
@@ -28,6 +31,7 @@ namespace PresentationLayer.Controllers
 		}
 
 		// POST: /Account/Login
+		[AllowAnonymous]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Login(string email, string password)
@@ -65,6 +69,7 @@ namespace PresentationLayer.Controllers
 			{
 				try
 				{
+					
 					await _userService.CreateUserAsync(userDto);
 					return RedirectToAction("Login", "Account");
 				}
@@ -80,11 +85,13 @@ namespace PresentationLayer.Controllers
 		// POST: /Account/Logout
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Logout()
+
+
+		public async Task<IActionResult> Logout()
 		{
 			// Here you would typically clear the session or authentication cookie
 			// For now, we'll just redirect to login
-			return RedirectToAction("Login", "Account");
+			return RedirectToAction("Index", "Home");
 		}
 
         // GET: /Account/AccessDenied

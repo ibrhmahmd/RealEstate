@@ -17,6 +17,10 @@ namespace DataAccessLayer.Entities
         public string Description { get; set; }
         [MaxLength(50)]
         public string Location { get; set; }
+
+        [Required]
+        public Guid ProjectID { get; set; }
+        public Project Project { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 

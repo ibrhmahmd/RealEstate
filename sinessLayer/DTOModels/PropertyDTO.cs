@@ -1,5 +1,6 @@
 ﻿using DataAccessLayer.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLayer.DTOModels
 {
@@ -10,6 +11,8 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
+        [Required]
+        public Guid ProjectID { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
@@ -29,6 +32,8 @@ namespace BusinessLayer.DTOModels
         [Required]
         public bool IsOccupied { get; set; }
         public List<string> ImageLinks { get; set; } = new List<string>();
+
+      
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
