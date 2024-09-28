@@ -1,3 +1,4 @@
+using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
 using System.Diagnostics;
@@ -7,10 +8,11 @@ namespace PresentationLayer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly PropertyService _propertyService;
+        public HomeController(ILogger<HomeController> logger, PropertyService propertyService )
         {
             _logger = logger;
+            _propertyService = propertyService;
         }
 
         public IActionResult Index()
@@ -28,9 +30,11 @@ namespace PresentationLayer.Controllers
             return View();
         }
 
-        public IActionResult Properties()
+        public async Task<IActionResult> Properties()
         {
-            return View();
+
+            var properties = await _propertyService.GetAllPropertiesAsync();
+            return View("Properties",properties);
         }
 
         public IActionResult Agents()

@@ -28,6 +28,7 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsOccupied { get; set; }
+        public List<string> ImageLinks { get; set; } = new List<string>();
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
