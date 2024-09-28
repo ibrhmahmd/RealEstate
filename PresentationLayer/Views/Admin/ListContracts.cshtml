@@ -1,7 +1,7 @@
-﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+﻿@model List<BusinessLayer.DTOModels.ContractDTO>
 @{
-    ViewData["Title"] = "Property List";
-    ViewData["ActionName"] = "Property";
+    ViewData["Title"] = "Contract List";
+    ViewData["ActionName"] = "Contract";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
@@ -15,54 +15,49 @@
 @section content {
     <br />
     <div class="container">
-        <h2 class="header-title">Property Management</h2>
-       
+        <h2 class="header-title">Contract Management</h2>
+
         <div class="header-container">
 
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
-            <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add">Add Property</a>
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Contract..." />
+            <a asp-action="CreateContract" asp-controller="Admin" class="btn btn-add">Add Contract</a>
         </div>
 
         <div class="container table-container">
             <table class="table table-hover table-bordered" id="PropertyTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Project</th>
-                        <th>Area</th>
-                        <th>Price</th>
-                        <th>Type</th>
-						<th></th>
-						<th></th>
-						<th>Actions</th>
-					
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        
+                        <th>Actions</th>
+
                     </tr>
                 </thead>
                 <tbody id="UserTable">
                     @foreach (var property in Model)
                     {
                         <tr>
-                            <td>@property.Name</td>
-                            <td>@property.Location</td>
-                            <td>@property.Description</td>
-                            <td>@property.Area</td>
-                            <td>@property.Price</td>
-                            <td>@property.Type</td>
-                                <td></td>
                             <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                  
+                       
                             <td>
-                                <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal" data-id="@property.Id">
+                             
+                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteContractModal" data-id="@property.Id">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
-                                <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i> Details
+                                <a asp-action="ShowContract" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i> Review
                                 </a>
                             </td>
-                    
+
                         </tr>
 
                     }
@@ -78,16 +73,16 @@
     <br />
 
     <!-- Delete Property Modal -->
-    <div class="modal fade" id="deletePropertyModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteContractModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deletePropertyModalLabel">Delete Property</h5>
+                    <h5 class="modal-title" id="deleteContractModalLabel">Delete Contract</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this property?
-                    <input type="hidden" id="deletePropertyId" />
+                    Are you sure you want to delete this contract?
+                    <input type="hidden" id="deleteContractId" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -96,7 +91,7 @@
             </div>
         </div>
     </div>
-        <div class="services section">
+    <div class="services section">
 
         <div class="container">
 
@@ -137,9 +132,9 @@
                         <p>CRUD on Properties</p>
                     </div>
                 </div><!-- End Service Item -->
-                </div>
-                </div>
-                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @section scripts {
@@ -162,12 +157,12 @@
             });
 
             // Delete Property Modal behavior
-            $('#deletePropertyModal').on('show.bs.modal', function (event) {
+            $('#deleteContractModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var id = button.data('id');
-                $('#deletePropertyId').val(id);
+                $('#deleteContractyId').val(id);
                 $('#confirmDeleteButton').off('click').on('click', function () {
-                    window.location.href = '@Url.Action("SoftDeleteProperty", "Admin")/' + id;
+                    window.location.href = '@Url.Action("SoftDeleteContract", "Admin")/' + id;
                 });
             });
         });

@@ -174,16 +174,21 @@
         <br />
         <!-- Page Title -->
         <div class="page-title" data-aos="fade">
-           
             <nav class="breadcrumbs">
                 <div class="container">
                     <ol>
-                        <li><a asp-action="admin" asp-controller="account">Home</a></li>
-                        <li class="current">@ViewData["Title"]</li>
+                        <!-- Breadcrumb links -->
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li><a asp-action="Admin" asp-controller="Account">Admin</a></li>
+                        <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>
+                        <li class="current">@ViewData["Title"]</li> <!-- Current Page -->
                     </ol>
                 </div>
             </nav>
         </div>
+
+
+
         <!-- End Page Title -->
         <!-- Page-specific content will be rendered here -->
         @RenderBody()
@@ -207,6 +212,7 @@
 
     <!-- Main JS File -->
     <script src="~/assets/js/main.js"></script>
+
 
     @RenderSection("scripts", required: false)
 </body>

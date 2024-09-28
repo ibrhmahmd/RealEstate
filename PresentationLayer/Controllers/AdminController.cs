@@ -10,13 +10,13 @@ namespace PresentationLayer.Controllers
     {
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
-  
+        private readonly ContractService _contractService;
 
-        public AdminController(PropertyService propertyService, UserService userService)
+        public AdminController(PropertyService propertyService, UserService userService , ContractService contractService)
         {
             _propertyService = propertyService;
             _userService = userService;
-
+            _contractService = contractService;
         }
 
         // Property CRUD Operations
@@ -113,6 +113,10 @@ namespace PresentationLayer.Controllers
             }
             return View(user);
         }
-    
+        public async Task<IActionResult> ListContracts()
+        {
+            var contracts = await _contractService.GetAllContractsAsync();
+            return View(contracts);
+        }
     }
 }
