@@ -27,7 +27,7 @@
                 <div class="container">
                     <ol>
                         <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-                        <li class="current">View Property</li>
+                        <li class="current">Property Single</li>
                     </ol>
                 </div>
             </nav>
@@ -88,32 +88,43 @@
                 <div class="row justify-content-between gy-4 mt-4">
                     <div class="col-lg-8" data-aos="fade-up">
                         <div class="portfolio-description">
-                            <h2>Desription</h2>
-                            <p> @Model.Description</p>
-                        </div><!-- End Portfolio Description -->
+                            <h2>This is an example of property details</h2>
+                            <p>Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia.</p>
+                        </div>
+                        <!-- End Portfolio Description -->
+
+
+
                         <!-- Tabs -->
                         <ul class="nav nav-pills mb-3">
-                            <li><a class="nav-link active" data-bs-toggle="pill" href="#video-tab">Video</a></li>
-                            <li><a class="nav-link" data-bs-toggle="pill" href="#floor-plans-tab">Floor Plans</a></li>
                             <li><a class="nav-link" data-bs-toggle="pill" href="#location-tab">Location</a></li>
+                            <li><a class="nav-link" data-bs-toggle="pill" href="#floor-plans-tab">Floor Plans</a></li>
+                            <li><a class="nav-link active" data-bs-toggle="pill" href="#video-tab">Video</a></li>
                         </ul><!-- End Tabs -->
+
+
                         <!-- Tab Content -->
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="video-tab">
-                                <!-- Video content -->
-                                <iframe width="100%" height="400" src="https://www.youtube.com/embed/example_video_id" frameborder="0" allowfullscreen></iframe>
-                            </div><!-- End Video Tab -->
-
+                            <div class="tab-pane fade  show active" id="location-tab">
+                                <!-- Google Maps Embed -->
+                                <iframe style="border:0; width: 100%; height: 400px;"
+@*                                         src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=@Model.Latitude,@Model.Longitude"
+ *@                                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" 
+                                frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div><!-- End Location Tab -->
                             <div class="tab-pane fade" id="floor-plans-tab">
                                 <img src="~/assets/img/floor-plan.jpg" alt="" class="img-fluid">
                             </div><!-- End Floor Plans Tab -->
-
-                            <div class="tab-pane fade" id="location-tab">
-                                <!-- Google Maps Embed -->
-                                <iframe style="border:0; width: 100%; height: 400px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div><!-- End Location Tab -->
+                            <div class="tab-pane fade" id="video-tab">
+                                <!-- Video content -->
+                                <iframe width="100%" height="400" src="https://www.youtube.com/embed/example_video_id" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <!-- End Video Tab -->                           
                         </div><!-- End Tab Content -->
                     </div>
+
+
+
 
                     <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                         <div class="portfolio-info">
@@ -125,6 +136,8 @@
                                 <li><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
                                 <li><strong>Current State:</strong> <span>@Model.IsOccupied</span></li>
                             </ul>
+                            <!-- Open Contract Button -->
+                            <a href="@Url.Action("openContract", "Contract")" class="btn btn-primary">Open Contract</a>
                         </div>
                     </div>
                 </div>
