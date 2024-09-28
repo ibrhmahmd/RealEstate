@@ -1,6 +1,9 @@
 ﻿@model IEnumerable<BusinessLayer.DTOModels.UserDTO>
+@{
+    ViewData["Title"] = "User List";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 
-    
+}
 @section Styles {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -9,13 +12,12 @@
 }
 @section content {
     <br />
-    <br />
-    <br />
-    <br />
-    <div class="container">
-        <div class="header-container">
-            <h2 class="header-title">User Management</h2>
-          
+	<div class="container">
+		<h2 class="header-title">User Management</h2>
+		<div class="header-container">
+
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Users..." />
+	
         </div>
 
     <div class="container table-container">
@@ -24,10 +26,10 @@
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
-                      
+                        <th>UserName</th>
                         <th>Email</th>
                         <th>Phone Number</th>
-                        <th>Is Deleted</th>
+                            <th>Is Verified</th>
                         <th>Delete</th>
                         <th>Details</th>
                     </tr>
@@ -37,12 +39,12 @@
                     {
                         var statusClass = item.IsDeleted == true ? "status-deleted" : "status-active"; // Inverted logic
                         <tr>
-                        
+                                <td>@item.UserName</td>
                             <td>@item.Email</td>
                             <td>@item.PhoneNumber</td>
                             <td>
                                 <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
-                                    @(item.IsDeleted ? "Deleted" : "Active")
+                                    @(item.IsDeleted ? "False" : "True")
                                 </span>
                             </td>
                             <td>
@@ -64,7 +66,7 @@
             </a>
         </form>
     </div>
-    </div>
+ </div>
     <br />
     }
     @section scripts {
@@ -72,5 +74,17 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            // Search function
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $('#UserTable tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
     }
      

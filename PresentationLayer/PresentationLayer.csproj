@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\AdminLayout.cshtml" />
+    <Content Remove="Views\Shared\_AdminLayout.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Shared\AdminLayout.cshtml" />
+    <None Include="Views\Shared\_AdminLayout.cshtml" />
     <None Include="wwwroot\assets\css\style.css" />
     <None Include="wwwroot\assets\img\avatar.svg" />
     <None Include="wwwroot\assets\img\bg.svg" />
@@ -32,14 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sinessLayer\BusinessLayer.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Shared\AdminLayout.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Shared\AdminLayout.cshtml" />
   </ItemGroup>
 
 </Project>
