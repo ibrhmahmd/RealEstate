@@ -9,8 +9,9 @@ namespace BusinessLayer.DTOModels
     {
         [Required, StringLength(100)]
         public string Name { get; set; }
+		public Guid? ProjectId { get; set; }
 
-        public string? PropertyPictureUrl { get; set; }
+		public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }

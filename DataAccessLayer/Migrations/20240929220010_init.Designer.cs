@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240921142730_AddBase")]
-    partial class AddBase
+    [Migration("20240929220010_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,13 +26,14 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Address", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -48,7 +49,8 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<string>("State")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -56,16 +58,24 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Addresse");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AgentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContractType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -76,23 +86,63 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Document")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("InitialPayment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsConditionCheckRequired")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<float?>("MonthlyRent")
-                        .HasColumnType("real");
+                    b.Property<bool>("IsFurnished")
+                        .HasColumnType("bit");
 
-                    b.Property<Guid>("PropertyID")
+                    b.Property<bool?>("IsTerminated")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("LateFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("OccupantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float?>("SecurityDeposit")
-                        .HasColumnType("real");
+                    b.Property<Guid>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PropertyLocation")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal?>("RecurringPaymentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RecurringPaymentFrequency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Rooms")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -100,26 +150,86 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("PropertyID");
+                    b.HasIndex("AgentId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("OccupantId");
 
-                    b.ToTable("Contract");
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Contracts");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.DeveloperCompany", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("YearFounded")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeveloperCompanies");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Payment", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("ContractId")
                         .HasColumnType("uniqueidentifier");
@@ -136,9 +246,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PaymentMethod")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -149,24 +256,18 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ContractId");
 
                     b.ToTable("Payments");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.Project", b =>
                 {
-                    b.Property<Guid>("ID")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("AddressID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<float>("Area")
-                        .HasColumnType("real");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -177,16 +278,107 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("DeveloperCompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeveloperCompanyId");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Area")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFUrnished")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOccupied")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("Latitude")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("Longitude")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PropertyPictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Rooms")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -198,9 +390,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AddressID");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Properties");
                 });
@@ -408,30 +600,43 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser<System.Guid>");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
+                    b.HasOne("DataAccessLayer.Entities.User", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DataAccessLayer.Entities.User", "Occupant")
+                        .WithMany()
+                        .HasForeignKey("OccupantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("DataAccessLayer.Entities.Property", "Property")
                         .WithMany("Contracts")
-                        .HasForeignKey("PropertyID")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataAccessLayer.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("DataAccessLayer.Entities.User", null)
+                        .WithMany("Contracts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Occupant");
 
                     b.Navigation("Property");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Payment", b =>
@@ -445,15 +650,22 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Contract");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.Project", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Address", "Address")
-                        .WithMany("Properties")
-                        .HasForeignKey("AddressID")
+                    b.HasOne("DataAccessLayer.Entities.DeveloperCompany", "DeveloperCompany")
+                        .WithMany("Projects")
+                        .HasForeignKey("DeveloperCompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("DeveloperCompany");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Project", null)
+                        .WithMany("properties")
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -516,17 +728,27 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Address", b =>
-                {
-                    b.Navigation("Properties");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
                     b.Navigation("Payments");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.DeveloperCompany", b =>
+                {
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Project", b =>
+                {
+                    b.Navigation("properties");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
+                {
+                    b.Navigation("Contracts");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
                 {
                     b.Navigation("Contracts");
                 });
