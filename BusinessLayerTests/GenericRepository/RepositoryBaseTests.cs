@@ -32,7 +32,7 @@ namespace UnitTests.RepositoryTests
 
             var property = new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -64,7 +64,7 @@ namespace UnitTests.RepositoryTests
 
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -75,7 +75,7 @@ namespace UnitTests.RepositoryTests
             });
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property2",
                 Type = "House",
                 Area = 150,
@@ -106,7 +106,7 @@ namespace UnitTests.RepositoryTests
             var id = Guid.NewGuid();
             context.Properties.Add(new Property
             {
-                ID = id,
+                Id = id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -137,7 +137,7 @@ namespace UnitTests.RepositoryTests
             var id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -167,7 +167,7 @@ namespace UnitTests.RepositoryTests
             var id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -198,7 +198,7 @@ namespace UnitTests.RepositoryTests
             var id = Guid.NewGuid();
             var property = new Property
             {
-                ID = id,
+                Id = id,
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,
@@ -229,7 +229,7 @@ namespace UnitTests.RepositoryTests
 
             context.Properties.Add(new Property
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Property1",
                 Type = "Apartment",
                 Area = 100,

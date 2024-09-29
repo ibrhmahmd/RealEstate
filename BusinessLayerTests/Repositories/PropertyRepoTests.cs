@@ -47,7 +47,7 @@ namespace DataAccessLayer.Repositories.Tests
         {
             var propertyDTO = new PropertyDTO
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Test Property",
                 Type = "Apartment",
                 Area = 100.5m,
@@ -56,7 +56,7 @@ namespace DataAccessLayer.Repositories.Tests
                 IsOccupied = false
             };
             await _repo.InsertAsync(propertyDTO);
-            var propertyInDb = await _repo.GetByIdAsync(propertyDTO.ID);
+            var propertyInDb = await _repo.GetByIdAsync(propertyDTO.Id);
 
             Assert.IsNotNull(propertyInDb);
             Assert.AreEqual(propertyDTO.Name, propertyInDb.Name);
@@ -75,7 +75,7 @@ namespace DataAccessLayer.Repositories.Tests
         {
             var propertyDTO = new PropertyDTO
             {
-                ID = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 Name = "Test Property",
                 Type = "Apartment",
                 Area = 100.5m,
@@ -91,7 +91,7 @@ namespace DataAccessLayer.Repositories.Tests
             propertyDTO.Price = 300000m;
 
             await _repo.UpdateAsync(propertyDTO);
-            var updatedProperty = await _repo.GetByIdAsync(propertyDTO.ID);
+            var updatedProperty = await _repo.GetByIdAsync(propertyDTO.Id);
 
             Assert.IsNotNull(updatedProperty);
             Assert.AreEqual("Updated Property", updatedProperty.Name);
