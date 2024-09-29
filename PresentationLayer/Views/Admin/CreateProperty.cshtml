@@ -1,6 +1,7 @@
 ﻿@model BusinessLayer.DTOModels.PropertyDTO
 @{
     ViewData["Title"] = "Add Prperty";
+    ViewData["ActionName"] = "Property";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 
 }
@@ -27,11 +28,23 @@
                             <h5 class="card-title">Add New Property</h5>
                         </div>
                         <div class="card-body">
-                            <form id="addPropertyForm" asp-action="CreateProperty" asp-controller="Admin" method="post">
+                    <form id="addPropertyForm" enctype="multipart/form-data" asp-action="CreateProperty" asp-controller="Admin" method="post">
                                 <div class="mb-3">
                                     <label asp-for="Name" class="form-label"></label>
                                     <input asp-for="Name" class="form-control" id="propertyName" required>
                                 </div>
+                        <div class="mb-3">
+                            
+                            <label asp-for="PropertyPicture" class="control-label"></label>
+							<div class="custom-file">
+                              
+								<input asp-for="PropertyPicture" class="form-control" />
+                           
+                                </div>
+                            <span asp-validation-for="PropertyPicture" class="text-danger"></span>
+                            
+
+                        </div>
                                 <div class="mb-3">
                                     <label asp-for="Location" class="form-label"></label>
                                     <input asp-for="Location" class="form-control" id="propertyAddress" required>

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace DataAccessLayer.Entities
 {
@@ -15,6 +16,12 @@ namespace DataAccessLayer.Entities
 
         [MaxLength(200)]
         public string Description { get; set; }
+   
+        public string? PropertyPictureUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? PropertyPicture { get; set; }
+
         [MaxLength(50)]
         public string Location { get; set; }
         [Required]

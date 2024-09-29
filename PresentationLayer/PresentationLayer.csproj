@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\_AdminLayout.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Shared\_AdminLayout.cshtml" />
     <None Include="wwwroot\assets\css\style.css" />
     <None Include="wwwroot\assets\img\avatar.svg" />
     <None Include="wwwroot\assets\img\bg.svg" />
@@ -32,6 +27,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sinessLayer\BusinessLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Properties\userpicture\" />
+    <Folder Include="wwwroot\Properties\PropertyPicture\" />
   </ItemGroup>
 
 </Project>

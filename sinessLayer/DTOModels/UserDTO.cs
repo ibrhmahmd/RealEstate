@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLayer.DTOModels
 {
@@ -7,5 +9,6 @@ namespace BusinessLayer.DTOModels
 
 		public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
+  
     }
 }
