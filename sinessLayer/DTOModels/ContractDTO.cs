@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLayer.DTOModels
 {
@@ -76,5 +77,6 @@ namespace BusinessLayer.DTOModels
 
 		[Range(0, 20)]
 		public int Rooms { get; set; } // Number of rooms in the property
+	
 	}
 }

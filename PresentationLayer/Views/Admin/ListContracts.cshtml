@@ -20,41 +20,45 @@
         <div class="header-container">
 
             <input type="text" id="searchInput" class="search-bar" placeholder="Search Contract..." />
-            <a asp-action="CreateContract" asp-controller="Admin" class="btn btn-add">Add Contract</a>
+       
         </div>
 
         <div class="container table-container">
             <table class="table table-hover table-bordered" id="PropertyTable">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>Type</th>
+                        <th>Agent</th>
+                        <th>End Date</th>
+                        <th>Payment Method</th>
+                        <th>Location</th>
                         
                         <th>Actions</th>
 
                     </tr>
                 </thead>
                 <tbody id="UserTable">
-                    @foreach (var property in Model)
+                    @foreach (var contract in Model)
                     {
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>@contract.ContractType</td>
+                            <td>@contract.Agent</td>
+                            <td>@contract.EndDate</td>
+                            <td>@contract.PaymentMethodId</td>
+                            <td>@contract.PropertyLocation</td>
+                 
                   
                        
                             <td>
-                             
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteContractModal" data-id="@property.Id">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                                <a asp-action="ShowContract" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i> Review
+
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-delete">
+                                    <i class="fas fa-info-trash"></i>Archive
+                                </a>
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i>Details
+                                </a>
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-success">
+                                    <i class="fas fa-info-accept"></i>Accept
                                 </a>
                             </td>
 
@@ -72,25 +76,7 @@
 
     <br />
 
-    <!-- Delete Property Modal -->
-    <div class="modal fade" id="deleteContractModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteContractModalLabel">Delete Contract</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete this contract?
-                    <input type="hidden" id="deleteContractId" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a id="confirmDeleteButton" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
-    </div>
+  
     <div class="services section">
 
         <div class="container">
@@ -115,7 +101,7 @@
                         <div class="icon">
                             <i class="bi bi-broadcast"></i>
                         </div>
-                        <a href="service-details.html" class="stretched-link">
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                             <h3>Contracts</h3>
                         </a>
                         <p>Viewe Contracts.</p>
@@ -156,15 +142,6 @@
                 });
             });
 
-            // Delete Property Modal behavior
-            $('#deleteContractModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                $('#deleteContractyId').val(id);
-                $('#confirmDeleteButton').off('click').on('click', function () {
-                    window.location.href = '@Url.Action("SoftDeleteContract", "Admin")/' + id;
-                });
-            });
-        });
+         
     </script>
 }

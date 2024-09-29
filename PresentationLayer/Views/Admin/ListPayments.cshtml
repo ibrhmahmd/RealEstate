@@ -1,0 +1,100 @@
+﻿@model List<BusinessLayer.DTOModels.PaymentDTO>
+@{
+    ViewData["Title"] = "Payment List";
+    ViewData["ActionName"] = "Payment";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+}
+
+@section content {
+    <br />
+    <div class="container">
+        <h2 class="header-title">Payment History</h2>
+
+        <div class="header-container">
+
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Payment..." />
+     
+        </div>
+
+        <div class="container table-container">
+            <table class="table table-hover table-bordered" id="PropertyTable">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Payment Method</th>
+                    <th></th>
+                        <th></th>
+
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody id="UserTable">
+                    @foreach (var payment in Model)
+                    {
+                        <tr>
+                            <td>@payment.Amount</td>
+                            <td>@payment.PaymentMethod</td>
+                           <td></td>
+                            <td>/td>
+                       @*       <td>@payment.PropertyLocation</td> *@
+
+
+
+                            <td>
+
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@payment.Id" class="btn btn-custom btn-delete">
+                                    <i class="fas fa-info-trash"></i>Archive
+                                </a>
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@payment.Id" class="btn btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i>Details
+                                </a>
+                                <a asp-action="" asp-controller="Admin" asp-route-Id="@payment.Id" class="btn btn-custom btn-success">
+                                    <i class="fas fa-info-accept"></i>Accept
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                <i class="fas fa-rotate-back"></i> Back
+            </a>
+        </div>
+    </div>
+
+
+    <br />
+
+}
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Search function
+            $('#searchInput').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $('#PropertyTable tbody tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+
+    </script>
+}
