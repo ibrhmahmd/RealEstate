@@ -19,7 +19,7 @@ namespace DataAccessLayer.Entities
         public string Location { get; set; }
 
         [Required]
-        public Guid ProjectID { get; set; }
+        public Guid? ProjectID { get; set; }
         public Project Project { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial

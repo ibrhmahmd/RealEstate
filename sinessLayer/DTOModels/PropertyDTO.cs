@@ -12,7 +12,7 @@ namespace BusinessLayer.DTOModels
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
         [Required]
-        public Guid ProjectID { get; set; }
+        public Guid? ProjectID { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
