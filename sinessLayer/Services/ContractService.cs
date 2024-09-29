@@ -5,7 +5,6 @@ using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 namespace BusinessLayer.Services
 {
     public class ContractService

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class addProjectDeveloper : Migration
+    public partial class addcontract : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -254,12 +254,16 @@ namespace DataAccessLayer.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Location = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ProjectID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Longitude = table.Column<int>(type: "int", nullable: true),
+                    Latitude = table.Column<int>(type: "int", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Area = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Rooms = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     IsOccupied = table.Column<bool>(type: "bit", nullable: false),
+                    IsFUrnished = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -271,11 +275,10 @@ namespace DataAccessLayer.Migrations
                 {
                     table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Properties_Projects_ProjectID",
-                        column: x => x.ProjectID,
+                        name: "FK_Properties_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -283,12 +286,26 @@ namespace DataAccessLayer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PropertyID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PropertyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OccupantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AgentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PaymentMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    MonthlyRent = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    SecurityDeposit = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    ContractType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    InitialPayment = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RecurringPaymentAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    RecurringPaymentFrequency = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    IsConditionCheckRequired = table.Column<bool>(type: "bit", nullable: false),
+                    LateFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    IsTerminated = table.Column<bool>(type: "bit", nullable: true),
+                    Document = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PropertyLocation = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    IsFurnished = table.Column<bool>(type: "bit", nullable: false),
+                    Rooms = table.Column<int>(type: "int", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -300,17 +317,28 @@ namespace DataAccessLayer.Migrations
                 {
                     table.PrimaryKey("PK_Contracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Contracts_Properties_PropertyID",
-                        column: x => x.PropertyID,
+                        name: "FK_Contracts_Properties_PropertyId",
+                        column: x => x.PropertyId,
                         principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Contracts_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Contracts_Users_AgentId",
+                        column: x => x.AgentId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Contracts_Users_OccupantId",
+                        column: x => x.OccupantId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Contracts_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -379,14 +407,24 @@ namespace DataAccessLayer.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contracts_PropertyID",
+                name: "IX_Contracts_AgentId",
                 table: "Contracts",
-                column: "PropertyID");
+                column: "AgentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contracts_UserID",
+                name: "IX_Contracts_OccupantId",
                 table: "Contracts",
-                column: "UserID");
+                column: "OccupantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contracts_PropertyId",
+                table: "Contracts",
+                column: "PropertyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contracts_UserId",
+                table: "Contracts",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Payments_ContractId",
@@ -399,9 +437,9 @@ namespace DataAccessLayer.Migrations
                 column: "DeveloperCompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Properties_ProjectID",
+                name: "IX_Properties_ProjectId",
                 table: "Properties",
-                column: "ProjectID");
+                column: "ProjectId");
         }
 
         /// <inheritdoc />

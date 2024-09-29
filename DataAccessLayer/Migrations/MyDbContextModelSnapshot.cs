@@ -66,6 +66,14 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AgentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContractType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -75,23 +83,63 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Document")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("InitialPayment")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsConditionCheckRequired")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("MonthlyRent")
+                    b.Property<bool>("IsFurnished")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsTerminated")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("LateFee")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("PropertyID")
+                    b.Property<Guid>("OccupantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal?>("SecurityDeposit")
+                    b.Property<Guid>("PaymentMethodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PropertyLocation")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<decimal?>("RecurringPaymentAmount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("RecurringPaymentFrequency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Rooms")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -99,15 +147,18 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserID")
-                        .IsRequired()
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropertyID");
+                    b.HasIndex("AgentId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("OccupantId");
+
+                    b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Contracts");
                 });
@@ -292,13 +343,22 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFUrnished")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsOccupied")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("Latitude")
+                        .HasColumnType("int");
 
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("Longitude")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -308,8 +368,11 @@ namespace DataAccessLayer.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("ProjectID")
+                    b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rooms")
+                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -323,7 +386,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectID");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Properties");
                 });
@@ -542,21 +605,32 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
+                    b.HasOne("DataAccessLayer.Entities.User", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DataAccessLayer.Entities.User", "Occupant")
+                        .WithMany()
+                        .HasForeignKey("OccupantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("DataAccessLayer.Entities.Property", "Property")
                         .WithMany("Contracts")
-                        .HasForeignKey("PropertyID")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataAccessLayer.Entities.User", "User")
+                    b.HasOne("DataAccessLayer.Entities.User", null)
                         .WithMany("Contracts")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Occupant");
 
                     b.Navigation("Property");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Payment", b =>
@@ -585,9 +659,7 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasOne("DataAccessLayer.Entities.Project", "Project")
                         .WithMany("properties")
-                        .HasForeignKey("ProjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProjectId");
 
                     b.Navigation("Project");
                 });

@@ -47,4 +47,8 @@
     <_ContentIncludedByDefault Remove="Views\Shared\AdminLayout.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Contraact\" />
+  </ItemGroup>
+
 </Project>

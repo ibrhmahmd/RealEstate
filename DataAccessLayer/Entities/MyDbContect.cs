@@ -23,5 +23,19 @@ public class MyDbContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Gu
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<User>().ToTable("Users");
+
+        // Explicitly configure the relationship between Contract and User for UserID and AgentID
+        modelBuilder.Entity<Contract>()
+            .HasOne(c => c.Occupant) // Relationship for UserID
+            .WithMany()
+            .HasForeignKey(c => c.OccupantId)
+            .OnDelete(DeleteBehavior.Restrict); // Prevent cascading deletes if needed
+
+        modelBuilder.Entity<Contract>()
+            .HasOne(c => c.Agent) // Relationship for AgentID
+            .WithMany()
+            .HasForeignKey(c => c.AgentId)
+            .OnDelete(DeleteBehavior.Restrict); // Optional: Configure delete behavior
     }
 }
+

@@ -11,11 +11,19 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
-        [Required]
-        public Guid? ProjectID { get; set; }
+        public Guid? ProjectId { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
+
+
+
+        [Required, Range(0, 20)]
+        public int Rooms { get; set; }
+        public int? Longitude { get; set; }
+        public int? Latitude { get; set; }
+        [Required]
+        public bool IsFUrnished { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
