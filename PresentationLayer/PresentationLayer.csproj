@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Properties\ContractPicture\" />
+    <Folder Include="wwwroot\Properties\Contract\" />
     <Folder Include="wwwroot\Properties\userpicture\" />
     <Folder Include="wwwroot\Properties\PropertyPicture\" />
   </ItemGroup>

@@ -5,6 +5,7 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOModels;
 using Microsoft.AspNetCore.Http;
 using PresentationLayer.helper;
+using Humanizer.Localisation;
 namespace PresentationLayer.Controllers
 {
     public class AdminController : Controller
@@ -155,6 +156,19 @@ namespace PresentationLayer.Controllers
 			var payment = await _paymentService.GetAllPaymentsAsync();
 			return View(payment);
 		}
+        public async Task<IActionResult> DownloadFile()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
+            var memory = new MemoryStream();
+            using(var stream = new FileStream(path,FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "application/pdf";
+            var fileName = Path.GetFileName(path);
+            return File(memory , contentType, fileName);
+        }
 
 	}
 }
