@@ -24,8 +24,9 @@ namespace BusinessLayer.Services
         {
             var contracts = await _unitOfWork.ContractsRepository.GetAllAsync();
             return _mapper.Map<List<ContractDTO>>(contracts);
+
         }
-    
+
 
 
 

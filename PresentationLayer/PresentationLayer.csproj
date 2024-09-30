@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,6 +34,10 @@
     <Folder Include="wwwroot\Properties\Contract\" />
     <Folder Include="wwwroot\Properties\userpicture\" />
     <Folder Include="wwwroot\Properties\PropertyPicture\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Contraact\" />
   </ItemGroup>
 
 </Project>

@@ -24,13 +24,15 @@ namespace DataAccessLayer.Entities
 
         [MaxLength(50)]
         public string Location { get; set; }
-		public Guid? ProjectId { get; set; }
-		[Required]
+        public Guid? ProjectId { get; set; }
+        [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
 
+        [Required, Range(0,20)]
+        public int  Rooms{ get; set; }
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
@@ -39,14 +41,14 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public bool IsOccupied { get; set; }
-		[Required, Range(0, 20)]
-		public int Rooms { get; set; }
-		public int? Longitude { get; set; }
-		public int? Latitude { get; set; }
-		[Required]
-		public bool IsFUrnished { get; set; }
+        [Required, Range(0, 20)]
+        public int Rooms { get; set; }
+        public int? Longitude { get; set; }
+        public int? Latitude { get; set; }
+        [Required]
+        public bool IsFUrnished { get; set; }
 
-		// Navigation property
-		public virtual ICollection<Contract>? Contracts { get; set; }
+        // Navigation property
+        public virtual ICollection<Contract>? Contracts { get; set; }
     }
 }

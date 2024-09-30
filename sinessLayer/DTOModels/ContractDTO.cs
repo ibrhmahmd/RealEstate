@@ -21,8 +21,6 @@ namespace BusinessLayer.DTOModels
 		public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
 
-
-
 		// Navigation Properties
 		[ForeignKey("PropertyId")]
 		public virtual Property Property { get; set; }
@@ -33,11 +31,7 @@ namespace BusinessLayer.DTOModels
 		[ForeignKey("AgentId")]
 		public virtual User? Agent { get; set; } // Navigation property for the Agent
 
-
 		public virtual ICollection<Payment>? Payments { get; set; } // Payments associated with the contract
-
-
-
 
 		// Additional Contract Information
 		[Required]

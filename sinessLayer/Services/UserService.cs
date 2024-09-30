@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;

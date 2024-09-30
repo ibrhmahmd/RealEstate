@@ -17,9 +17,19 @@ namespace BusinessLayer.DTOModels
         public IFormFile? PropertyPicture { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
+        public Guid? ProjectId { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
+
+
+
+        [Required, Range(0, 20)]
+        public int Rooms { get; set; }
+        public int? Longitude { get; set; }
+        public int? Latitude { get; set; }
+        [Required]
+        public bool IsFUrnished { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
@@ -35,6 +45,9 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsOccupied { get; set; }
+        public List<string> ImageLinks { get; set; } = new List<string>();
+
+      
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }

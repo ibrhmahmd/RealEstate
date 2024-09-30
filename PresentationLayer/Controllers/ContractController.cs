@@ -1,31 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using BusinessLayer.DTOModels;
+﻿using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace PresentationLayer.Controllers
 {
-    public class UsersController : Controller
+    public class ContractController : Controller
     {
-        private readonly UserService _userService;
+        private readonly ContractService _contractService;
 
-        public UsersController(UserService userService)
+        public ContractController(ContractService contractService)
         {
-            _userService = userService;
+            _contractService = contractService;
         }
 
 
-        // GET: Users
-        public async Task<IActionResult> Index()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
-        }
-
-
-        // GET: Users/Details/5
+        // GET: Contracts/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -35,8 +24,8 @@ namespace PresentationLayer.Controllers
 
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.Value);
-                return View(user);
+                var contract = await _contractService.GetContractByIdAsync(id.Value);
+                return View(contract);
             }
             catch (KeyNotFoundException)
             {
@@ -47,38 +36,31 @@ namespace PresentationLayer.Controllers
 
 
 
-        // GET: Users/Create
+        // GET: Contracts/Create
         public IActionResult Create()
         {
             return View();
         }
 
 
-        // POST: Users/Create
+
+
+        // POST: Contracts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserName,Email,PasswordHash,PhoneNumber")] UserDTO userDto)
+        public async Task<IActionResult> Create([Bind("PropertyID,UserID,StartDate,MonthlyRent,SecurityDeposit")] ContractDTO contractDto)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var createdUser = await _userService.CreateUserAsync(userDto);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Email", ex.Message);
-                }
+                var createdContract = await _contractService.CreateContractAsync(contractDto);
+                return RedirectToAction(nameof(Index));
             }
-            return View(userDto);
+            return View(contractDto);
         }
 
 
 
-
-
-        // GET: Users/Edit/5
+        // GET: Contracts/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -88,8 +70,8 @@ namespace PresentationLayer.Controllers
 
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.Value);
-                return View(user);
+                var contract = await _contractService.GetContractByIdAsync(id.Value);
+                return View(contract);
             }
             catch (KeyNotFoundException)
             {
@@ -97,12 +79,13 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        // POST: Users/Edit/5
+
+        // POST: Contracts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] UserDTO userDto)
+        public async Task<IActionResult> Edit(Guid id, [Bind("PropertyID,UserID,StartDate,MonthlyRent,SecurityDeposit")] ContractDTO contractDto)
         {
-            if (id != userDto.Id)
+            if (id != contractDto.Id)
             {
                 return NotFound();
             }
@@ -111,22 +94,19 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
-                    await _userService.UpdateUserAsync(userDto);
+                    await _contractService.UpdateContractAsync(contractDto);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (KeyNotFoundException)
                 {
                     return NotFound();
                 }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Email", ex.Message);
-                }
             }
-            return View(userDto);
+            return View(contractDto);
         }
 
-        // GET: Users/Delete/5
+        // this method should be end cotract not delete it 
+        // GET: Contracts/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -136,8 +116,8 @@ namespace PresentationLayer.Controllers
 
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.Value);
-                return View(user);
+                var contract = await _contractService.GetContractByIdAsync(id.Value);
+                return View(contract);
             }
             catch (KeyNotFoundException)
             {
@@ -145,20 +125,19 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        // POST: Users/Delete/5
+        // POST: Contracts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             try
             {
-                await _userService.HardDeleteUserAsync(id);
+                await _contractService.SoftDeleteContractAsync(id);
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
             return RedirectToAction(nameof(Index));
         }
     }

@@ -66,7 +66,6 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-
         public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
         {
             try
@@ -160,9 +159,6 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
-        // Soft delete an entity by setting IsDeleted to true
-        // Soft delete an entity by setting IsDeleted to true
         public async Task SoftDeleteAsync(Guid id)
         {
             try
@@ -227,6 +223,11 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception("An error occurred while updating the entity.", ex);
             }
         }
+
+
+
+
+
 
 
         // Method to get by unique property name
