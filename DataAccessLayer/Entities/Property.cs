@@ -42,7 +42,6 @@ namespace DataAccessLayer.Entities
         [Required]
         public bool IsOccupied { get; set; }
         [Required, Range(0, 20)]
-        public int Rooms { get; set; }
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
         [Required]
