@@ -5,6 +5,7 @@ using BusinessLayer.Services;
 using BusinessLayer.DTOModels;
 using Microsoft.AspNetCore.Http;
 using PresentationLayer.helper;
+using Humanizer.Localisation;
 namespace PresentationLayer.Controllers
 {
     public class AdminController : Controller
@@ -12,13 +13,16 @@ namespace PresentationLayer.Controllers
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
         private readonly ContractService _contractService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+		private readonly PaymentService _paymentService;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(PropertyService propertyService, UserService userService , ContractService contractService, IWebHostEnvironment webHostEnvironment)
+        public AdminController(PropertyService propertyService, UserService userService , 
+            ContractService contractService, PaymentService paymentService, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
             _contractService = contractService;
+            _paymentService = paymentService;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -132,9 +136,39 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> ListContracts()
         {
+
             var contracts = await _contractService.GetAllContractsAsync();
             return View(contracts);
         }
+        public async Task<IActionResult> ContractDetails(Guid id)
+        {
 
-    }
+            var contract = await _contractService.GetContractByIdAsync(id);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return View(contract);
+        }
+		public async Task<IActionResult> ListPayments()
+		{
+
+			var payment = await _paymentService.GetAllPaymentsAsync();
+			return View(payment);
+		}
+        public async Task<IActionResult> DownloadFile()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
+            var memory = new MemoryStream();
+            using(var stream = new FileStream(path,FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "application/pdf";
+            var fileName = Path.GetFileName(path);
+            return File(memory , contentType, fileName);
+        }
+
+	}
 }

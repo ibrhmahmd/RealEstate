@@ -24,8 +24,9 @@ namespace PresentationLayer
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<PropertyService>();
             builder.Services.AddScoped<ContractService>();
-            // Add AutoMapper and mapping profile
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
+			builder.Services.AddScoped<PaymentService>();
+			// Add AutoMapper and mapping profile
+			builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             var app = builder.Build();
 

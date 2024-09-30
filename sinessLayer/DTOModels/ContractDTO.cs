@@ -3,78 +3,74 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLayer.DTOModels
 {
-    public class ContractDTO : BaseEntity<Guid>
-    {
-        [Required]
-        public Guid PropertyId { get; set; }
+	public class ContractDTO : BaseEntity<Guid>
+	{
+		[Required]
+		public Guid PropertyId { get; set; }
 
-        [Required]
-        public Guid OccupantId { get; set; } // Renamed UserID to TenantId
+		[Required]
+		public Guid OccupantId { get; set; } // Renamed UserID to TenantId
 
-        public Guid? AgentId { get; set; } // Optional agent who reviewed the contract
+		public Guid? AgentId { get; set; } // Optional agent who reviewed the contract
 
-        [Required]
-        public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
-
-
+		[Required]
+		public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
 
-        // Navigation Properties
-        [ForeignKey("PropertyID")]
-        public virtual Property Property { get; set; }
+		// Navigation Properties
+		[ForeignKey("PropertyId")]
+		public virtual Property Property { get; set; }
 
-        [ForeignKey("TenantId")]
-        public virtual User? Occupant { get; set; } // Renamed User to Tenant
+		[ForeignKey("TenantId")]
+		public virtual User? Occupant { get; set; } // Renamed User to Tenant
 
-        [ForeignKey("AgentId")]
-        public virtual User? Agent { get; set; } // Navigation property for the Agent
+		[ForeignKey("AgentId")]
+		public virtual User? Agent { get; set; } // Navigation property for the Agent
 
+		public virtual ICollection<Payment>? Payments { get; set; } // Payments associated with the contract
 
-        public virtual ICollection<Payment>? Payments { get; set; } // Payments associated with the contract
+		// Additional Contract Information
+		[Required]
+		public DateTime StartDate { get; set; }
 
+		public DateTime? EndDate { get; set; }
 
+		[Required, MaxLength(20)]
+		public string ContractType { get; set; } // Lease, Ownership, etc.
 
+		[Range(0, double.MaxValue)]
+		public decimal? InitialPayment { get; set; } // Initial down payment or security deposit
 
-        // Additional Contract Information
-        [Required]
-        public DateTime StartDate { get; set; }
+		[Range(0, double.MaxValue)]
+		public decimal? RecurringPaymentAmount { get; set; } // Monthly rent or installment amount
 
-        public DateTime? EndDate { get; set; }
+		[Required, MaxLength(20)]
+		public string RecurringPaymentFrequency { get; set; } = "Monthly"; // Monthly, Quarterly, etc.
 
-        [Required, MaxLength(20)]
-        public string ContractType { get; set; } // Lease, Ownership, etc.
+		[Range(0, double.MaxValue)]
+		public decimal? TotalAmount { get; set; } // Total contract amount for sale or lease
 
-        [Range(0, double.MaxValue)]
-        public decimal? InitialPayment { get; set; } // Initial down payment or security deposit
+		[Required]
+		public bool IsConditionCheckRequired { get; set; } = false; // Pre-contract inspections
 
-        [Range(0, double.MaxValue)]
-        public decimal? RecurringPaymentAmount { get; set; } // Monthly rent or installment amount
+		[Required]
+		public decimal LateFee { get; set; } // Late payment fee
 
-        [Required, MaxLength(20)]
-        public string RecurringPaymentFrequency { get; set; } = "Monthly"; // Monthly, Quarterly, etc.
+		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
 
-        [Range(0, double.MaxValue)]
-        public decimal? TotalAmount { get; set; } // Total contract amount for sale or lease
+		public string? Document { get; set; } // Path to the contract document (optional)
 
-        [Required]
-        public bool IsConditionCheckRequired { get; set; } = false; // Pre-contract inspections
+		[Required, MaxLength(200)]
+		public string PropertyLocation { get; set; } // Location of the property
 
-        [Required]
-        public decimal LateFee { get; set; } // Late payment fee
+		public bool IsFurnished { get; set; } = false; // Is the property furnished?
 
-        public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
-
-        public string? Document { get; set; } // Path to the contract document (optional)
-
-        [Required, MaxLength(200)]
-        public string PropertyLocation { get; set; } // Location of the property
-
-        public bool IsFurnished { get; set; } = false; // Is the property furnished?
-
-        [Range(0, 20)]
-        public int Rooms { get; set; } // Number of rooms in the property
-    }
+		[Range(0, 20)]
+		public int Rooms { get; set; } // Number of rooms in the property
+	
+	}
 }

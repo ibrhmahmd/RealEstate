@@ -1,10 +1,14 @@
-﻿using System;
+﻿using DataAccessLayer.Entities;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DataAccessLayer.Entities
+namespace BusinessLayer.DTOModels
 {
-	public class Project : BaseEntity<Guid>
+	public class ProjectDTO : BaseEntity<Guid>
 	{
 		[Required]
 		[MaxLength(200)]
@@ -14,8 +18,7 @@ namespace DataAccessLayer.Entities
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
 		public string Status { get; set; }
-		[ForeignKey("DeveloperCompanyId")]
-		public DeveloperCompany DeveloperCompany { get; set; }
 		public ICollection<Property> properties { get; set; }
+
 	}
 }

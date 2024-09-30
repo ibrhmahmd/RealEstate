@@ -12,7 +12,7 @@ namespace DataAccessLayer.Entities
     public class Property : BaseEntity<Guid>
     {
         [Required, StringLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [MaxLength(200)]
         public string Description { get; set; }
@@ -24,12 +24,7 @@ namespace DataAccessLayer.Entities
 
         [MaxLength(50)]
         public string Location { get; set; }
-
-        public int? Longitude { get; set; }
-        public int? Latitude { get; set; }
-
         public Guid? ProjectId { get; set; }
-        public Project Project { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 
@@ -46,6 +41,10 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public bool IsOccupied { get; set; }
+        [Required, Range(0, 20)]
+        public int Rooms { get; set; }
+        public int? Longitude { get; set; }
+        public int? Latitude { get; set; }
         [Required]
         public bool IsFUrnished { get; set; }
 
