@@ -79,17 +79,19 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>Property Name:</strong> @Model.Name</li>
+                                    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
                                     <li class="list-group-item"><strong>Location:</strong> @Model.Location</li>
-                                    <li class="list-group-item"><strong>Property Description:</strong> @Model.Description</li>
-                                    <li class="list-group-item"><strong>Property Price:</strong> @Model.Price</li>
-                                    <li class="list-group-item"><strong>Property Type:</strong> @Model.Type</li>
+                                    <li class="list-group-item"><strong>Description:</strong> @Model.Description</li>
+                                    <li class="list-group-item"><strong>Price:</strong> @Model.Price</li>
+                                    <li class="list-group-item"><strong>Type:</strong> @Model.Type</li>
                                     <li class="list-group-item"><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
-                                    @*<li class="list-group-item"><strong>Beds:</strong> @Model.Beds</li>
-                                    <li class="list-group-item"><strong>Baths:</strong> @Model.Baths</li> *@
-
-                                </ul>
-                           
+                                    <li class="list-group-item"><strong>Rooms:</strong>@Model.Rooms</li>
+                                    <li class="list-group-item"><strong>Occupied:</strong>@Model.IsOccupied</li>
+                                    <li class="list-group-item"><strong>Furnished:</strong>@Model.IsFUrnished</li>
+                                    <li class="list-group-item"><strong>Furnished:</strong>@Model.IsFUrnished</li>
+                                    <li class="list-group-item"><strong>Project:</strong>@Model.ProjectId</li>
+@*                                     <li class="list-group-item"><strong>Contracts:</strong>@Model.Contracts</li>
+ *@                                </ul>
                             </div>
                         </div>
                         <br />

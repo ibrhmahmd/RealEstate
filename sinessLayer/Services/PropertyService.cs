@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,11 +13,12 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly MyDbContext _context;
+        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper, MyDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = dbContext;
         }
 
 
@@ -24,6 +26,14 @@ namespace BusinessLayer.Services
         public async Task<List<PropertyDTO>> GetAllPropertiesAsync()
         {
             var properties = await _unitOfWork.PropertiesRepository.GetAllAsync();
+            return _mapper.Map<List<PropertyDTO>>(properties);
+        }
+
+
+        public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
+        {
+            var properties = await _context.Properties
+                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted ==false).ToListAsync();
             return _mapper.Map<List<PropertyDTO>>(properties);
         }
 
@@ -115,13 +125,13 @@ namespace BusinessLayer.Services
         // Restore a soft deleted property
         public async Task RestorePropertyAsync(Guid Id)
         {
-            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id); 
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
             if (property == null)
             {
                 throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
-            if (!property.IsDeleted) 
+            if (!property.IsDeleted)
             {
                 throw new InvalidOperationException($"Property with Id {Id} is not deleted and cannot be restored.");
             }

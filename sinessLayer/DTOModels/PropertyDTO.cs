@@ -10,7 +10,6 @@ namespace BusinessLayer.DTOModels
         [Required, StringLength(100)]
         public string Name { get; set; }
 		public Guid? ProjectId { get; set; }
-
 		public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
@@ -22,11 +21,12 @@ namespace BusinessLayer.DTOModels
         public decimal Area { get; set; }
 
 
-
         [Required, Range(0, 20)]
         public int Rooms { get; set; }
+
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
+
         [Required]
         public bool IsFUrnished { get; set; }
 
@@ -44,6 +44,8 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsOccupied { get; set; }
+
+        public PropertStatus? Status { get; set; }
 
         public List<string> ImageLinks { get; set; } = new List<string>();
 

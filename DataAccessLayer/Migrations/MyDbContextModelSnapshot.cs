@@ -92,6 +92,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<decimal?>("InitialPayment")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool?>("IsArcheives")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsConditionCheckRequired")
                         .HasColumnType("bit");
 
@@ -243,9 +246,25 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsLate")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("LateFee")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PaymentMethod")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ReferenceNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
@@ -253,9 +272,14 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContractId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payments");
                 });
@@ -375,6 +399,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Rooms")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -644,6 +671,10 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DataAccessLayer.Entities.User", null)
+                        .WithMany("Payments")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Contract");
                 });
 
@@ -663,7 +694,6 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.Project", null)
                         .WithMany("properties")
                         .HasForeignKey("ProjectId");
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -749,6 +779,8 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DataAccessLayer.Entities.User", b =>
                 {
                     b.Navigation("Contracts");
+
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,10 +21,11 @@ namespace DataAccessLayer.Entities
 		public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
 
+		public bool? IsArcheives { get; set; } = false;
 
 
-		// Navigation Properties
-		[ForeignKey("PropertyId")]
+        // Navigation Properties
+        [ForeignKey("PropertyId")]
 		public virtual Property Property { get; set; }
 
 		[ForeignKey("TenantId")]

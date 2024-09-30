@@ -41,13 +41,26 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public bool IsOccupied { get; set; }
-        [Required, Range(0, 20)]
+
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
+        
         [Required]
         public bool IsFUrnished { get; set; }
 
+        public PropertStatus? Status { get; set; } 
+
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
+    }
+
+
+
+    public enum PropertStatus
+    {
+        Lease,
+        Ownership,
+        Rent
+
     }
 }

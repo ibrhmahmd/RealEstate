@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class isarchievedcontract : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,13 +258,14 @@ namespace DataAccessLayer.Migrations
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Area = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Rooms = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     IsOccupied = table.Column<bool>(type: "bit", nullable: false),
-                    Rooms = table.Column<int>(type: "int", nullable: false),
                     Longitude = table.Column<int>(type: "int", nullable: true),
                     Latitude = table.Column<int>(type: "int", nullable: true),
                     IsFUrnished = table.Column<bool>(type: "bit", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -291,6 +292,7 @@ namespace DataAccessLayer.Migrations
                     OccupantId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AgentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PaymentMethodId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsArcheives = table.Column<bool>(type: "bit", nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ContractType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -348,8 +350,14 @@ namespace DataAccessLayer.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ContractId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PaymentMethod = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ReferenceNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    IsLate = table.Column<bool>(type: "bit", nullable: true),
+                    LateFee = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -366,6 +374,11 @@ namespace DataAccessLayer.Migrations
                         principalTable: "Contracts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Payments_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -431,6 +444,11 @@ namespace DataAccessLayer.Migrations
                 name: "IX_Payments_ContractId",
                 table: "Payments",
                 column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_UserId",
+                table: "Payments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_DeveloperCompanyId",

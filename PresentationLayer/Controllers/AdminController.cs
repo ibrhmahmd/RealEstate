@@ -6,8 +6,10 @@ using BusinessLayer.DTOModels;
 using Microsoft.AspNetCore.Http;
 using PresentationLayer.helper;
 using Humanizer.Localisation;
+using Microsoft.AspNetCore.Authorization;
 namespace PresentationLayer.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;

@@ -32,8 +32,7 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> Properties()
         {
-
-            var properties = await _propertyService.GetAllPropertiesAsync();
+            var properties = await _propertyService.GetAvailablePropertiesAsync();
             return View("Properties",properties);
         }
 
