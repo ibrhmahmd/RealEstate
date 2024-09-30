@@ -5,6 +5,7 @@ using DataAccessLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 namespace BusinessLayer.Services
 {
     public class ContractService
@@ -19,11 +20,14 @@ namespace BusinessLayer.Services
         }
 
         // Get all Contracts
-        public async Task<IQueryable<ContractDTO>> GetAllContractsAsync()
+        public async Task<List<ContractDTO>> GetAllContractsAsync()
         {
             var contracts = await _unitOfWork.ContractsRepository.GetAllAsync();
-            return _mapper.Map<IQueryable<ContractDTO>>(contracts);
+            return _mapper.Map<List<ContractDTO>>(contracts);
+
         }
+
+
 
 
         // Get all contracts including soft deleted

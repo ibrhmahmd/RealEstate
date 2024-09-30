@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,6 +10,10 @@ namespace BusinessLayer.DTOModels
         [Required, StringLength(100)]
         public string Name { get; set; }
 
+        public string? PropertyPictureUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? PropertyPicture { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
         public Guid? ProjectId { get; set; }

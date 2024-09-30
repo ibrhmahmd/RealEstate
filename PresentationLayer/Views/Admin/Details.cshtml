@@ -90,55 +90,34 @@
 
 @model BusinessLayer.DTOModels.UserDTO
 @{
-    Layout = null;
-}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-    <style>
-        .table-container {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+    ViewData["Title"] = "User Details";
+    ViewData["ActionName"] = "Users";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 
-    </style>
-</head>
-<body>
-    <!-- Page Title -->
-    <div class="page-title" data-aos="fade">
-        <div class="heading">
-            <div class="container">
-                <div class="row d-flex justify-content-center text-center">
-                    <div class="col-lg-8">
-                        <h1>User Details</h1>
-                        <p class="mb-0"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav class="breadcrumbs">
-            <div class="container">
-                <ol>
-                    <li><a href="~/Admin/View.cshtml">Admin</a></li>
-                    <li class="current">User Management</li>
-                    <li class="current">User details</li>
-                </ol>
-            </div>
-        </nav>
-    </div><!-- End Page Title -->
+}
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+}
+@section content {
+
+	
     <div class="container table-container">
 
         <div class="container mt-3">
             <form method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
 
-       
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" readonly />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
                 <div class="form-group">
                     <label asp-for="Email" class="control-label"></label>
                     <input asp-for="Email" class="form-control" readonly />
@@ -158,10 +137,9 @@
             </form>
         </div>
         <br />
-     
-      
+     }
+          @section scripts {
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-</body>
-</html>
+          }

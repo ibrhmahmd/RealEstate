@@ -1,5 +1,10 @@
 ﻿@model BusinessLayer.DTOModels.PropertyDTO 
+@{
+    ViewData["Title"] = "Property Details";
+    ViewData["ActionName"] = "Property";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 
+}
 @section Styles {
     <!-- Add your CSS styles here -->
     <link rel="stylesheet" href="~/assets/css/property-details.css">
@@ -20,9 +25,7 @@
 @section Content {
    
         <br />
-        <br />
-        <br />
-        <br />
+  
         <!-- Page Title -->
      <div class="container">
 
@@ -57,14 +60,10 @@
                             </script>
                             <div class="swiper-wrapper align-items-center">
                                 <div class="swiper-slide">
-                                    <img src="~/assets/img/property-slide/property-slide-1.jpg" alt="Property Image 1">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="~/assets/img/property-slide/property-slide-2.jpg" alt="Property Image 2">
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="~/assets/img/property-slide/property-slide-3.jpg" alt="Property Image 3">
-                                </div>
+                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img">
+
+                            </div>
+                               
                             </div>
                             <div class="swiper-button-prev"></div>
                             <div class="swiper-button-next"></div>

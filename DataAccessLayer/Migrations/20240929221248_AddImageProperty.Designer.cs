@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240929210756_addcontract")]
-    partial class addcontract
+    [Migration("20240929221248_AddImageProperty")]
+    partial class AddImageProperty
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -373,6 +373,9 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PropertyPictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Rooms")
                         .HasColumnType("int");

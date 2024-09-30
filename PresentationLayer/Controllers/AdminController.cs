@@ -3,20 +3,23 @@ using System;
 using System.Threading.Tasks;
 using BusinessLayer.Services;
 using BusinessLayer.DTOModels;
-
+using Microsoft.AspNetCore.Http;
+using PresentationLayer.helper;
 namespace PresentationLayer.Controllers
 {
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
-  
+        private readonly ContractService _contractService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(PropertyService propertyService, UserService userService)
+        public AdminController(PropertyService propertyService, UserService userService , ContractService contractService, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
-
+            _contractService = contractService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // Property CRUD Operations
@@ -28,6 +31,13 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
+            if (propertyDto.PropertyPicture != null)
+            {
+
+                var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
+                propertyDto.PropertyPictureUrl = fileName;
+            }
+         
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
@@ -39,6 +49,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> EditProperty(Guid id)
         {
             var property = await _propertyService.GetPropertyByIdAsync(id);
+
             if (property == null)
             {
                 return NotFound();
@@ -49,6 +60,12 @@ namespace PresentationLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProperty(PropertyDTO propertyDto)
         {
+            if (propertyDto.PropertyPicture != null)
+            {
+
+                var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
+                propertyDto.PropertyPictureUrl = fileName;
+            }
             if (ModelState.IsValid)
             {
                 await _propertyService.UpdatePropertyAsync(propertyDto);
@@ -113,6 +130,11 @@ namespace PresentationLayer.Controllers
             }
             return View(user);
         }
-    
+        public async Task<IActionResult> ListContracts()
+        {
+            var contracts = await _contractService.GetAllContractsAsync();
+            return View(contracts);
+        }
+
     }
 }

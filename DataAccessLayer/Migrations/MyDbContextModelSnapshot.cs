@@ -371,6 +371,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("PropertyPictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Rooms")
                         .HasColumnType("int");
 

@@ -1,5 +1,10 @@
 ﻿@model BusinessLayer.DTOModels.PropertyDTO
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["ActionName"] = "Property";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 
+}
 @section Styles {
     <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
@@ -12,28 +17,10 @@
 }
 
 @section content {
-    <!-- Page Title -->
-    <div class="page-title" data-aos="fade">
-        <div class="heading">
-            <div class="container">
-                <div class="row d-flex justify-content-center text-center">
-                    <div class="col-lg-8">
-                        <h1>Edit Property</h1>
-                        <p class="mb-0"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <nav class="breadcrumbs">
-            <div class="container">
-                <ol>
-                    <li><a href="~/Admin/View.cshtml">Admin</a></li>
-                    <li a href="~/Admin/AdminListProperties.cshtml">Property Management</li>
-                    <li class="current">Edit Property</li>
-                </ol>
-            </div>
-        </nav>
-    </div><!-- End Page Title -->
+   
+        <!-- Page Title -->
+<br />
+
         <!-- Edit Property Card -->
        
             <div class="row justify-content-center">
@@ -43,7 +30,7 @@
                             <h5 class="card-title">Add New Property</h5>
                         </div>
                         <div class="card-body">
-                            <form id="editPropertyForm" asp-action="EditProperty" asp-controller="Admin" method="post">
+                            <form id="editPropertyForm" asp-action="EditProperty" enctype="multipart/form-data" asp-controller="Admin" method="post">
                                 <!-- Hidden input for Property Id -->
                                 <input type="hidden" asp-for="Id" />
 
@@ -52,7 +39,19 @@
                                     <label asp-for="Name" class="form-label"></label>
                                     <input asp-for="Name" class="form-control" id="editPropertyName" required>
                                 </div>
+                        <div class="mb-3">
 
+                            <label asp-for="PropertyPicture" class="control-label"></label>
+                            <div class="custom-file">
+
+                                <input asp-for="PropertyPicture" class="form-control" />
+
+                            </div>
+                            <span asp-validation-for="PropertyPicture" class="text-danger"></span>
+
+
+                        </div>
+                      
                                 <!-- Property Address -->
                                 <div class="mb-3">
                                     <label asp-for="Location" class="form-label"></label>
