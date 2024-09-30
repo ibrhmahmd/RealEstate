@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class AddM : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -258,11 +258,11 @@ namespace DataAccessLayer.Migrations
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Area = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Rooms = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     IsOccupied = table.Column<bool>(type: "bit", nullable: false),
-                    Rooms = table.Column<int>(type: "int", nullable: false),
-                    Longitude = table.Column<int>(type: "int", nullable: true),
+                    Longitude = table.Column<int>(type: "int", nullable: false),
                     Latitude = table.Column<int>(type: "int", nullable: true),
                     IsFUrnished = table.Column<bool>(type: "bit", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),

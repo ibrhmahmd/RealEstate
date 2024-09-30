@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240929220010_init")]
-    partial class init
+    [Migration("20240930133407_AddM")]
+    partial class AddM
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -361,6 +361,7 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("Longitude")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
