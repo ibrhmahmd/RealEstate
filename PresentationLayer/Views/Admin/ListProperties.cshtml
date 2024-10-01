@@ -1,4 +1,5 @@
-﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+﻿@using BusinessLayer.DTOModels
+@model List<BusinessLayer.DTOModels.PropertyDTO>
 @{
     ViewData["Title"] = "Property List";
     ViewData["ActionName"] = "Property";
@@ -31,10 +32,10 @@
                         <th>Location</th>
                         <th>Project</th>
                         <th>Area</th>
-                        <th>Price</th>
+						<th>Price</th>
+						<th>Rooms</th>
                         <th>Type</th>
-                        <th></th>
-						<th></th>
+						<th>Status</th>
 						<th>Actions</th>
 					
                     </tr>
@@ -42,15 +43,23 @@
                 <tbody id="UserTable">
                     @foreach (var property in Model)
                     {
+                    var statusClass = property.Status == PropertStatus.Lease ? "Lease" :
+                    property.Status == PropertStatus.Rent ? "Rent" :
+                    property.Status == PropertStatus.Ownership ? "Ownership" : "";
+
                         <tr>
                             <td>@property.Name</td>
                             <td>@property.Location</td>
                             <td>@property.Description</td>
                             <td>@property.Area</td>
                             <td>@property.Price</td>
+                            <td>@property.Rooms</td>
                             <td>@property.Type</td>
-                                <td></td>
-                            <td></td>
+                            
+                            <td><span class="status-label @statusClass">@property.Status</span></td>
+                       
+                    
+
                             <td>
                                 <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
                                     <i class="fas fa-edit"></i> Edit
@@ -71,9 +80,9 @@
             <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
                 <i class="fas fa-rotate-back"></i> Back
             </a>
-            <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-custom btn-details">
+          @*   <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-custom btn-details">
                 <i class="fas fa-info-circle"></i> Download
-            </a>
+            </a> *@
         </div>
     </div>
 

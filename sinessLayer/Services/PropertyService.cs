@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,11 +13,14 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly MyDbContext _context;
 
-        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper)
+        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper,
+            MyDbContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
 
@@ -51,7 +55,12 @@ namespace BusinessLayer.Services
             return _mapper.Map<PropertyDTO>(property);
         }
 
-
+        public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
+        {
+            var properties = await _context.Properties
+                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted == false).ToListAsync();
+            return _mapper.Map<List<PropertyDTO>>(properties);
+        }
 
         // Create a new property
         public async Task<PropertyDTO> CreatePropertyAsync(PropertyDTO propertyDto)

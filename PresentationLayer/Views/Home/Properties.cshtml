@@ -1,81 +1,177 @@
-﻿@{
+﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+@{
     Layout = "_Layout";
+    var uniqueLocations = Model.Select(p => p.Location).Distinct().ToList();
 }
 
 @section Styles {
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet" />
-    <link href="~/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" />
-    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 }
 
-@section Content {
-    <main class="main">
-        <!-- Page Title -->
-        <div class="page-title" data-aos="fade">
-            <div class="heading">
-                <div class="container">
-                    <div class="row d-flex justify-content-center text-center">
-                        <div class="col-lg-8">
-                            <h1>Properties</h1>
-                            <p class="mb-0">Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas consequatur ut a odio voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi ratione sint. Sit quaerat ipsum dolorem.</p>
-                        </div>
+@section content {
+    <br />
+    <div class="page-title" data-aos="fade">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1>Properties</h1>
+                        <p class="mb-0"></p>
                     </div>
                 </div>
             </div>
-            <nav class="breadcrumbs">
-                <div class="container">
-                    <ol>
-                        <li><a href="~/index.html">Home</a></li>
-                        <li class="current">Properties</li>
-                    </ol>
-                </div>
-            </nav>
-        </div><!-- End Page Title -->
-        <!-- Real Estate Section -->
-        <section id="real-estate" class="real-estate section">
+        </div>
+        <nav class="breadcrumbs">
             <div class="container">
-                <div class="row gy-4">
-                    @* Example property items with links to PropertySingle.cshtml *@
-                    @for (int i = 1; i <= 6; i++)
-                    {
-                        <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                            <div class="card">
-                                <img src="~/assets/img/properties/property-1.jpg" alt="Property @i" class="img-fluid" />
-                                <div class="card-body">
-                                    <span class="sale-rent">Rent | $1200</span>
-                                    <h3><a href="~/PropertySingle.cshtml?id=@i" class="stretched-link">204 Mount Olive Road Two</a></h3>
-                                    <div class="card-content d-flex flex-column justify-content-center text-center">
-                                        <div class="row propery-info">
-                                            <div class="col">Area</div>
-                                            <div class="col">Beds</div>
-                                            <div class="col">Baths</div>
-                                            <div class="col">Garages</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col">340m2</div>
-                                            <div class="col">5</div>
-                                            <div class="col">2</div>
-                                            <div class="col">1</div>
+                <ol>
+                    <li><a href="~/index.html">Home</a></li>
+                    <li class="current">Properties</li>
+                </ol>
+            </div>
+        </nav>
+    </div>
+
+    </div>
+    <div class="container">
+   
+
+        <div class="header-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+            <select class="form-select mx-3" id="locationSelect" name="location">
+                <option value="">State</option>
+                @foreach (var location in uniqueLocations)
+                {
+                    <option value="@location">@location</option>
+                }
+            </select>
+
+            <!-- Dropdown for Type -->
+            <select class="form-select mx-3" id="typeSelect" name="type">
+                <option value="">Type</option>
+                <option value="Apartment">Apartment</option>
+                <option value="House">House</option>
+                <option value="Commercial">Commercial</option>
+            </select>
+
+            <!-- Radio Buttons for Status -->
+            <div class="d-flex align-items-center mx-3">
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="All" id="statusAll" checked>
+                    <label class="form-check-label" for="statusAll">All</label>
+                </div>
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="Lease" id="statusLease">
+                    <label class="form-check-label" for="statusLease">Lease</label>
+                </div>
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="Ownership" id="statusOwnership">
+                    <label class="form-check-label" for="statusOwnership">Ownership</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" value="Rent" id="statusRent">
+                    <label class="form-check-label" for="statusRent">Rent</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="container table-container">
+            <section id="real-estate" class="real-estate section">
+                <div class="container">
+                    <div class="row gy-4">
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var property in Model)
+                            {
+                                <div class="col-xl-4 col-md-6 property-card" data-aos="fade-up" data-aos-delay="100" data-location="@property.Location" data-type="@property.Type" data-status="@property.Status">
+                                    <div class="card">
+                                        <img src="~/assets/img/properties/property-1.jpg" alt="Property Image" class="img-fluid" />
+                                        <div class="card-body">
+                                            <span class="sale-rent">@property.Type | @property.Status</span>
+                                            <h3>
+                                                <a href="@Url.Action("Details", "Properties", new { id = property.Id })" class="stretched-link">@property.Name</a>
+                                            </h3>
+                                            <div class="card-content d-flex flex-column justify-content-center text-center">
+                                                <div class="row property-info">
+                                                    <div class="col">Type</div>
+                                                    <div class="col">Area</div>
+                                                    <div class="col">Location</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">@property.Type</div>
+                                                    <div class="col">@property.Area</div>
+                                                    <div class="col">@property.Location</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col text-center">
+                                <p>No properties found.</p>
                             </div>
-                        </div>
-
-                        <!-- End Property Item -->
-                    }
+                        }
+                    </div>
                 </div>
-            </div>
-        </section><!-- End Real Estate Section -->
-    </main><!-- End Main -->
+            </section>
+        </div>
+    </div>
+    <br />
 }
 
-@section Scripts {
-    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/vendor/aos/aos.js"></script>
-    <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- Main JS File -->
     <script src="~/assets/js/main.js"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            function filterProperties() {
+                var searchValue = $('#searchInput').val().toLowerCase();
+                var locationValue = $('#locationSelect').val().toLowerCase();
+                var typeValue = $('#typeSelect').val().toLowerCase();
+                var statusValue = $('input[name="status"]:checked').val();
+
+                $('.property-card').filter(function () {
+                    var cardLocation = $(this).data('location').toLowerCase();
+                    var cardType = $(this).data('type').toLowerCase();
+                    var cardStatus = $(this).data('status');
+
+                    // Check if the card matches all criteria
+                    var isVisible =
+                        (searchValue === '' || $(this).text().toLowerCase().indexOf(searchValue) > -1) &&
+                        (locationValue === '' || cardLocation === locationValue) &&
+                        (typeValue === '' || cardType === typeValue) &&
+                        (statusValue === 'All' || cardStatus === statusValue);
+
+                    $(this).toggle(isVisible);
+                });
+            }
+
+            // Search function
+            $('#searchInput').on('keyup', filterProperties);
+
+            // Location filter
+            $('#locationSelect').on('change', filterProperties);
+
+            // Type filter
+            $('#typeSelect').on('change', filterProperties);
+
+            // Status filter
+            $('input[name="status"]').on('change', filterProperties);
+        });
+    </script>
 }

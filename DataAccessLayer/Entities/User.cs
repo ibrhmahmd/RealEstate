@@ -16,5 +16,6 @@ namespace DataAccessLayer.Entities
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
         public virtual ICollection<Contract>? Contracts { get; set; }
+        public virtual ICollection<Payment>? Payments { get; set; }
     }
 }

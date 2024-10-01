@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
     <style>
         .custom-card-container {
-            max-width: 400px; /* Set a custom width for the card */
-            margin-top: 20px; /* Add space after the header */
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
     </style>
 }
@@ -22,84 +28,83 @@
 <br />
 
         <!-- Edit Property Card -->
-       
-            <div class="row justify-content-center">
-                <div class="col-md-6 custom-card-container">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Add New Property</h5>
-                        </div>
-                        <div class="card-body">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Edit Property</h5>
+                </div>
+                <div class="card-body">
                             <form id="editPropertyForm" asp-action="EditProperty" enctype="multipart/form-data" asp-controller="Admin" method="post">
-                                <!-- Hidden input for Property Id -->
-                                <input type="hidden" asp-for="Id" />
-
-                                <!-- Property Name -->
-                                <div class="mb-3">
-                                    <label asp-for="Name" class="form-label"></label>
-                                    <input asp-for="Name" class="form-control" id="editPropertyName" required>
-                                </div>
+                     
+                                <!-- Property Details Fields -->
                         <div class="mb-3">
-
-                            <label asp-for="PropertyPicture" class="control-label"></label>
-                            <div class="custom-file">
-
-                                <input asp-for="PropertyPicture" class="form-control" />
-
-                            </div>
-                            <span asp-validation-for="PropertyPicture" class="text-danger"></span>
-
-
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <input asp-for="Name" class="form-control" id="propertyName" required>
                         </div>
-                      
-                                <!-- Property Address -->
-                                <div class="mb-3">
-                                    <label asp-for="Location" class="form-label"></label>
-                                    <input asp-for="Location" class="form-control" id="editPropertyAddress" required>
-                                </div>
+                        <div class="mb-3">
+                            <label asp-for="PropertyPicture" class="form-label">Property Picture</label>
+                            <input asp-for="PropertyPicture" type="file" class="form-control" />
+                        </div>
 
-                                <!-- Property Description -->
-                                <div class="mb-3">
-                                    <label asp-for="Description" class="form-label"></label>
-                                    <textarea asp-for="Description" class="form-control" id="editPropertyDescription" required></textarea>
-                                </div>
+                        <div class="mb-3">
+                            <label asp-for="Location" class="form-label">Location</label>
+                            <input asp-for="Location" class="form-control" id="location" required>
+                        </div>
 
-                                <!-- Property Area (sqft) -->
-                                <div class="mb-3">
-                                    <label asp-for="Area" class="form-label"></label>
-                                    <input asp-for="Area" class="form-control" id="editPropertyArea" type="number" required>
-                                </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" id="propertyDescription" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Area" class="form-label">Area (sqft)</label>
+                            <input asp-for="Area" class="form-control" id="propertyArea" type="number" min="200" max="10000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Price ($)</label>
+                            <input asp-for="Price" class="form-control" id="propertyPrice" type="number" min="10000" max="1000000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Rooms" class="form-label">Number of Rooms</label>
+                            <input asp-for="Rooms" class="form-control" id="propertyRooms" type="number" min="1" max="20" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Type" class="form-label">Type</label>
+                            <select asp-for="Type" class="form-select" id="propertyType" required>
+                                <option value="Apartment">Apartment</option>
+                                <option value="House">House</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                        </div>
 
-                                <!-- Property Price ($) -->
-                                <div class="mb-3">
-                                    <label asp-for="Price" class="form-label"></label>
-                                    <input asp-for="Price" class="form-control" id="editPropertyPrice" type="number" required>
-                                </div>
+                        <!-- Property Status Section -->
+                        <h5 class="mb-3">Property Status</h5>
+                        <div class="mb-3 checkbox-container">
+                            <div class="form-check">
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" id="propertyAvailable" required>
+                                <label class="form-check-label" for="propertyAvailable">Is Available</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="IsOccupied" class="form-check-input" type="checkbox" id="propertyOccupied">
+                                <label class="form-check-label" for="propertyOccupied">Is Occupied</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="IsFUrnished" class="form-check-input" type="checkbox" id="propertyFurnished">
+                                <label class="form-check-label" for="propertyFurnished">Is Furnished</label>
+                            </div>
+                        </div>
 
-                                <!-- Property Type -->
-                                <div class="mb-3">
-                                    <label asp-for="Type" class="form-label"></label>
-                                    <select asp-for="Type" class="form-select" id="editPropertyType" required>
-                                        <option value="">Select Type</option>
-                                        <option value="Apartment">Apartment</option>
-                                        <option value="House">House</option>
-                                        <option value="Commercial">Commercial</option>
-                                    </select>
-                                </div>
-
-                                <!-- Update Button -->
-                                <button type="submit" class="btn btn-success">Update Property</button>
-                        <a style="margin-left:480px" asp-action="ListProperties" asp-controller="Admin" class="btn btn-success">
+                        <!-- Save Property Button -->
+                        <button type="submit" class="btn btn-success">Update Property</button>
+                        <a style="margin-left:485px" asp-action="ListProperties" asp-controller="Admin" class="btn btn-success">
                             <i class="fas fa-rotate-back"></i> Back
                         </a>
-                            </form>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-          
             </div>
-   
-    
+        </div>
+    </div>
     <br />
 }
 
