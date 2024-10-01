@@ -165,9 +165,18 @@ namespace PresentationLayer.Controllers
             }
             return View(pay);
         }
+
         public async Task<IActionResult> Terminate(Guid id)
         {
-            await _contractService.TerminateAsync(id);
+            try
+            {
+                await _contractService.TerminateAsync(id);
+                TempData["SuccessMessage"] = "Contract terminated successfully.";
+            }
+            catch (KeyNotFoundException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
             return RedirectToAction("ListContracts");
         }
         public async Task<IActionResult> DownloadFile()

@@ -120,20 +120,35 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
-        public async Task Terminate(Guid id)
+        public async Task<bool> Terminate(Guid contractId)
         {
-            var entity = await GetByIdAsync(id);
-            if (entity != null)
+            try
             {
-                var ter = entity as dynamic; 
-                ter.IsTerminated = true;
-                await SaveChangesAsync();
+                // Retrieve the contract from the database using the contractId
+                var contract = await Context.Set<T>().FindAsync(contractId);
+
+                // Check if the contract exists
+                if (contract == null)
+                {
+                    return false; // Contract not found
+                }
+
+                // Use dynamic to access the IsDeleted property
+                var deletedEntity = contract as dynamic;
+                deletedEntity.IsDeleted = true; // Set IsDeleted to true
+                deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
+
+                // Save the changes to the database
+                await Context.SaveChangesAsync();
+
+                return true; // Indicate that the termination was successful
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("Entity not found for soft deletion.");
+                throw new Exception($"An error occurred while terminating the contract with ID {contractId}.", ex);
             }
         }
+
 
         // Insert a new entity
         public async Task InsertAsync(T entity)

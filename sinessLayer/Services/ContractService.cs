@@ -103,15 +103,22 @@ namespace BusinessLayer.Services
 
         public async Task TerminateAsync(Guid id)
         {
+            // Retrieve the contract from the repository
             var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+
+            // Check if the contract exists
             if (contract == null)
             {
                 throw new KeyNotFoundException($"Contract with ID {id} not found.");
             }
 
+            // Call the repository's Terminate method to mark it as deleted
             await _unitOfWork.ContractsRepository.Terminate(id);
+
+            // Save changes
             await _unitOfWork.SaveAsync();
         }
+
 
 
         // Hard delete a contract
