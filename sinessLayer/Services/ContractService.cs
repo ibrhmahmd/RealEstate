@@ -12,11 +12,13 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly MyDbContext _context;
 
-        public ContractService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ContractService(IUnitOfWork unitOfWork, IMapper mapper, MyDbContext context)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = context;
         }
 
         // Get all Contracts
@@ -138,5 +140,27 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+
+
+        public async Task EndContractAsync(Guid id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} not found.");
+            }
+
+            if (contract.IsTerminated ?? false) // Check if the contract is already terminated
+            {
+                throw new InvalidOperationException($"Contract with ID {id} is already terminated.");
+            }
+
+            contract.IsTerminated = true;
+            contract.EndDate = DateTime.Now; // Set the end date to the current date when terminating
+
+            // Update the contract in the database
+            _unitOfWork.ContractsRepository.UpdateAsync(contract);
+            await _unitOfWork.SaveAsync();
+        }
     }
 }

@@ -1,0 +1,79 @@
+﻿@model BusinessLayer.DTOModels.ContractDTO
+
+@{
+    ViewBag.Title = "Create Contract";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Create New Contract</h2>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Create", "Contract", FormMethod.Post))
+            {
+                @* Instructions for users *@
+                <p class="text-muted">Please fill in the details for the new contract.</p>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.PropertyLocation, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.PropertyLocation, new { @class = "form-control", @placeholder = "Enter property location" })
+                    @Html.ValidationMessageFor(model => model.PropertyLocation, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.StartDate, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.EndDate, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ContractType, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.ContractType, new { @class = "form-control", @placeholder = "Enter contract type (e.g., Lease)" })
+                    @Html.ValidationMessageFor(model => model.ContractType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.InitialPayment, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.InitialPayment, new { @class = "form-control", @type = "number", @placeholder = "Enter initial payment" })
+                    @Html.ValidationMessageFor(model => model.InitialPayment, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.RecurringPaymentAmount, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.RecurringPaymentAmount, new { @class = "form-control", @type = "number", @placeholder = "Enter recurring payment amount" })
+                    @Html.ValidationMessageFor(model => model.RecurringPaymentAmount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.RecurringPaymentFrequency, new { @class = "form-control", @placeholder = "Enter payment frequency (e.g., Monthly)" })
+                    @Html.ValidationMessageFor(model => model.RecurringPaymentFrequency, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.LateFee, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.LateFee, new { @class = "form-control", @type = "number", @placeholder = "Enter late fee amount" })
+                    @Html.ValidationMessageFor(model => model.LateFee, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.IsFurnished, new { @class = "form-label" })
+                    @Html.CheckBoxFor(model => model.IsFurnished, new { @class = "form-check-input" })
+                    <label class="form-check-label" for="IsFurnished">Is this property furnished?</label>
+                    @Html.ValidationMessageFor(model => model.IsFurnished, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Create Contract</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

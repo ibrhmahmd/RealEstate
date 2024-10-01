@@ -138,7 +138,7 @@
                                 <li><strong>Current State:</strong> <span>@Model.IsOccupied</span></li>
                             </ul>
                             <!-- Open Contract Button -->
-                            <a href="@Url.Action("openContract", "Contract")" class="btn btn-primary">Open Contract</a>
+                            <a href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" class="btn btn-primary">Open Contract</a>
                         </div>
                     </div>
                 </div>

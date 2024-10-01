@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Open Lease Contract";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+      <!-- Use your existing layout page here -->
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-center">Open Lease Contract</h2>
+            <!-- Embed the PDF directly using an iframe or object tag -->
+            <iframe src="@Url.Action("GetLocalLeaseContract", "LeaseContract")" width="100%" height="800px">
+                Your browser does not support iframes.
+            </iframe>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <!-- Load PDF.js as a module -->
+    <script type="module">
+        import * as pdfjsLib from '~/pdfjs/pdf.mjs';
+
+        // Set the path for the PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '~/pdfjs/pdf.worker.mjs';
+
+        // Path to the local PDF file served by the controller
+        const pdfPath = '@Url.Action("GetLocalLeaseContract", "LeaseContract")';
+        const container = document.getElementById("pdf-container");
+
+        // Load and render the PDF
+        pdfjsLib.getDocument(pdfPath).promise.then((pdf) => {
+            for (let i = 1; i <= pdf.numPages; i++) {
+                pdf.getPage(i).then((page) => {
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    container.appendChild(canvas);
+                    page.render({ canvasContext: context, viewport: viewport });
+                });
+            }
+        }).catch((error) => {
+            console.error('Error loading PDF:', error);
+        });
+    </script>
+}
