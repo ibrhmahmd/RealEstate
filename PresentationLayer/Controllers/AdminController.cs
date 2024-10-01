@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using PresentationLayer.helper;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 namespace PresentationLayer.Controllers
 {
   //  [Authorize(Roles = "Admin")]
@@ -17,15 +18,17 @@ namespace PresentationLayer.Controllers
         private readonly UserService _userService;
         private readonly ContractService _contractService;
 		private readonly PaymentService _paymentService;
+        private readonly MyDbContext _context;
 		private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(PropertyService propertyService, UserService userService , 
-            ContractService contractService, PaymentService paymentService, IWebHostEnvironment webHostEnvironment)
+            ContractService contractService, PaymentService paymentService,MyDbContext context ,IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
             _contractService = contractService;
             _paymentService = paymentService;
+            _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -120,14 +123,7 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListUsers");
         }
 
-        // Hard Delete User
-        [HttpPost, ActionName("HardDelete")]
-        public async Task<IActionResult> HardDeleteConfirmed(Guid id)
-        {
-            await _userService.HardDeleteUserAsync(id);
-            return RedirectToAction("ListUsers");
-        }
-
+ 
         // User Details
         public async Task<IActionResult> Details(Guid id)
         {
@@ -160,6 +156,20 @@ namespace PresentationLayer.Controllers
 			var payment = await _paymentService.GetAllPaymentsAsync();
 			return View(payment);
 		}
+        public async Task<IActionResult> PaymentDetails(Guid id)
+        {
+            var pay = await _paymentService.GetPaymenttByIdAsync(id);
+            if (pay == null)
+            {
+                return NotFound();
+            }
+            return View(pay);
+        }
+        public async Task<IActionResult> Terminate(Guid id)
+        {
+            await _contractService.TerminateAsync(id);
+            return RedirectToAction("ListContracts");
+        }
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
@@ -173,6 +183,8 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory , contentType, fileName);
         }
+    
 
-	}
+
+    }
 }

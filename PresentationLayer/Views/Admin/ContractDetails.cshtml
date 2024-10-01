@@ -70,6 +70,9 @@
                         <div class="swiper-button-next"></div>
                         <div class="swiper-pagination"></div>
                     </div>
+                    <br />
+                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
+
                 </div>
 
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
@@ -84,14 +87,21 @@
                                 <li class="list-group-item"><strong>Agent:</strong> @Model.Agent</li>
                                 <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate</li>
                                 <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethodId</li>
-                       
+                                <li class="list-group-item"><strong>Intial Payment:</strong> @Model.InitialPayment</li>
+                                <li class="list-group-item"><strong>Recurring Payment Amount:</strong> @Model.RecurringPaymentAmount</li>
+                                <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
+                                <li class="list-group-item"><strong>Total Amount:</strong> @Model.TotalAmount</li>
+                                <li class="list-group-item"><strong>LateFee:</strong> @Model.LateFee</li>
+                                <li class="list-group-item"><strong>Is Terminated:</strong> @Model.IsTerminated</li>
+                                <li class="list-group-item"><strong>Is Furnished:</strong> @Model.IsFurnished</li>
                             </ul>
 
                         </div>
                     </div>
                     <br />
-                    <a asp-action="ListProperties" style="margin-left:90px" asp-controller="Admin" class="btn btn-success ">Back To List</a>
-
+                   
+                    <a asp-action="Terminate" style="margin-left:100px" asp-controller="Admin" class="btn btn-success ">Terminate</a>
+                  
                 </div>
             </div>
         </div>

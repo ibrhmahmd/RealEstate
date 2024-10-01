@@ -18,6 +18,7 @@ namespace DataAccessLayer.GenericRepository
         Task SoftDeleteAsync(Guid id);
         Task RestoreSoftDeletedAsync(Guid id);
         Task HardDeleteAsync(Guid Id);
+        Task Terminate(Guid Id);
         Task SaveChangesAsync();
     }
 }

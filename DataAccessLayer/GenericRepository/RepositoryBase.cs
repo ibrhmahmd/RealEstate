@@ -120,7 +120,20 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
-
+        public async Task Terminate(Guid id)
+        {
+            var entity = await GetByIdAsync(id);
+            if (entity != null)
+            {
+                var ter = entity as dynamic; 
+                ter.IsTerminated = true;
+                await SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Entity not found for soft deletion.");
+            }
+        }
 
         // Insert a new entity
         public async Task InsertAsync(T entity)

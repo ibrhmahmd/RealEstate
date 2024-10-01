@@ -101,7 +101,17 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task TerminateAsync(Guid id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} not found.");
+            }
 
+            await _unitOfWork.ContractsRepository.Terminate(id);
+            await _unitOfWork.SaveAsync();
+        }
 
 
         // Hard delete a contract
