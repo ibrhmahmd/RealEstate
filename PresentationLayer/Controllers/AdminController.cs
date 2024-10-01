@@ -15,10 +15,10 @@ namespace PresentationLayer.Controllers
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
         private readonly ContractService _contractService;
-		private readonly PaymentService _paymentService;
-		private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly PaymentService _paymentService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(PropertyService propertyService, UserService userService , 
+        public AdminController(PropertyService propertyService, UserService userService,
             ContractService contractService, PaymentService paymentService, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
@@ -59,7 +59,7 @@ namespace PresentationLayer.Controllers
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
-         
+
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
@@ -95,8 +95,8 @@ namespace PresentationLayer.Controllers
             }
             return View(propertyDto);
         }
-    
-       
+
+
         public async Task<IActionResult> SoftDeleteProperty(Guid id)
         {
             await _propertyService.SoftDeletePropertyAsync(id);
@@ -168,25 +168,25 @@ namespace PresentationLayer.Controllers
             }
             return View(contract);
         }
-		public async Task<IActionResult> ListPayments()
-		{
+        public async Task<IActionResult> ListPayments()
+        {
 
-			var payment = await _paymentService.GetAllPaymentsAsync();
-			return View(payment);
-		}
+            var payment = await _paymentService.GetAllPaymentsAsync();
+            return View(payment);
+        }
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
             var memory = new MemoryStream();
-            using(var stream = new FileStream(path,FileMode.Open))
+            using (var stream = new FileStream(path, FileMode.Open))
             {
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
             var contentType = "application/pdf";
             var fileName = Path.GetFileName(path);
-            return File(memory , contentType, fileName);
+            return File(memory, contentType, fileName);
         }
 
-	}
+    }
 }

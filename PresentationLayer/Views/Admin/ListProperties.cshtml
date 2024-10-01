@@ -16,7 +16,7 @@
     <br />
     <div class="container">
         <h2 class="header-title">Property Management</h2>
-       
+
         <div class="header-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
             <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add">Add Property</a>
@@ -33,9 +33,9 @@
                         <th>Price</th>
                         <th>Type</th>
                         <th></th>
-						<th></th>
-						<th>Actions</th>
-					
+                        <th></th>
+                        <th>Actions</th>
+
                     </tr>
                 </thead>
                 <tbody id="PropertiesTable">
@@ -48,7 +48,7 @@
                             <td>@property.Area</td>
                             <td>@property.Price</td>
                             <td>@property.Type</td>
-                                <td></td>
+                            <td></td>
                             <td></td>
                             <td>
                                 <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
@@ -61,7 +61,7 @@
                                     <i class="fas fa-info-circle"></i> Details
                                 </a>
                             </td>
-                    
+
                         </tr>
 
                     }
@@ -102,7 +102,7 @@
 
 
 
-        <div class="services section">
+    <div class="services section">
 
         <div class="container">
 
@@ -143,9 +143,9 @@
                         <p>CRUD on Properties</p>
                     </div>
                 </div><!-- End Service Item -->
-                </div>
-                </div>
-                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @section scripts {
