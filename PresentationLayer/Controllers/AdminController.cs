@@ -9,7 +9,7 @@ using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 namespace PresentationLayer.Controllers
 {
-    //[Authorize(Roles ="Admin")]
+    //[Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
@@ -27,6 +27,22 @@ namespace PresentationLayer.Controllers
             _paymentService = paymentService;
             _webHostEnvironment = webHostEnvironment;
         }
+
+
+        public IActionResult View()
+        {
+            Index();
+            return View("../Admin/view");
+        }
+
+        public IActionResult Index()
+        {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+            Console.WriteLine("User Claims: " + string.Join(", ", claims));
+
+            return View();
+        }
+
 
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties()

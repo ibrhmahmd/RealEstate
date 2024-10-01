@@ -1,31 +1,37 @@
 ﻿using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
+    //[Authorize(Roles = "User, Admin")]
     public class ContractController : Controller
     {
         private readonly ContractService _contractService;
+        private readonly UserService _userService;
         private readonly PropertyService _propertyService;
-        private readonly UserManager<UserDTO> _userManager;
+        private readonly UserManager<User> _userManager;
+        private readonly ILogger<ContractController> _logger;
 
-        public ContractController(ContractService contractService, UserManager<UserDTO> userManager, PropertyService propertyService )
+        public ContractController(
+            ContractService contractService,
+            UserManager<User> userManager,
+            PropertyService propertyService,
+            ILogger<ContractController> logger,
+            UserService userService)
         {
             _contractService = contractService;
             _userManager = userManager;
             _propertyService = propertyService;
+            _logger = logger;
+            _userService = userService;
         }
 
-
-
-
-
-
-
-        // GET: Contracts/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -40,13 +46,11 @@ namespace PresentationLayer.Controllers
             }
             catch (KeyNotFoundException)
             {
+                _logger.LogWarning("Contract with ID {Id} not found.", id);
                 return NotFound();
             }
         }
 
-
-        // GET: Contracts/Create?propertyId=guid
-        // GET: Contracts/Create?propertyId=guid
         public async Task<IActionResult> Create(Guid? propertyId)
         {
             if (propertyId == null)
@@ -54,44 +58,46 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
 
-            // Fetch the PropertyDTO using the propertyId
             var property = await _propertyService.GetPropertyByIdAsync(propertyId.Value);
 
             if (property == null)
             {
-                return NotFound(); // Property not found
+                return NotFound();
             }
 
-            // Prepopulate the ContractDTO model with values from PropertyDTO
             var contractModel = new ContractDTO
             {
                 PropertyId = property.Id,
                 StartDate = DateTime.Now,
-                IsFurnished = property.IsFUrnished, // Assuming PropertyDTO has an IsFurnished property
-                Rooms = property.Rooms // Assuming PropertyDTO has a Rooms property
+                IsFurnished = property.IsFUrnished,
+                Rooms = property.Rooms
             };
 
-            // Check if property.Status has a value
             if (property.Status.HasValue)
             {
-                if (property.Status.Value == PropertStatus.Lease) // Compare with enum value
+                switch (property.Status.Value)
                 {
-                    contractModel.RecurringPaymentFrequency = "Monthly"; // Set rent payment frequency to monthly
-                    contractModel.RecurringPaymentAmount = property.Price / 12; // Monthly rent based on annual price
-                    contractModel.TotalAmount = property.Price; // Total amount is the annual price
-                    contractModel.InitialPayment = (property.Price / 12) * 2; // Two months' rent upfront as initial payment
-                }
-                else if (property.Status.Value == PropertStatus.Ownership) // Compare with enum value
-                {
-                    contractModel.RecurringPaymentFrequency = "Quarterly"; // Assuming ownership is billed quarterly
-                    contractModel.RecurringPaymentAmount = property.Price / 4; // Quarterly payment based on total price
-                    contractModel.TotalAmount = property.Price; // Total amount is the price of the property
-                    contractModel.InitialPayment = (property.Price / 4) * 3; // Three months' payment upfront as initial payment
+                    case PropertStatus.Lease:
+                        contractModel.RecurringPaymentFrequency = "Monthly";
+                        contractModel.RecurringPaymentAmount = property.Price / 12;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 12) * 2;
+                        break;
+
+                    case PropertStatus.Ownership:
+                        contractModel.RecurringPaymentFrequency = "Quarterly";
+                        contractModel.RecurringPaymentAmount = property.Price / 4;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 4) * 3;
+                        break;
+
+                    default:
+                        ModelState.AddModelError("", "Unknown property status.");
+                        return View("~/Views/Contract/Create.cshtml", contractModel);
                 }
             }
             else
             {
-                // Handle cases where property status is null
                 ModelState.AddModelError("", "Property status is not defined.");
                 return View("~/Views/Contract/Create.cshtml", contractModel);
             }
@@ -99,41 +105,45 @@ namespace PresentationLayer.Controllers
             return View("~/Views/Contract/Create.cshtml", contractModel);
         }
 
-
-        // POST: Contracts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PropertyId,StartDate,MonthlyRent,SecurityDeposit,OccupantId,RecurringPaymentFrequency,IsFurnished,Rooms")] ContractDTO contractDto)
+        public async Task<IActionResult> Create( ContractDTO contractDto)
         {
-            // Use UserManager to get the currently logged-in user
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
+            if (contractDto == null)
             {
-                return Unauthorized(); // User is not authenticated or not found
+                return BadRequest("Contract data is required.");
             }
 
-            // Assign the user ID to OccupantId
-            contractDto.OccupantId = user.Id;
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                return Unauthorized();
+            }
+
+            contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     var createdContract = await _contractService.CreateContractAsync(contractDto);
-                    return RedirectToAction(nameof(Details), new { id = createdContract.Id }); // Redirect to Details of created contract
+                    return RedirectToAction(nameof(Details), new { id = createdContract.Id });
                 }
-                catch (Exception ex) // Catch any exceptions during contract creation
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error creating contract.");
                     ModelState.AddModelError("", $"Error creating contract: {ex.Message}");
                 }
             }
 
-            return View(contractDto);
+            return View("ContractSave");
         }
 
 
-        // GET: Contracts/Edit/5
+
+
+
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -144,23 +154,21 @@ namespace PresentationLayer.Controllers
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);
-
-                // Optionally check if the current user is authorized to edit this contract
                 var user = await _userManager.GetUserAsync(User);
                 if (contract.OccupantId != user?.Id)
                 {
-                    return Forbid(); // User is not authorized to edit this contract
+                    return Forbid();
                 }
 
                 return View(contract);
             }
             catch (KeyNotFoundException)
             {
+                _logger.LogWarning("Contract with ID {Id} not found for editing.", id);
                 return NotFound();
             }
         }
 
-        // POST: Contracts/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,PropertyId,OccupantId,StartDate,MonthlyRent,SecurityDeposit,RecurringPaymentFrequency,IsFurnished,Rooms")] ContractDTO contractDto)
@@ -179,10 +187,12 @@ namespace PresentationLayer.Controllers
                 }
                 catch (KeyNotFoundException)
                 {
+                    _logger.LogWarning("Contract with ID {Id} not found during edit.", id);
                     return NotFound();
                 }
-                catch (Exception ex) // Catch any exceptions during contract update
+                catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error updating contract.");
                     ModelState.AddModelError("", $"Error updating contract: {ex.Message}");
                 }
             }
@@ -190,7 +200,6 @@ namespace PresentationLayer.Controllers
             return View(contractDto);
         }
 
-        // GET: Contracts/EndContract/5
         public async Task<IActionResult> EndContract(Guid? id)
         {
             if (id == null)
@@ -201,23 +210,21 @@ namespace PresentationLayer.Controllers
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);
-
-                // Optionally check if the current user is authorized to end this contract
                 var user = await _userManager.GetUserAsync(User);
                 if (contract.OccupantId != user?.Id)
                 {
-                    return Forbid(); // User is not authorized to end this contract
+                    return Forbid();
                 }
 
                 return View(contract);
             }
             catch (KeyNotFoundException)
             {
+                _logger.LogWarning("Contract with ID {Id} not found for ending.", id);
                 return NotFound();
             }
         }
 
-        // POST: Contracts/EndContract/5
         [HttpPost, ActionName("EndContract")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EndContractConfirmed(Guid id)
@@ -225,20 +232,21 @@ namespace PresentationLayer.Controllers
             try
             {
                 await _contractService.EndContractAsync(id);
-                return RedirectToAction(nameof(Index)); // Redirect to index or another appropriate action
+                return RedirectToAction(nameof(Index));
             }
             catch (KeyNotFoundException)
             {
+                _logger.LogWarning("Contract with ID {Id} not found when attempting to end it.", id);
                 return NotFound();
             }
-            catch (Exception ex) // Catch any exceptions during contract ending
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error ending contract.");
                 ModelState.AddModelError("", $"Error ending contract: {ex.Message}");
-                return View(); // Return the same view with the error
+                return View();
             }
         }
 
-        // Optionally, add an Index action to list all contracts
         public async Task<IActionResult> Index()
         {
             var contracts = await _contractService.GetAllContractsAsync();

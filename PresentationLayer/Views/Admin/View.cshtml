@@ -25,11 +25,16 @@
             </div>
         </nav>
     </div><!-- End Page Title -->
+    <!-- Logout Button -->
+    <div class="container text-end">
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+
     <!-- Services Section -->
     <section id="services" class="services section">
-
         <div class="container">
-
             <div class="row gy-4">
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
@@ -52,7 +57,7 @@
                         <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                             <h3>Contracts</h3>
                         </a>
-                        <p>Viewe Contracts.</p>
+                        <p>View Contracts.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -67,7 +72,6 @@
                         <p>CRUD on Properties</p>
                     </div>
                 </div><!-- End Service Item -->
-
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                     <div class="service-item position-relative">

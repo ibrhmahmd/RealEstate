@@ -1,41 +1,45 @@
-@model BusinessLayer.DTOModels.UserDTO
+@model DataAccessLayer.Entities.User
 @{
     ViewData["Title"] = "Login";
-    Layout = "_Layout1";
- // Specify your layout file here
+    Layout = "_Layout1"; // Specify your layout file here
 }
 
-
 <form asp-controller="Account" asp-action="Login" method="post">
-                <img src="~/assets/img/avatar.svg" alt="">
-                <h2 class="title">Welcome</h2>
+    <img src="~/assets/img/avatar.svg" alt="">
+    <h2 class="title">Welcome</h2>
 
-                <!-- Input Email -->
-                <div class="input-div one">
-                    <div class="i">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Email</h5>
-            <input asp-for="Email" type="email" class="input" name="Email" required>
-                    </div>
-                </div>
-                <!-- End Input Email -->
-                <!-- Input Password -->
-                <div class="input-div pass">
-                    <div class="i">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Password</h5>
-            <input asp-for="PasswordHash" type="password" class="input" name="Password" required>
-                    </div>
-                </div>
-                <!-- End Input Password -->
+    <!-- Input Email -->
+    <div class="input-div one">
+        <div class="i">
+            <i class="fas fa-envelope"></i> <!-- Add an icon for email -->
+        </div>
+        <div class="div">
+            <h5>Email</h5>
+            <input asp-for="Email" type="email" class="input" name="email" required>
+        </div>
+    </div>
+    <!-- End Input Email -->
+    <!-- Input Password -->
+    <div class="input-div pass">
+        <div class="i">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="div">
+            <h5>Password</h5>
+            <input asp-for="PasswordHash" type="password" class="input" name="password" required>
+        </div>
+    </div>
+    <!-- End Input Password -->
+    <!-- Remember Me Checkbox -->
+    <div class="input-div remember-me">
+        <input type="checkbox" id="rememberMe" name="rememberMe" />
+        <label for="rememberMe">Remember Me</label>
+    </div>
 
-                <a href="#">Forgot Password?</a>
-                <input type="submit" class="btn" value="Login">
-                <div class="text-center mt-3">
-                    <p style="color: #999;" class="div">Don't have an account? <a asp-controller="Account" asp-action="Register">Register here</a></p>
-                </div>
-            </form>
+    <a href="#">Forgot Password?</a>
+    <input type="submit" class="btn" value="Login">
+
+    <div class="text-center mt-3">
+        <p style="color: #999;" class="div">Don't have an account? <a asp-controller="Account" asp-action="Register">Register here</a></p>
+    </div>
+</form>
