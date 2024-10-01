@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241001152633_UpdatePaymentMethod")]
+    partial class UpdatePaymentMethod
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,7 +113,7 @@ namespace DataAccessLayer.Migrations
                     b.Property<decimal>("LateFee")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("OccupantId")
+                    b.Property<Guid>("OccupantId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("PaymentMethodId")
@@ -643,7 +646,8 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.User", "Occupant")
                         .WithMany()
                         .HasForeignKey("OccupantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("DataAccessLayer.Entities.Property", "Property")
                         .WithMany("Contracts")

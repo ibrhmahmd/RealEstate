@@ -12,13 +12,13 @@ namespace DataAccessLayer.Entities
         [Required]
         public Guid PropertyId { get; set; }
 
-        [Required]
-        public Guid OccupantId { get; set; } // Renamed UserID to TenantId
+       
+        public Guid? OccupantId { get; set; } // Renamed UserID to TenantId
 
         public Guid? AgentId { get; set; } // Optional agent who reviewed the contract
 
-        [Required]
-        public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
+       
+        public Guid? PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
 
         public bool? IsArcheives { get; set; } = false;
