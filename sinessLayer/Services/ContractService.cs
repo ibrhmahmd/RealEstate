@@ -22,7 +22,7 @@ namespace BusinessLayer.Services
         // Get all Contracts
         public async Task<List<ContractDTO>> GetAllContractsAsync()
         {
-            var contracts = await _unitOfWork.ContractsRepository.GetAllAsync();
+            var contracts = await _unitOfWork.ContractsRepository.GetAllAsync(1,5);
             return _mapper.Map<List<ContractDTO>>(contracts);
         }
 

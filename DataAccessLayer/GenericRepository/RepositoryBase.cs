@@ -20,18 +20,18 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
-
-        // Get all records excluding soft-deleted entities
-        public async Task<IQueryable<T>> GetAllAsync()
+        public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
         {
             try
             {
-                return Context.Set<T>().Where(e => EF.Property<bool>(e, "IsDeleted") == false);
+                return Context.Set<T>()
+                              .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                              .Skip((pageNumber - 1) * pageSize)
+                              .Take(pageSize);
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving all records.", ex);
+                throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
 

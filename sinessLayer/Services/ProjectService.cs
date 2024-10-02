@@ -23,7 +23,7 @@ namespace BusinessLayer.Services
         // Get all Projects
         public async Task<IQueryable<ProjectDTO>> GetAllProjectsAsync()
         {
-            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync();
+            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1,5);
             return _mapper.Map<IQueryable<ProjectDTO>>(projects);
         }
 

@@ -22,7 +22,7 @@ namespace PresentationLayer.Controllers // Updated namespace for Web Application
         [Route("Index")] // Set route to /Properties/Index
         public async Task<IActionResult> Index()
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
+            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
             return View("~/View/Home/PropertySingle.cshtml", properties.ToList()); // Return the Index.cshtml view
         }
 
@@ -48,7 +48,7 @@ namespace PresentationLayer.Controllers // Updated namespace for Web Application
         [HttpGet("api/all")]
         public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllProperties()
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
+            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
             return Ok(properties);
         }
 

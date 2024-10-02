@@ -30,7 +30,7 @@ namespace BusinessLayer.Services
         // Get all users
         public async Task<List<User>> GetAllUsersAsync()
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var users = await _unitOfWork.UserRepository.GetAllAsync(1,5);
 
             return users.ToList(); 
         }
@@ -195,7 +195,7 @@ namespace BusinessLayer.Services
         // Authenticate user based on email and password
         public async Task<User> AuthenticateUserAsync(string email, string password)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var users = await _unitOfWork.UserRepository.GetAllAsync(1,5);
             var user = await users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)

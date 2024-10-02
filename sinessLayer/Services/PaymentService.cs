@@ -22,7 +22,7 @@ namespace BusinessLayer.Services
 		// Get all payments
 		public async Task<List<PaymentDTO>> GetAllPaymentsAsync()
 		{
-			var payments = await _unitOfWork.PaymentsRepository.GetAllAsync();
+			var payments = await _unitOfWork.PaymentsRepository.GetAllAsync(1,5);
 			return _mapper.Map<List<PaymentDTO>>(payments);
 		}
 

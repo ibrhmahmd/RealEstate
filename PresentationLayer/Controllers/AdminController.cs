@@ -38,7 +38,7 @@ namespace PresentationLayer.Controllers
             {
                 
             }
-            var properties = await _propertyService.GetAllPropertiesAsync();
+            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
             return View(properties);
             return Unauthorized();
         }

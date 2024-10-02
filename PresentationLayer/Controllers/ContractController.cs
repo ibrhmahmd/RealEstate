@@ -105,6 +105,11 @@ namespace PresentationLayer.Controllers
             return View("~/Views/Contract/Create.cshtml", contractModel);
         }
 
+
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create( ContractDTO contractDto)

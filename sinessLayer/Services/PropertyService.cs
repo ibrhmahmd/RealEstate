@@ -23,9 +23,9 @@ namespace BusinessLayer.Services
 
 
         // Get all properties
-        public async Task<List<PropertyDTO>> GetAllPropertiesAsync()
+        public async Task<List<PropertyDTO>> GetAllPropertiesAsync(int pageNumer, int pagesize)
         {
-            var properties = await _unitOfWork.PropertiesRepository.GetAllAsync();
+            var properties = await _unitOfWork.PropertiesRepository.GetAllAsync(pageNumer,pagesize);
             return _mapper.Map<List<PropertyDTO>>(properties);
         }
 
