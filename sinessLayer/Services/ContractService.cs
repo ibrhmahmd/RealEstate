@@ -159,6 +159,7 @@ namespace BusinessLayer.Services
             {
                 PropertyId = property.Id,
                 PropertyLocation = property.Location,
+                ContractType = property.Status.ToString(),
                 StartDate = DateTime.Now,
                 IsFurnished = property.IsFUrnished,
                 Rooms = property.Rooms
@@ -177,9 +178,9 @@ namespace BusinessLayer.Services
 
                     case PropertStatus.Ownership:
                         contractModel.RecurringPaymentFrequency = "Quarterly";
-                        contractModel.RecurringPaymentAmount = property.Price / 4;
+                        contractModel.RecurringPaymentAmount = Math.Round((property.Price - ((decimal)0.30 * property.Price)) % 24);
                         contractModel.TotalAmount = property.Price;
-                        contractModel.InitialPayment = (property.Price / 4) * 3;
+                        contractModel.InitialPayment = Math.Round((decimal)0.30 * property.Price);
                         break;
 
                     default:
