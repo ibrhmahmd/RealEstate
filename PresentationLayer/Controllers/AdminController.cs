@@ -36,9 +36,10 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
-                var properties = await _propertyService.GetAllPropertiesAsync();
-                return View(properties);
+                
             }
+            var properties = await _propertyService.GetAllPropertiesAsync();
+            return View(properties);
             return Unauthorized();
         }
 
