@@ -142,8 +142,6 @@ namespace PresentationLayer.Controllers
 
 
 
-
-
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -225,27 +223,27 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        [HttpPost, ActionName("EndContract")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EndContractConfirmed(Guid id)
-        {
-            try
-            {
-                await _contractService.EndContractAsync(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (KeyNotFoundException)
-            {
-                _logger.LogWarning("Contract with ID {Id} not found when attempting to end it.", id);
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error ending contract.");
-                ModelState.AddModelError("", $"Error ending contract: {ex.Message}");
-                return View();
-            }
-        }
+        //[HttpPost, ActionName("EndContract")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> EndContractConfirmed(Guid id)
+        //{
+        //    try
+        //    {
+        //        await _contractService.EndContractAsync(id);
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch (KeyNotFoundException)
+        //    {
+        //        _logger.LogWarning("Contract with ID {Id} not found when attempting to end it.", id);
+        //        return NotFound();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error ending contract.");
+        //        ModelState.AddModelError("", $"Error ending contract: {ex.Message}");
+        //        return View();
+        //    }
+        //}
 
         public async Task<IActionResult> Index()
         {

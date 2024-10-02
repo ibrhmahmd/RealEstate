@@ -31,11 +31,15 @@ namespace PresentationLayer.Controllers
             return View();
         }
 
+
+
         public async Task<IActionResult> Properties()
         {
             var properties = await _propertyService.GetAvailablePropertiesAsync();
             return View("Properties",properties);
         }
+
+
 
         public IActionResult Agents()
         {

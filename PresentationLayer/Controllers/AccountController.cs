@@ -25,7 +25,7 @@ namespace PresentationLayer.Controllers
         public IActionResult Admin()
         {
             
-            return View("../Admin/view");
+            return View("~/Views/Admin/view.cshtml");
         }
 
         // GET: /Account/Login
@@ -48,9 +48,10 @@ namespace PresentationLayer.Controllers
                     // Create the claims for the user, including Name and UserID
                     var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, email), 
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), 
-                new Claim("UserId", user.Id.ToString()) 
+                new Claim(ClaimTypes.Name, email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("UserId", user.Id.ToString()),
+                new Claim("Role", user.Role.ToString() )
             };
 
                     // Create the ClaimsIdentity and AuthenticationProperties
@@ -75,7 +76,7 @@ namespace PresentationLayer.Controllers
                     // Redirect based on the role of the user
                     if (roles.Contains("Admin"))
                     {
-                        return RedirectToAction("View", "Admin");
+                        return Admin();
                     }
 
                     return RedirectToAction("Index", "Home");

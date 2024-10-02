@@ -30,14 +30,12 @@
     <!-- Page Title -->
     <div class="container">
 
-        <!-- Real Estate Edit Section -->
 
         <div class="header-container">
             <h1 class="header-title" style="color:darkgreen">Property Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
-                <!-- Property Image Slider -->
                 <div class="col-lg-9" data-aos="fade-up">
                     <div class="portfolio-details-slider swiper init-swiper">
                         <script type="application/json" class="swiper-config">
@@ -61,8 +59,7 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                @*<img style="width:800px" src="@Url.Content("~/properties/contractpicture/" + Model.PropertyPictureUrl)" class="card-img">*@
-
+                                <embed src="@Url.Content("~/properties/Residential Lease Agreement.pdf")" width="800px" height="740px" type="application/pdf" />
                             </div>
 
                         </div>
@@ -74,7 +71,6 @@
                     <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
 
                 </div>
-
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-header">
@@ -100,12 +96,11 @@
                     </div>
                     <br />
 
-                    <a asp-action="Terminate" style="margin-left:100px" asp-controller="Admin" class="btn btn-success ">Terminate</a>
-
+                    <a asp-action="Terminate" asp-controller="Admin" class="btn btn-success btn-sm ">Terminate</a>
+                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
                 </div>
             </div>
         </div>
-        <!-- End Real Estate Edit Section -->
     </div>
 
 }
@@ -113,4 +108,5 @@
 @section Scripts {
     <!-- Add your JS scripts here -->
     <script src="~/assets/js/property-details.js"></script>
+
 }

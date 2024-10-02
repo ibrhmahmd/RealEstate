@@ -7,52 +7,44 @@ using Microsoft.AspNetCore.Http;
 using PresentationLayer.helper;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 namespace PresentationLayer.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
         private readonly ContractService _contractService;
         private readonly PaymentService _paymentService;
+        private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(PropertyService propertyService, UserService userService,
-            ContractService contractService, PaymentService paymentService, IWebHostEnvironment webHostEnvironment)
+            ContractService contractService, PaymentService paymentService, MyDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
             _contractService = contractService;
             _paymentService = paymentService;
+            _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-
-
-        public IActionResult View()
-        {
-            Index();
-            return View("../Admin/view");
-        }
-
-        public IActionResult Index()
-        {
-            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-            Console.WriteLine("User Claims: " + string.Join(", ", claims));
-
-            return View();
-        }
-
 
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties()
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return View(properties);
+            if (User.IsInRole("Admin"))
+            {
+                var properties = await _propertyService.GetAllPropertiesAsync();
+                return View(properties);
+            }
+            return Unauthorized();
         }
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
+
             if (propertyDto.PropertyPicture != null)
             {
 
@@ -134,13 +126,6 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListUsers");
         }
 
-        // Hard Delete User
-        [HttpPost, ActionName("HardDelete")]
-        public async Task<IActionResult> HardDeleteConfirmed(Guid id)
-        {
-            await _userService.HardDeleteUserAsync(id);
-            return RedirectToAction("ListUsers");
-        }
 
         // User Details
         public async Task<IActionResult> Details(Guid id)
@@ -174,6 +159,45 @@ namespace PresentationLayer.Controllers
             var payment = await _paymentService.GetAllPaymentsAsync();
             return View(payment);
         }
+        public async Task<IActionResult> PaymentDetails(Guid id)
+        {
+            var pay = await _paymentService.GetPaymenttByIdAsync(id);
+            if (pay == null)
+            {
+                return NotFound();
+            }
+            return View(pay);
+        }
+        public async Task<IActionResult> Terminate(Guid id)
+        {
+            try
+            {
+                var contract = await _context.Contracts.FindAsync(id);
+
+                if (contract == null)
+                {
+                    throw new KeyNotFoundException("Contract not found.");
+                }
+
+                contract.IsTerminated = true;
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Contract terminated successfully.";
+            }
+            catch (KeyNotFoundException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while terminating the contract.";
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("ListContracts");
+        }
+
+
+
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
@@ -187,6 +211,5 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory, contentType, fileName);
         }
-
     }
 }
