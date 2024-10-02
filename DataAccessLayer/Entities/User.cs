@@ -16,7 +16,6 @@ namespace DataAccessLayer.Entities
 
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
-        public string Role { get; set; } // Add this property if it's not present
 
         public virtual ICollection<Contract>? Contracts { get; set; }
         public virtual ICollection<Payment>? Payments { get; set; }

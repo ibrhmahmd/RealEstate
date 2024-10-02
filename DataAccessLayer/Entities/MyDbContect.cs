@@ -22,7 +22,6 @@ public class MyDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure Identity User table to use "Users" instead of the default "AspNetUsers"
         modelBuilder.Entity<User>().ToTable("Users");
 
         // Explicitly configure the relationship between Contract and User for UserID and AgentID

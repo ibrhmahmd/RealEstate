@@ -21,21 +21,6 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-
-        // Get a record by ID, excluding soft-deleted entities
-        public async Task<T> GetByIdAsync(Guid ID)
-        {
-            try
-            {
-                return await Context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "ID") == ID && EF.Property<bool>(e, "IsDeleted") == false);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while retrieving the record with ID {ID}.", ex);
-            }
-        }
-
-
         // Get all records excluding soft-deleted entities
         public async Task<IQueryable<T>> GetAllAsync()
         {
@@ -103,7 +88,7 @@ namespace DataAccessLayer.GenericRepository
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while retrieving the entity by name: {ID}.", ex);
+                throw new Exception($"An error occurred while retrieving the entity by name: {id}.", ex);
             }
         }
 
