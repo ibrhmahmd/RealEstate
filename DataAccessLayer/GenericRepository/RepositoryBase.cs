@@ -36,6 +36,37 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+
+
+        // Get all Items in Paged list
+        public async Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false);
+
+                var totalRecords = await query.CountAsync();
+
+                var items = await query.OrderBy(e => EF.Property<int>(e, "Id")) // Ensure ordering to avoid paging inconsistencies
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
+
+                return new PagedResult<T>
+                {
+                    Items = items,
+                    TotalRecords = totalRecords,
+                    CurrentPage = pageNumber,
+                    PageSize = pageSize
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
+
         // Get entities by name
         public async Task<IQueryable<T>> GetByNameAsync(string name)
         {

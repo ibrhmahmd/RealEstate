@@ -58,53 +58,22 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
 
-            var property = await _propertyService.GetPropertyByIdAsync(propertyId.Value);
-
-            if (property == null)
+            try
             {
-                return NotFound();
-            }
-
-            var contractModel = new ContractDTO
-            {
-                PropertyId = property.Id,
-                StartDate = DateTime.Now,
-                IsFurnished = property.IsFUrnished,
-                Rooms = property.Rooms
-            };
-
-            if (property.Status.HasValue)
-            {
-                switch (property.Status.Value)
-                {
-                    case PropertStatus.Lease:
-                        contractModel.RecurringPaymentFrequency = "Monthly";
-                        contractModel.RecurringPaymentAmount = property.Price / 12;
-                        contractModel.TotalAmount = property.Price;
-                        contractModel.InitialPayment = (property.Price / 12) * 2;
-                        break;
-
-                    case PropertStatus.Ownership:
-                        contractModel.RecurringPaymentFrequency = "Quarterly";
-                        contractModel.RecurringPaymentAmount = property.Price / 4;
-                        contractModel.TotalAmount = property.Price;
-                        contractModel.InitialPayment = (property.Price / 4) * 3;
-                        break;
-
-                    default:
-                        ModelState.AddModelError("", "Unknown property status.");
-                        return View("~/Views/Contract/Create.cshtml", contractModel);
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("", "Property status is not defined.");
+                var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
                 return View("~/Views/Contract/Create.cshtml", contractModel);
             }
-
-            return View("~/Views/Contract/Create.cshtml", contractModel);
+            catch (KeyNotFoundException)
+            {
+                _logger.LogWarning("Property with ID {PropertyId} not found.", propertyId);
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View("~/Views/Contract/Create.cshtml", new ContractDTO { PropertyId = propertyId.Value });
+            }
         }
-
 
 
 

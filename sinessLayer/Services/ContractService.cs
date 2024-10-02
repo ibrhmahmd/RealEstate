@@ -147,5 +147,52 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+
+        public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
+        {
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+            if (property == null)
+            {
+                throw new KeyNotFoundException($"Property with ID {propertyId} not found.");
+            }
+
+            var contractModel = new ContractDTO
+            {
+                PropertyId = property.Id,
+                PropertyLocation = property.Location,
+                StartDate = DateTime.Now,
+                IsFurnished = property.IsFUrnished,
+                Rooms = property.Rooms
+            };
+
+            if (property.Status.HasValue)
+            {
+                switch (property.Status.Value)
+                {
+                    case PropertStatus.Lease:
+                        contractModel.RecurringPaymentFrequency = "Monthly";
+                        contractModel.RecurringPaymentAmount = property.Price / 12;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 12) * 2;
+                        break;
+
+                    case PropertStatus.Ownership:
+                        contractModel.RecurringPaymentFrequency = "Quarterly";
+                        contractModel.RecurringPaymentAmount = property.Price / 4;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 4) * 3;
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("Unknown property status.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Property status is not defined.");
+            }
+
+            return contractModel;
+        }
     }
 }

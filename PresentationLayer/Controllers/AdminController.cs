@@ -8,6 +8,8 @@ using PresentationLayer.helper;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using PresentationLayer.Models;
+using System.Drawing.Printing;
 namespace PresentationLayer.Controllers
 {
     [Authorize]
@@ -31,17 +33,36 @@ namespace PresentationLayer.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+
+
+
+
+
         // Property CRUD Operations
-        public async Task<IActionResult> ListProperties()
+        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 10)
         {
             if (User.IsInRole("Admin"))
             {
                 
             }
-            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
-            return View(properties);
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PropertyListViewModel
+            {
+                Properties = pagedProperties.Items,
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
+            };
+
+            return View(viewModel);
             return Unauthorized();
         }
+
+
+
+
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {

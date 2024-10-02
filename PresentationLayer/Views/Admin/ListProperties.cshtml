@@ -1,4 +1,4 @@
-﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+﻿@model PropertyListViewModel
 @{
     ViewData["Title"] = "Property List";
     ViewData["ActionName"] = "Property";
@@ -14,70 +14,82 @@
 
 @section content {
     <br />
-    <div class="container">
-        <h2 class="header-title">Property Management</h2>
-
-        <div class="header-container">
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
-            <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add">Add Property</a>
-        </div>
-
-        <div class="container table-container">
-            <table class="table table-hover table-bordered" id="PropertyTable">
-                <thead>
+    <div class="container table-container">
+        <table class="table table-hover table-bordered" id="PropertyTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Project</th>
+                    <th>Area</th>
+                    <th>Price</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="PropertiesTable">
+                @foreach (var property in Model.Properties)
+                {
                     <tr>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Project</th>
-                        <th>Area</th>
-                        <th>Price</th>
-                        <th>Type</th>
-                        <th></th>
-                        <th></th>
-                        <th>Actions</th>
-
+                        <td>@property.Name</td>
+                        <td>@property.Location</td>
+                        <td>@property.Description</td>
+                        <td>@property.Area</td>
+                        <td>@property.Price</td>
+                        <td>@property.Type</td>
+                        <td>
+                            <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal" data-id="@property.Id">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                            <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody id="PropertiesTable">
-                    @foreach (var property in Model)
+                }
+            </tbody>
+        </table>
+
+        <!-- Pagination and Back Button Container -->
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Back Button on the left -->
+            <div>
+                <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                    <i class="fas fa-rotate-back"></i> Back
+                </a>
+            </div>
+
+            <!-- Pagination on the right -->
+            <div>
+                <ul class="pagination">
+                    @if (Model.PageNumber > 1)
                     {
-                        <tr>
-                            <td>@property.Name</td>
-                            <td>@property.Location</td>
-                            <td>@property.Description</td>
-                            <td>@property.Area</td>
-                            <td>@property.Price</td>
-                            <td>@property.Type</td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal" data-id="@property.Id">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                                <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </a>
-                            </td>
-
-                        </tr>
-
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                        </li>
                     }
-                </tbody>
-            </table>
-            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
-                <i class="fas fa-rotate-back"></i> Back
-            </a>
-            <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-custom btn-details">
-                <i class="fas fa-info-circle"></i> Download
-            </a>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 
-
     <br />
+
 
     <!-- Delete Property Modal -->
     <div class="modal fade" id="deletePropertyModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
