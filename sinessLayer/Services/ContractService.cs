@@ -20,11 +20,13 @@ namespace BusinessLayer.Services
         }
 
         // Get all Contracts
-        public async Task<IQueryable<ContractDTO>> GetAllContractsAsync()
+        public async Task<List<ContractDTO>> GetAllContractsAsync()
         {
             var contracts = await _unitOfWork.ContractsRepository.GetAllAsync();
-            return _mapper.Map<IQueryable<ContractDTO>>(contracts);
+            return _mapper.Map<List<ContractDTO>>(contracts);
         }
+
+
 
 
         // Get all contracts including soft deleted
@@ -99,7 +101,17 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task TerminateAsync(Guid id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} not found.");
+            }
 
+            await _unitOfWork.ContractsRepository.Terminate(id);
+            await _unitOfWork.SaveAsync();
+        }
 
 
         // Hard delete a contract

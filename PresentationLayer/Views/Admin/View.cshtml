@@ -1,8 +1,9 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+@{
+    Layout = "_Layout";
 }
 
 <main class="main">
+
     <!-- Page Title -->
     <div class="page-title" data-aos="fade">
         <div class="heading">
@@ -24,11 +25,18 @@
             </div>
         </nav>
     </div><!-- End Page Title -->
+    <!-- Logout Button -->
+    <div class="container text-end">
+        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
 
     <!-- Services Section -->
     <section id="services" class="services section">
         <div class="container">
             <div class="row gy-4">
+
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="service-item position-relative">
                         <div class="icon">
@@ -46,10 +54,10 @@
                         <div class="icon">
                             <i class="bi bi-broadcast"></i>
                         </div>
-                        <a href="service-details.html" class="stretched-link">
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                             <h3>Contracts</h3>
                         </a>
-                        <p>Viewe Contracts.</p>
+                        <p>View Contracts.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -65,13 +73,12 @@
                     </div>
                 </div><!-- End Service Item -->
 
-
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
                     <div class="service-item position-relative">
                         <div class="icon">
                             <i class="bi bi-bounding-box-circles"></i>
                         </div>
-                        <a href="service-details.html" class="stretched-link">
+                        <a href="@Url.Action("ListPayments", "Admin")" class="stretched-link">
                             <h3>Payments</h3>
                         </a>
                         <p>Payments Reports.</p>
@@ -84,7 +91,7 @@
                             <i class="bi bi-calendar4-week"></i>
                         </div>
                         <a href="service-details.html" class="stretched-link">
-                            <h3>statistics</h3>
+                            <h3>Velit Doloremque</h3>
                         </a>
                         <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
                     </div>

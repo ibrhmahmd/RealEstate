@@ -4,13 +4,13 @@ using PresentationLayer.Models;
 using System.Diagnostics;
 
 namespace PresentationLayer.Controllers
-{
+{   
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly PropertyService _propertyService;
-
-        public HomeController(ILogger<HomeController> logger, PropertyService propertyService)
+        public HomeController(ILogger<HomeController> logger, PropertyService propertyService )
         {
             _logger = logger;
             _propertyService = propertyService;
@@ -31,10 +31,12 @@ namespace PresentationLayer.Controllers
             return View();
         }
 
+
+
         public async Task<IActionResult> Properties()
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return View("Properties", properties);
+            var properties = await _propertyService.GetAvailablePropertiesAsync();
+            return View("Properties",properties);
         }
 
 

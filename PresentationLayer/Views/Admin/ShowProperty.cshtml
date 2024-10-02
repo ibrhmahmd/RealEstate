@@ -1,0 +1,114 @@
+﻿@model BusinessLayer.DTOModels.PropertyDTO
+@{
+    ViewData["Title"] = "Property Details";
+    ViewData["ActionName"] = "Property";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@section Styles {
+    <!-- Add your CSS styles here -->
+    <link rel="stylesheet" href="~/assets/css/property-details.css">
+    <style>
+        .portfolio-details-slider img {
+            width: 100%; /* Makes the images responsive */
+            height: 400px; /* Set a fixed height for all images */
+            object-fit: cover; /* Ensures images cover the area without distortion */
+        }
+
+        .card {
+            height: auto; /* Allow the card to grow automatically based on content */
+            padding: 20px; /* Add more padding inside the card */
+        }
+    </style>
+}
+
+@section Content {
+
+    <br />
+
+    <!-- Page Title -->
+    <div class="container">
+
+        <!-- Real Estate Edit Section -->
+
+        <div class="header-container">
+            <h1 class="header-title" style="color:darkgreen">Property Details</h1>
+
+        </div> <div class="container" data-aos="fade-up">
+            <div class="row">
+                <!-- Property Image Slider -->
+                <div class="col-lg-9" data-aos="fade-up">
+                    <div class="portfolio-details-slider swiper init-swiper">
+                        <script type="application/json" class="swiper-config">
+                            {
+                                "loop": true,
+                                "speed": 600,
+                                "autoplay": {
+                                    "delay": 5000
+                                },
+                                "slidesPerView": "auto",
+                                "navigation": {
+                                    "nextEl": ".swiper-button-next",
+                                    "prevEl": ".swiper-button-prev"
+                                },
+                                "pagination": {
+                                    "el": ".swiper-pagination",
+                                    "type": "bullets",
+                                    "clickable": true
+                                }
+                            }
+                        </script>
+                        <div class="swiper-wrapper align-items-center">
+                            <div class="swiper-slide">
+                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img">
+
+                            </div>
+
+                        </div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <br />
+                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
+
+                </div>
+
+                <!-- Property Summary Sidebar in Card Format -->
+                <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Property Name:</strong> @Model.Name</li>
+                                <li class="list-group-item"><strong>Location:</strong> @Model.Location</li>
+                                <li class="list-group-item"><strong>Property Description:</strong> @Model.Description</li>
+                                <li class="list-group-item"><strong>Property Price:</strong> @Model.Price</li>
+                                <li class="list-group-item"><strong>Property Type:</strong> @Model.Type</li>
+                                <li class="list-group-item"><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
+                                @*<li class="list-group-item"><strong>Beds:</strong> @Model.Beds</li>
+                            <li class="list-group-item"><strong>Baths:</strong> @Model.Baths</li> *@
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <br />
+                    <a asp-action="ListProperties" style="margin-left:100px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- End Real Estate Edit Section -->
+    </div>
+
+}
+
+@section Scripts {
+    <!-- Add your JS scripts here -->
+    <script src="~/assets/js/property-details.js"></script>
+}

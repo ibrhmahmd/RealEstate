@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataAccessLayer.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessLayer.DTOModels
 {
     public class UserDTO : IdentityUser<Guid>
     {
-        public string? Role { get; set; }
-        public bool IsDeleted { get; set; }
+		public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
+        public virtual ICollection<Contract>? Contracts { get; set; }
+        public virtual ICollection<Payment>? Payments { get; set; }
     }
 }

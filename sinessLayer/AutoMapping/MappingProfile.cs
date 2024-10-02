@@ -26,6 +26,13 @@ namespace BusinessLayer.MappingProfiles
             CreateMap<AddressDTO, Address>()
              .ReverseMap();
 
+            CreateMap<ProjectDTO, Project>()
+            .ReverseMap();
+
+            CreateMap<DeveloperCompanyDTO, DeveloperCompany>()
+            .ReverseMap();
+
+
         }
     }
 

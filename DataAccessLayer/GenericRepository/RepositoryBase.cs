@@ -70,7 +70,7 @@ namespace DataAccessLayer.GenericRepository
         {
             try
             {
-                return Context.Set<T>(); 
+                return Context.Set<T>();
             }
             catch (Exception ex)
             {
@@ -80,11 +80,26 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-        public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid ID)
+
+        public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
         {
             try
             {
-                return (Task<IQueryable<T>>)Context.Set<T>().Where(e => EF.Property<Guid>(e, "Id") == ID);
+                return (Task<IQueryable<T>>)Context.Set<T>().Where(e => EF.Property<Guid>(e, "Id") == Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while retrieving the entity by name: {Id}.", ex);
+            }
+        }
+
+
+        // Get a record by ID, excluding soft-deleted entities
+        public async Task<T> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                return await Context.Set<T>().FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id && EF.Property<bool>(e, "IsDeleted") == false);
             }
             catch (Exception ex)
             {
@@ -118,6 +133,34 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
+        public async Task<bool> Terminate(Guid contractId)
+        {
+            try
+            {
+                // Retrieve the contract from the database using the contractId
+                var contract = await Context.Set<T>().FindAsync(contractId);
+
+                // Check if the contract exists
+                if (contract == null)
+                {
+                    return false; // Contract not found
+                }
+
+                // Use dynamic to access the IsDeleted property
+                var deletedEntity = contract as dynamic;
+                deletedEntity.IsDeleted = true; // Set IsDeleted to true
+                deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
+
+                // Save the changes to the database
+                await Context.SaveChangesAsync();
+
+                return true; // Indicate that the termination was successful
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while terminating the contract with ID {contractId}.", ex);
+            }
+        }
 
 
         // Insert a new entity
@@ -158,6 +201,9 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+
+        // Soft delete an entity by setting IsDeleted to true
+        // Soft delete an entity by setting IsDeleted to true
         public async Task SoftDeleteAsync(Guid id)
         {
             try
@@ -222,11 +268,6 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception("An error occurred while updating the entity.", ex);
             }
         }
-
-
-
-
-
 
 
         // Method to get by unique property name

@@ -7,24 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="appsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\AccountAssests\css\style.css" />
-    <None Include="wwwroot\AccountAssests\img\avatar.svg" />
-    <None Include="wwwroot\AccountAssests\img\bg.svg" />
-    <None Include="wwwroot\AccountAssests\img\wave.png" />
-    <None Include="wwwroot\AccountAssests\js\main.js" />
+    <None Include="wwwroot\assets\css\style.css" />
+    <None Include="wwwroot\assets\img\avatar.svg" />
+    <None Include="wwwroot\assets\img\bg.svg" />
+    <None Include="wwwroot\assets\img\wave.png" />
+    <None Include="wwwroot\assets\js\main1.js" />
     <None Include="wwwroot\fonts\.DS_Store" />
     <None Include="wwwroot\fonts\flaticon\.DS_Store" />
     <None Include="wwwroot\fonts\ionicons\fonts\.DS_Store" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,32 +27,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\sinessLayer\BusinessLayer.csproj" />
+    <Folder Include="wwwroot\Properties\Contract\" />
+    <Folder Include="wwwroot\Properties\userpicture\" />
+    <Folder Include="wwwroot\Properties\PropertyPicture\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\assets\css\" />
-    <Folder Include="wwwroot\lib\assets\img\hero-carousel\" />
-    <Folder Include="wwwroot\lib\assets\img\properties\" />
-    <Folder Include="wwwroot\lib\assets\img\property-slide\" />
-    <Folder Include="wwwroot\lib\assets\img\team\" />
-    <Folder Include="wwwroot\lib\assets\img\testimonials\" />
-    <Folder Include="wwwroot\lib\assets\js\" />
-    <Folder Include="wwwroot\lib\assets\vendor\aos\" />
-    <Folder Include="wwwroot\lib\assets\vendor\bootstrap-icons\fonts\" />
-    <Folder Include="wwwroot\lib\assets\vendor\bootstrap\css\" />
-    <Folder Include="wwwroot\lib\assets\vendor\bootstrap\js\" />
-    <Folder Include="wwwroot\lib\assets\vendor\fontawesome-free\css\" />
-    <Folder Include="wwwroot\lib\assets\vendor\fontawesome-free\webfonts\" />
-    <Folder Include="wwwroot\lib\assets\vendor\php-email-form\" />
-    <Folder Include="wwwroot\lib\assets\vendor\purecounter\" />
-    <Folder Include="wwwroot\lib\assets\vendor\swiper\" />
-    <Folder Include="wwwroot\lib\fonts\flaticon\font\" />
-    <Folder Include="wwwroot\lib\fonts\flaticon\license\" />
-    <Folder Include="wwwroot\lib\fonts\icomoon\" />
-    <Folder Include="wwwroot\lib\fonts\ionicons\css\" />
-    <Folder Include="wwwroot\lib\fonts\ionicons\fonts\" />
-    <Folder Include="wwwroot\lib\fonts\open-iconic\" />
+    <ProjectReference Include="..\sinessLayer\BusinessLayer.csproj" />
   </ItemGroup>
 
 </Project>

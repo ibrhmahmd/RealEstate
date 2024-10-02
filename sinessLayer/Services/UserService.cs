@@ -1,13 +1,12 @@
-﻿using AutoMapper;
-using BusinessLayer.DTOModels;
+using AutoMapper;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -15,110 +14,123 @@ namespace BusinessLayer.Services
 {
     public class UserService
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly MyDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-        public UserService(UserManager<User> userManager, SignInManager<User> signInManager, IUnitOfWork unitOfWork, IMapper mapper, MyDbContext context)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper , UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
-
 
         // Get all users
-        public async Task<List<UserDTO>> GetAllUsersAsync()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
-            return _mapper.Map<List<UserDTO>>(users);
+
+            return users.ToList(); 
         }
-
-
 
 
         // Get all users including soft deleted
-        public async Task<IQueryable<UserDTO>> GetAllUsersIncludingDeletedAsync()
+        public async Task<List<User>> GetAllUsersIncludingDeletedAsync()
         {
             var users = await _unitOfWork.UserRepository.GetAllIncludingDeletedAsync();
-            return _mapper.Map<IQueryable<UserDTO>>(users);
+            return (List<User>)users; // No mapping needed if returning the entity directly
         }
 
-
-
-
-
         // Get user by ID
-        public async Task<UserDTO> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
-            return _mapper.Map<UserDTO>(user);
+            return user; // Return the User entity directly
         }
 
 
 
 
-        // Create a new user
-        public async Task<UserDTO> CreateUserAsync(UserDTO userDto)
+
+        public async Task<User> CreateUserAsync(User user)
         {
-            if (await IsEmailTakenAsync(userDto.Email))
+            if (await IsEmailTakenAsync(user.Email))
             {
-                throw new InvalidOperationException($"Email {userDto.Email} is already in use.");
+                throw new InvalidOperationException($"Email {user.Email} is already in use.");
             }
 
-            // Use AutoMapper to map UserDTO to User entity
-            var user = _mapper.Map<User>(userDto);
-
-            // Hash the password before saving it
-            if (!string.IsNullOrWhiteSpace(userDto.PasswordHash))
+            if (!string.IsNullOrWhiteSpace(user.PasswordHash))
             {
-                user.PasswordHash = HashPassword(userDto.PasswordHash);
+                user.PasswordHash = HashPassword(user.PasswordHash);
+            }
+
+            user.SecurityStamp = Guid.NewGuid().ToString();
+
+            // Check if the role exists, if not create it
+            if (!await _roleManager.RoleExistsAsync(user.Role))
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole<Guid>(user.Role));
+                if (!roleResult.Succeeded)
+                {
+                    throw new InvalidOperationException($"Could not create role {user.Role}");
+                }
             }
 
             await _unitOfWork.UserRepository.InsertAsync(user);
+
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, user.Role);
+            if (!addToRoleResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Could not add user to role {user.Role}");
+            }
+
             await _unitOfWork.SaveAsync();
 
-            // Return the mapped UserDTO (this might return a user with an ID if you need it)
-            return _mapper.Map<UserDTO>(user);
+            // Return the newly created User entity with its ID populated
+            return user;
         }
 
+
+
+
+
+
+
         // Update a user
-        public async Task<UserDTO> UpdateUserAsync(UserDTO userDto)
+        public async Task<User> UpdateUserAsync(User user)
         {
-            var existingUser = await _unitOfWork.UserRepository.GetByIdAsync(userDto.Id);
+            var existingUser = await _unitOfWork.UserRepository.GetByIdAsync(user.Id);
             if (existingUser == null)
             {
-                throw new KeyNotFoundException($"User with ID {userDto.Id} not found.");
+                throw new KeyNotFoundException($"User with ID {user.Id} not found.");
             }
 
             // Check if email has changed and is already taken
-            if (existingUser.Email != userDto.Email && await IsEmailTakenAsync(userDto.Email))
+            if (existingUser.Email != user.Email && await IsEmailTakenAsync(user.Email))
             {
-                throw new InvalidOperationException($"Email {userDto.Email} is already in use.");
+                throw new InvalidOperationException($"Email {user.Email} is already in use.");
             }
 
             // If the password is being updated, hash it
-            if (!string.IsNullOrWhiteSpace(userDto.PasswordHash))
+            if (!string.IsNullOrWhiteSpace(user.PasswordHash))
             {
-                existingUser.PasswordHash = HashPassword(userDto.PasswordHash);
+                existingUser.PasswordHash = HashPassword(user.PasswordHash);
             }
 
-            // Use AutoMapper to update the existing User entity
-            _mapper.Map(userDto, existingUser);
-
+            // Map updated properties to the existing user entity
+            existingUser.UserName = user.UserName;
+            existingUser.Email = user.Email;
+            existingUser.PhoneNumber = user.PhoneNumber;
             await _unitOfWork.UserRepository.UpdateAsync(existingUser);
             await _unitOfWork.SaveAsync();
 
-            // Return the mapped UserDTO
-            return _mapper.Map<UserDTO>(existingUser);
+            return existingUser; // Return the updated user entity
         }
 
 
@@ -137,7 +149,6 @@ namespace BusinessLayer.Services
         }
 
 
-
         // Hard delete a user
         public async Task HardDeleteUserAsync(Guid id)
         {
@@ -152,17 +163,16 @@ namespace BusinessLayer.Services
         }
 
 
-
         // Restore a soft deleted user
         public async Task RestoreUserAsync(Guid id)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(id); // Ensure this gets the user entity
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
 
-            if (!user.IsDeleted) // Accessing IsDeleted from the User entity
+            if (!user.IsDeleted) // Assuming there's an IsDeleted property in the User entity
             {
                 throw new InvalidOperationException($"User with ID {id} is not deleted and cannot be restored.");
             }
@@ -172,52 +182,35 @@ namespace BusinessLayer.Services
         }
 
 
-
-
-
         // Helper method to check if an email is already taken
         private async Task<bool> IsEmailTakenAsync(string email)
         {
             var existingUser = await _unitOfWork.UserRepository.GetByUniqueAsync(email, "Email");
-
             return existingUser != null;
         }
 
 
-        public async Task<User?> GetByEmail(string email)
+
+
+        // Authenticate user based on email and password
+        public async Task<User> AuthenticateUserAsync(string email, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
-            return user;
+            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var user = await users.FirstOrDefaultAsync(u => u.Email == email);
 
-        }
-
-
-
-        public async Task<UserDTO> AuthenticateUserAsync(string email, string password)
-        {
-            // Find the user by email
-            var user = await GetByEmail(email);
             if (user == null)
             {
-                throw new KeyNotFoundException($"User with email {email} not found."); // Throw an exception if user not found
+                return null; // User not found
             }
 
-            // Verify the password using the custom VerifyPassword method
-            var isPasswordValid = VerifyPassword(password, user.PasswordHash);
-
-            // Check if the password is correct
-            if (isPasswordValid)
+            // Verify the password
+            if (VerifyPassword(password, user.PasswordHash))
             {
-                // Map the User entity to UserDTO and return
-                return _mapper.Map<UserDTO>(user);
+                return user; // Return the User entity if authentication succeeds
             }
 
-            // Throw an exception if the password is incorrect
-            throw new UnauthorizedAccessException("Invalid password.");
+            return null; // Password is incorrect
         }
-
-
-
 
         private bool VerifyPassword(string password, string storedHash)
         {
@@ -238,9 +231,6 @@ namespace BusinessLayer.Services
                 throw new FormatException("Invalid format for Base64 string in stored password hash.", ex);
             }
         }
-
-
-
 
         private string HashPassword(string password, byte[] salt = null)
         {
@@ -264,8 +254,62 @@ namespace BusinessLayer.Services
         }
 
 
+        public async Task<bool> RegisterUserAsync(string email, string password, string role)
+        {
+            // Create the user
+            var user = new User { Email = email, UserName = email };
+
+            // Hash the password using the custom hashing method
+            user.PasswordHash = HashPassword(password);
+            user.SecurityStamp = Guid.NewGuid().ToString();
+
+            // Create the user
+
+            await CreateUserAsync(user);
+
+            var result = await GetUserByIdAsync(user.Id);
+            var insertionOK = false;
+
+            if (result != user)
+                insertionOK = false;
+            else
+            {
+                insertionOK = true;
+            }
 
 
+            if (insertionOK)
+            {
+                // Assign the Admin role to the user
+                if (!await _roleManager.RoleExistsAsync(role))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
+                }
+
+                // Assign the user to the Admin role
+                await _userManager.AddToRoleAsync(user, role);
+            }
+
+            return insertionOK;
+        }
+
+
+        // Method to get roles of a user
+        public async Task<List<string>> GetUserRolesAsync(Guid userId)
+        {
+            // Retrieve the user by ID
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if (user == null)
+            {
+                return new List<string>(); // Return empty list if user not found
+            }
+
+            // Get roles for the user
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return (List<string>)roles; // Return the list of roles
+        }
 
     }
 }

@@ -3,6 +3,7 @@ using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DataAccessLayer.UnitOfWork
@@ -16,17 +17,38 @@ namespace DataAccessLayer.UnitOfWork
         private IRepositoryBase<Payment> _payments;
         private IRepositoryBase<Property> _properties;
         private IRepositoryBase<User> _users;
+        private IRepositoryBase<DeveloperCompany> _developerCompanies;
+        private IRepositoryBase<Project> _projrcts;
 
         public UnitOfWork(MyDbContext context)
         {
             _context = context;
         }
 
+
+
+        public IRepositoryBase<DeveloperCompany> DeveloperCompanyRepository
+        {
+            get
+            {
+                return _developerCompanies ??= new RepositoryBase<DeveloperCompany>(_context);
+            }
+        }
+
+        public IRepositoryBase<Project> ProjectRepository
+        {
+            get
+            {
+                return _projrcts ??= new RepositoryBase<Project>(_context);
+            }
+        }
+
+
         public IRepositoryBase<User> UserRepository
         {
             get
             {
-                return _users ??= new RepositoryBase<User>(_context); 
+                return _users ??= new RepositoryBase<User>(_context);
             }
         }
 
@@ -34,7 +56,7 @@ namespace DataAccessLayer.UnitOfWork
         {
             get
             {
-                return _properties ??= new RepositoryBase<Property>(_context); 
+                return _properties ??= new RepositoryBase<Property>(_context);
             }
         }
 
@@ -42,7 +64,7 @@ namespace DataAccessLayer.UnitOfWork
         {
             get
             {
-                return _contracts ??= new RepositoryBase<Contract>(_context); 
+                return _contracts ??= new RepositoryBase<Contract>(_context);
             }
         }
 
@@ -50,7 +72,7 @@ namespace DataAccessLayer.UnitOfWork
         {
             get
             {
-                return _addresses ??= new RepositoryBase<Address>(_context); 
+                return _addresses ??= new RepositoryBase<Address>(_context);
             }
         }
 
@@ -58,9 +80,13 @@ namespace DataAccessLayer.UnitOfWork
         {
             get
             {
-                return _payments ??= new RepositoryBase<Payment>(_context); 
+                return _payments ??= new RepositoryBase<Payment>(_context);
             }
         }
+
+        public IRepositoryBase<Project> ProjectsRepository => throw new NotImplementedException();
+
+        public IRepositoryBase<DeveloperCompany> DeveloperCompaniesRepository => throw new NotImplementedException();
 
         public async Task SaveAsync()
         {

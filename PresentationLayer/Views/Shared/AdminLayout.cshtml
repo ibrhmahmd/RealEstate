@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>@ViewBag.Title - EstateAgency</title>
@@ -26,6 +27,115 @@
 
     <!-- Main CSS File -->
     <link href="~/assets/css/main.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .search-bar {
+            flex: 1;
+            margin-right: 10px;
+            padding: 10px 15px;
+            border: 2px solid #003366;
+          
+            border-radius: 20px;
+            outline: none;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .search-bar:focus {
+                box-shadow: 0 0 10px rgba(0, 51, 102, 0.5);
+            }
+
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .btn-add {
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-add:hover {
+                background-color: #002244;
+            }
+
+        .table th {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #e0f7fa;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-details {
+            background-color: #17a2b8;
+        }
+
+        .btn-custom i {
+            margin-right: 5px;
+        }
+
+    
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+    </style>
 
 </head>
 
@@ -43,78 +153,50 @@
             <nav id="navmenu" class="navmenu">
                 <ul>
                     <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("About", "Home")">About</a></li>
                     <li><a href="@Url.Action("Services", "Home")">Services</a></li>
                     <li><a href="@Url.Action("Properties", "Home")">Properties</a></li>
                     <li><a href="@Url.Action("Agents", "Home")">Agents</a></li>
-                    <li><a href="@Url.Action("Contact", "Home")">Contract</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
                     <li><a href="@Url.Action("Login", "Account")">Account</a></li>
-                    <li><a href="@Url.Action("Login", "Account")">Users</a></li>
-
+                    <li><a href="@Url.Action("Admin", "Account")">Admin</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
         </div>
+
     </header>
 
     <main class="main">
+        <br />
+        <br />
+        <br />
+        <!-- Page Title -->
+        <div class="page-title" data-aos="fade">
+            <nav class="breadcrumbs">
+                <div class="container">
+                    <ol>
+                        <!-- Breadcrumb links -->
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li><a asp-action="Admin" asp-controller="Account">Admin</a></li>
+						@* <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>*@
+                        <li class="current">@ViewData["ActionName"]</li>
+                        <li class="current">@ViewData["Title"]</li> <!-- Current Page -->
+                    </ol>
+                </div>
+            </nav>
+        </div>
+
+
+
+        <!-- End Page Title -->
         <!-- Page-specific content will be rendered here -->
         @RenderBody()
         @RenderSection("Content", required: false) <!-- Ensure this line exists -->
 
     </main>
 
-    <footer id="footer" class="footer light-background">
-        <div class="container">
-            <div class="row gy-3">
-                <div class="col-lg-3 col-md-6 d-flex">
-                    <i class="bi bi-geo-alt icon"></i>
-                    <div class="address">
-                        <h4>Address</h4>
-                        <p>A108 Adam Street, New York, NY 535022</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 d-flex">
-                    <i class="bi bi-telephone icon"></i>
-                    <div>
-                        <h4>Contact</h4>
-                        <p>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 d-flex">
-                    <i class="bi bi-clock icon"></i>
-                    <div>
-                        <h4>Opening Hours</h4>
-                        <p>
-                            <strong>Mon-Sat:</strong> 11AM - 23PM<br>
-                            <strong>Sunday:</strong> Closed
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6">
-                    <h4>Follow Us</h4>
-                    <div class="social-links d-flex">
-                        <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container copyright text-center mt-4">
-            <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">EstateAgency</strong> <span>All Rights Reserved</span></p>
-            <div class="credits">
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
-        </div>
-    </footer>
 
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
@@ -132,7 +214,9 @@
     <!-- Main JS File -->
     <script src="~/assets/js/main.js"></script>
 
+
     @RenderSection("scripts", required: false)
 </body>
+</html>
 
 </html>

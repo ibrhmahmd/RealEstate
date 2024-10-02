@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 
 namespace PresentationLayer.Controllers
 {
@@ -57,13 +58,13 @@ namespace PresentationLayer.Controllers
         // POST: Users/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserName,Email,PasswordHash,PhoneNumber")] UserDTO userDto)
+        public async Task<IActionResult> Create([Bind("UserName,Email,PasswordHash,PhoneNumber")] User user)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var createdUser = await _userService.CreateUserAsync(userDto);
+                    var createdUser = await _userService.CreateUserAsync(user);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (InvalidOperationException ex)
@@ -71,7 +72,7 @@ namespace PresentationLayer.Controllers
                     ModelState.AddModelError("Email", ex.Message);
                 }
             }
-            return View(userDto);
+            return View(user);
         }
 
 
@@ -100,9 +101,9 @@ namespace PresentationLayer.Controllers
         // POST: Users/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] UserDTO userDto)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] User user)
         {
-            if (id != userDto.Id)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -111,7 +112,7 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
-                    await _userService.UpdateUserAsync(userDto);
+                    await _userService.UpdateUserAsync(user);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (KeyNotFoundException)
@@ -123,7 +124,7 @@ namespace PresentationLayer.Controllers
                     ModelState.AddModelError("Email", ex.Message);
                 }
             }
-            return View(userDto);
+            return View(user);
         }
 
         // GET: Users/Delete/5

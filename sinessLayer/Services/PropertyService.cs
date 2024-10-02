@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,11 +13,12 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly MyDbContext _context;
+        public PropertyService(IUnitOfWork unitOfWork, IMapper mapper, MyDbContext dbContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _context = dbContext;
         }
 
 
@@ -24,6 +26,14 @@ namespace BusinessLayer.Services
         public async Task<List<PropertyDTO>> GetAllPropertiesAsync()
         {
             var properties = await _unitOfWork.PropertiesRepository.GetAllAsync();
+            return _mapper.Map<List<PropertyDTO>>(properties);
+        }
+
+
+        public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
+        {
+            var properties = await _context.Properties
+                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted ==false).ToListAsync();
             return _mapper.Map<List<PropertyDTO>>(properties);
         }
 
@@ -40,13 +50,13 @@ namespace BusinessLayer.Services
 
 
 
-        // Get property by ID
-        public async Task<PropertyDTO> GetPropertyByIdAsync(Guid id)
+        // Get property by Id
+        public async Task<PropertyDTO> GetPropertyByIdAsync(Guid Id)
         {
-            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
             if (property == null)
             {
-                throw new KeyNotFoundException($"Property with ID {id} not found.");
+                throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
             return _mapper.Map<PropertyDTO>(property);
         }
@@ -62,7 +72,7 @@ namespace BusinessLayer.Services
             await _unitOfWork.PropertiesRepository.InsertAsync(property);
             await _unitOfWork.SaveAsync();
 
-            // Return the mapped PropertyDTO (this might return a property with an ID if needed)
+            // Return the mapped PropertyDTO (this might return a property with an Id if needed)
             return _mapper.Map<PropertyDTO>(property);
         }
 
@@ -74,7 +84,7 @@ namespace BusinessLayer.Services
             var existingProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyDto.Id);
             if (existingProperty == null)
             {
-                throw new KeyNotFoundException($"Property with ID {propertyDto.Id} not found.");
+                throw new KeyNotFoundException($"Property with Id {propertyDto.Id} not found.");
             }
 
             _mapper.Map(propertyDto, existingProperty);
@@ -87,46 +97,46 @@ namespace BusinessLayer.Services
 
 
         // Soft delete a property
-        public async Task SoftDeletePropertyAsync(Guid id)
+        public async Task SoftDeletePropertyAsync(Guid Id)
         {
-            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
             if (property == null)
             {
-                throw new KeyNotFoundException($"Property with ID {id} not found.");
+                throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
-            await _unitOfWork.PropertiesRepository.SoftDeleteAsync(id);
+            await _unitOfWork.PropertiesRepository.SoftDeleteAsync(Id);
             await _unitOfWork.SaveAsync();
         }
 
         // Hard delete a property
-        public async Task HardDeletePropertyAsync(Guid id)
+        public async Task HardDeletePropertyAsync(Guid Id)
         {
-            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
             if (property == null)
             {
-                throw new KeyNotFoundException($"Property with ID {id} not found.");
+                throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
-            await _unitOfWork.PropertiesRepository.HardDeleteAsync(id);
+            await _unitOfWork.PropertiesRepository.HardDeleteAsync(Id);
             await _unitOfWork.SaveAsync();
         }
 
         // Restore a soft deleted property
-        public async Task RestorePropertyAsync(Guid id)
+        public async Task RestorePropertyAsync(Guid Id)
         {
-            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(id); 
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
             if (property == null)
             {
-                throw new KeyNotFoundException($"Property with ID {id} not found.");
+                throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
-            if (!property.IsDeleted) 
+            if (!property.IsDeleted)
             {
-                throw new InvalidOperationException($"Property with ID {id} is not deleted and cannot be restored.");
+                throw new InvalidOperationException($"Property with Id {Id} is not deleted and cannot be restored.");
             }
 
-            await _unitOfWork.PropertiesRepository.RestoreSoftDeletedAsync(id);
+            await _unitOfWork.PropertiesRepository.RestoreSoftDeletedAsync(Id);
             await _unitOfWork.SaveAsync();
         }
 
