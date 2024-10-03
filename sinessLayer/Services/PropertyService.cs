@@ -30,7 +30,6 @@ namespace BusinessLayer.Services
 
             var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
             {
-                Id = property.Id,
                 Name = property.Name,
                 Location = property.Location,
                 Description = property.Description,
@@ -38,6 +37,9 @@ namespace BusinessLayer.Services
                 Price = property.Price,
                 Type = property.Type,
             }).ToList();
+
+
+
 
             return new PagedResult<PropertyDTO>
             {
@@ -47,10 +49,6 @@ namespace BusinessLayer.Services
                 TotalRecords = propertiesPaged.TotalRecords
             };
         }
-
-
-
-
 
 
 
@@ -167,6 +165,25 @@ namespace BusinessLayer.Services
 
 
 
+        public async Task PropertyOccupiedAsync(Guid id)
+        {
+            // Retrieve the selected property using the provided ID
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+
+            // Check if the property exists
+            if (selectedProperty != null)
+            {
+                // Set the property as unavailable
+                selectedProperty.IsAvailable = false;
+
+                // Update the property in the repository
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
 
 
         // Helper method to check if a property already exists by some unique identifier
@@ -175,5 +192,9 @@ namespace BusinessLayer.Services
             var existingProperty = await _unitOfWork.PropertiesRepository.GetByUniqueAsync(propertyName, "Name");
             return existingProperty != null;
         }
+
+        
+
+
     }
 }

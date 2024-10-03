@@ -1,11 +1,12 @@
+using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
 using System.Diagnostics;
+using System.Drawing.Printing;
 
 namespace PresentationLayer.Controllers
 {   
-
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -33,10 +34,20 @@ namespace PresentationLayer.Controllers
 
 
 
-        public async Task<IActionResult> Properties()
+        public async Task<IActionResult> Properties(int pageNumber=1, int pageSize = 8)
         {
-            var properties = await _propertyService.GetAvailablePropertiesAsync();
-            return View("Properties",properties);
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = pagedProperties.Items,
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
+            }; 
+
+            return View("Properties", viewModel);
         }
 
 

@@ -47,12 +47,12 @@ namespace PresentationLayer.Controllers
                 {
                     // Create the claims for the user, including Name and UserID
                     var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim("UserId", user.Id.ToString()),
-                new Claim("Role", user.Role.ToString() )
-            };
+                    {
+                        new Claim(ClaimTypes.Name, email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim("UserId", user.Id.ToString()),
+                        new Claim("Role", user.Role.ToString() )
+                    };
 
                     // Create the ClaimsIdentity and AuthenticationProperties
                     var claimsIdentity = new ClaimsIdentity(claims, "Cookies");

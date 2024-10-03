@@ -2,9 +2,9 @@
 
 namespace PresentationLayer.Models
 {
-    public class PropertyListViewModel
+    public class PagedListViewModel<T>
     {
-        public List<PropertyDTO> Properties { get; set; }
+        public List<T> Items { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public int TotalRecords { get; set; }

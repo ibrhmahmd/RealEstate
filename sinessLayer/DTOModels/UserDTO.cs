@@ -9,6 +9,9 @@ namespace BusinessLayer.DTOModels
     {
 		public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
+        public string Role { get; set; } // Add this property if it's not present
+
+        public bool? IsVerified { get; set; } = false;
         public virtual ICollection<Contract>? Contracts { get; set; }
         public virtual ICollection<Payment>? Payments { get; set; }
     }

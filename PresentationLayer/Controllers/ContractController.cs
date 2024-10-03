@@ -219,10 +219,10 @@ namespace PresentationLayer.Controllers
         //    }
         //}
 
-        public async Task<IActionResult> Index()
-        {
-            var contracts = await _contractService.GetAllContractsAsync();
-            return View(contracts);
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    var contracts = await _contractService.GetAllContractsAsync();
+        //    return View(contracts);
+        //}
     }
 }

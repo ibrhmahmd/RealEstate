@@ -1,6 +1,8 @@
 using AutoMapper;
+using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +30,33 @@ namespace BusinessLayer.Services
             _roleManager = roleManager;
         }
 
-        // Get all users
-        public async Task<List<User>> GetAllUsersAsync()
-        {
-            var users = await _unitOfWork.UserRepository.GetAllAsync(1,5);
 
-            return users.ToList(); 
+
+
+
+
+
+        // Get all users
+        public async Task<PagedResult<UserDTO>> GetAllUsersAsync(int pageNumber, int pageSize)
+        {
+            var usersPaged = await _unitOfWork.UserRepository.GetAllPagedAsync(pageNumber, pageSize);
+            var userDTOs = usersPaged.Items.Select(user => new UserDTO
+            {
+                Id = user.Id,
+                UserName= user.UserName,
+                Email= user.Email,
+                PhoneNumber= user.PhoneNumber,
+                Role = user.Role,
+                IsVerified = user.IsVerified ?? false // Default to false if null
+            }).ToList();
+
+            return new PagedResult<UserDTO>
+            {
+                Items = userDTOs,
+                CurrentPage = usersPaged.CurrentPage,
+                PageSize = usersPaged.PageSize,
+                TotalRecords = usersPaged.TotalRecords
+            }; 
         }
 
 

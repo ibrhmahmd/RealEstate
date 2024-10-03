@@ -1,4 +1,4 @@
-﻿@model PropertyListViewModel
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
 @{
     ViewData["Title"] = "Property List";
     ViewData["ActionName"] = "Property";
@@ -14,6 +14,17 @@
 
 @section content {
     <br />
+    <br />
+    <div class="container">
+        <h2 class="header-title">Property Management</h2>
+
+        <div class="header-container">
+
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+            <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add">Add Property</a>
+        </div>
+
+
     <div class="container table-container">
         <table class="table table-hover table-bordered" id="PropertyTable">
             <thead>
@@ -28,7 +39,7 @@
                 </tr>
             </thead>
             <tbody id="PropertiesTable">
-                @foreach (var property in Model.Properties)
+                @foreach (var property in Model.Items)
                 {
                     <tr>
                         <td>@property.Name</td>

@@ -25,9 +25,7 @@ namespace DataAccessLayer.GenericRepository
             try
             {
                 return Context.Set<T>()
-                              .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
-                              .Skip((pageNumber - 1) * pageSize)
-                              .Take(pageSize);
+                              .Where(e => EF.Property<bool>(e, "IsDeleted") == false);
             }
             catch (Exception ex)
             {
@@ -44,7 +42,8 @@ namespace DataAccessLayer.GenericRepository
             try
             {
                 var query = Context.Set<T>().AsNoTracking()
-                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false);
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false);
+
 
                 var totalRecords = await query.CountAsync();
 
@@ -61,11 +60,13 @@ namespace DataAccessLayer.GenericRepository
                     PageSize = pageSize
                 };
             }
+
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+
 
         // Get entities by name
         public async Task<IQueryable<T>> GetByNameAsync(string name)
