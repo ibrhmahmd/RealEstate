@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Lease Contracts";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Referencing your layout
+}
+
+<div class="container table-container">
+    <div class="header-container">
+        <h1 class="header-title">Lease Contracts</h1>
+        <button class="btn btn-add">Add New Contract</button>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Contract Name</th>
+                <th>Tenant</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Sample Data -->
+            <tr>
+                <td>1</td>
+                <td>Lease Contract 1</td>
+                <td>John Doe</td>
+                <td>01/01/2023</td>
+                <td>01/01/2024</td>
+                <td>
+                    <a href="@Url.Action("Open", "LeaseContract", new { id = 1 })" class="btn btn-details btn-custom"><i class="fas fa-file-pdf"></i> Open</a>
+                    <button class="btn btn-edit btn-custom"><i class="fas fa-edit"></i> Edit</button>
+                    <button class="btn btn-delete btn-custom"><i class="fas fa-trash-alt"></i> Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

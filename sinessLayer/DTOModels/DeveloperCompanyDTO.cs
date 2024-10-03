@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.DTOModels
 {
-	public class DeveloperCompanyDTO : BaseEntity<Guid>
+public class DeveloperCompanyDTO : BaseEntity<Guid>
 	{
 		[Required]
 		[MaxLength(200)]

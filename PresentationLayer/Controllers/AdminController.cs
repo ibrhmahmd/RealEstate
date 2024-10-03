@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using BusinessLayer.Services;
@@ -8,21 +8,22 @@ using PresentationLayer.helper;
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using PresentationLayer.Models;
+using System.Drawing.Printing;
 namespace PresentationLayer.Controllers
 {
-  //  [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AdminController : Controller
     {
-
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
         private readonly ContractService _contractService;
-		private readonly PaymentService _paymentService;
+        private readonly PaymentService _paymentService;
         private readonly MyDbContext _context;
-		private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AdminController(PropertyService propertyService, UserService userService , 
-            ContractService contractService, PaymentService paymentService,MyDbContext context ,IWebHostEnvironment webHostEnvironment)
+        public AdminController(PropertyService propertyService, UserService userService,
+            ContractService contractService, PaymentService paymentService, MyDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
@@ -32,23 +33,87 @@ namespace PresentationLayer.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+
+
+
         // Property CRUD Operations
-        public async Task<IActionResult> ListProperties()
+        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return View(properties);
+            if (User.IsInRole("Admin"))
+            {
+
+            }
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = pagedProperties.Items,
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
+            };
+
+            return View(pagedListViewModel);
+            return Unauthorized();
         }
+
+
+
+
+
+        // User Listing
+        public async Task<IActionResult> ListUsers(int pageNumber = 1, int pageSize = 5)
+        {
+            if (User.IsInRole("Admin"))
+            {
+
+            }
+            var pagedUsers = await _userService.GetAllUsersAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<UserDTO>
+            {
+                Items = pagedUsers.Items,
+                PageNumber = pagedUsers.CurrentPage,
+                PageSize = pagedUsers.PageSize,
+                TotalRecords = pagedUsers.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+        }
+
+
+        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 5)
+        {
+
+            if (User.IsInRole("Admin"))
+            {
+
+            }
+            var Pagedcontracts = await _contractService.GetAllContractsAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<ContractDTO>
+            {
+                Items = Pagedcontracts.Items,
+                PageNumber = Pagedcontracts.CurrentPage,
+                PageSize = Pagedcontracts.PageSize,
+                TotalRecords = Pagedcontracts.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+        }
+
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
-          
+
             if (propertyDto.PropertyPicture != null)
             {
 
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
-         
+
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
@@ -56,6 +121,7 @@ namespace PresentationLayer.Controllers
             }
             return View(propertyDto);
         }
+
 
         public async Task<IActionResult> EditProperty(Guid id)
         {
@@ -84,8 +150,8 @@ namespace PresentationLayer.Controllers
             }
             return View(propertyDto);
         }
-    
-       
+
+
         public async Task<IActionResult> SoftDeleteProperty(Guid id)
         {
             await _propertyService.SoftDeletePropertyAsync(id);
@@ -101,14 +167,6 @@ namespace PresentationLayer.Controllers
             }
             return View(property);
         }
-
-        // User Listing
-        public async Task<IActionResult> ListUsers()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
-        }
-
         // Soft Delete User
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -123,7 +181,7 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListUsers");
         }
 
- 
+
         // User Details
         public async Task<IActionResult> Details(Guid id)
         {
@@ -134,12 +192,7 @@ namespace PresentationLayer.Controllers
             }
             return View(user);
         }
-        public async Task<IActionResult> ListContracts()
-        {
 
-            var contracts = await _contractService.GetAllContractsAsync();
-            return View(contracts);
-        }
         public async Task<IActionResult> ContractDetails(Guid id)
         {
 
@@ -150,12 +203,25 @@ namespace PresentationLayer.Controllers
             }
             return View(contract);
         }
-		public async Task<IActionResult> ListPayments()
-		{
+        public async Task<IActionResult> ListPayments(int pageNumber = 1, int pageSize = 5)
+        {
+            if (User.IsInRole("Admin"))
+            {
 
-			var payment = await _paymentService.GetAllPaymentsAsync();
-			return View(payment);
-		}
+            }
+            var Pagedpayment = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<PaymentDTO>
+            {
+                Items = Pagedpayment.Items,
+                PageNumber = Pagedpayment.CurrentPage,
+                PageSize = Pagedpayment.PageSize,
+                TotalRecords = Pagedpayment.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+        }
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
             var pay = await _paymentService.GetPaymenttByIdAsync(id);
@@ -165,35 +231,48 @@ namespace PresentationLayer.Controllers
             }
             return View(pay);
         }
-
         public async Task<IActionResult> Terminate(Guid id)
         {
             try
             {
-                await _contractService.TerminateAsync(id);
+                var contract = await _context.Contracts.FindAsync(id);
+
+                if (contract == null)
+                {
+                    throw new KeyNotFoundException("Contract not found.");
+                }
+
+                contract.IsTerminated = true;
+                await _context.SaveChangesAsync();
+
                 TempData["SuccessMessage"] = "Contract terminated successfully.";
             }
             catch (KeyNotFoundException ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while terminating the contract.";
+                Console.WriteLine(ex.Message);
+            }
             return RedirectToAction("ListContracts");
         }
+
+
+
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
             var memory = new MemoryStream();
-            using(var stream = new FileStream(path,FileMode.Open))
+            using (var stream = new FileStream(path, FileMode.Open))
             {
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
             var contentType = "application/pdf";
             var fileName = Path.GetFileName(path);
-            return File(memory , contentType, fileName);
+            return File(memory, contentType, fileName);
         }
-    
-
-
     }
 }

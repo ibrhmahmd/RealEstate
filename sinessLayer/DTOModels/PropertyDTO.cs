@@ -9,8 +9,8 @@ namespace BusinessLayer.DTOModels
     {
         [Required, StringLength(100)]
         public string Name { get; set; }
-		public Guid? ProjectId { get; set; }
-		public string? PropertyPictureUrl { get; set; }
+        public Guid? ProjectId { get; set; }
+        public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
@@ -52,11 +52,5 @@ namespace BusinessLayer.DTOModels
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
     }
-    public enum PropertStatus
-    {
-        Lease,
-        Ownership,
-        Rent
 
-    }
 }

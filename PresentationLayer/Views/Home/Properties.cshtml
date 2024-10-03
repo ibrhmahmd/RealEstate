@@ -1,9 +1,8 @@
-﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
 @{
     Layout = "_Layout";
-    var uniqueLocations = Model.Select(p => p.Location).Distinct().ToList();
+    var uniqueLocations = Model.Items.Select(p => p.Location).Distinct().ToList();
 }
-
 @section Styles {
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
@@ -34,13 +33,10 @@
         </nav>
     </div>
 
-    </div>
     <div class="container">
-   
-
         <div class="header-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
-            <select class="form-select mx-3" id="locationSelect" name="location">
+            <select class="form-select mx-4" id="locationSelect" name="location">
                 <option value="">State</option>
                 @foreach (var location in uniqueLocations)
                 {
@@ -48,7 +44,6 @@
                 }
             </select>
 
-            <!-- Dropdown for Type -->
             <select class="form-select mx-3" id="typeSelect" name="type">
                 <option value="">Type</option>
                 <option value="Apartment">Apartment</option>
@@ -56,7 +51,6 @@
                 <option value="Commercial">Commercial</option>
             </select>
 
-            <!-- Radio Buttons for Status -->
             <div class="d-flex align-items-center mx-3">
                 <div class="form-check me-2">
                     <input class="form-check-input" type="radio" name="status" value="All" id="statusAll" checked>
@@ -77,15 +71,16 @@
             </div>
         </div>
 
-        <div class="container table-container">
+        <div class="container-fluid custom-card-container" style="max-width: 1400px; margin: auto;">
+            <!-- Add custom styling here -->
             <section id="real-estate" class="real-estate section">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row gy-4">
-                        @if (Model != null && Model.Any())
+                        @if (Model.Items != null && Model.Items.Any())
                         {
-                            @foreach (var property in Model)
+                            @foreach (var property in Model.Items)
                             {
-                                <div class="col-xl-4 col-md-6 property-card" data-aos="fade-up" data-aos-delay="100" data-location="@property.Location" data-type="@property.Type" data-status="@property.Status">
+                                <div class="col-xl-3 col-lg-4 col-md-6 property-card" data-aos="fade-up" data-aos-delay="100" data-location="@property.Location" data-type="@property.Type" data-status="@property.Status">
                                     <div class="card">
                                         <img src="~/assets/img/properties/property-1.jpg" alt="Property Image" class="img-fluid" />
                                         <div class="card-body">
@@ -119,10 +114,35 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-container text-center mt-4">
+                @if (Model.TotalPages > 1)
+                {
+                    <ul class="pagination">
+                        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Properties", new { pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize })">Previous</a>
+                        </li>
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Properties", new { pageNumber = i, pageSize = Model.PageSize })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Properties", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })">Next</a>
+                        </li>
+                    </ul>
+                }
+            </div>
         </div>
     </div>
-    <br />
 }
+
+
+
+
+
 
 @section scripts {
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -160,6 +180,7 @@
                     $(this).toggle(isVisible);
                 });
             }
+
 
             // Search function
             $('#searchInput').on('keyup', filterProperties);

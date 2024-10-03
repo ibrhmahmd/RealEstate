@@ -134,6 +134,45 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        .page-link {
+            color: #003366; /* Primary color */
+            background-color: #ffffff;
+            border: 2px solid #003366;
+            border-radius: 20px;
+            padding: 8px 15px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .page-item.active .page-link {
+            background-color: #003366;
+            color: white;
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .page-link:hover {
+            background-color: #002244; /* Darker on hover */
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
 
     </style>
 
@@ -217,5 +256,6 @@
 
     @RenderSection("scripts", required: false)
 </body>
+</html>
 
 </html>

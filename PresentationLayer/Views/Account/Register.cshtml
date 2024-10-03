@@ -1,39 +1,37 @@
-﻿@model BusinessLayer.DTOModels.UserDTO
+@model DataAccessLayer.Entities.User // Adjust the namespace accordingly
 
 @{
     ViewData["Title"] = "Register";
-    Layout = "_Layout1"; 
+    Layout = "_Layout1";
 }
 
-<!-- Styles Section -->
+<form id="registrationForm" asp-controller="Account" asp-action="Register" method="post">
+    <img src="~/assets/img/avatar.svg" alt="">
+    <h2 class="title">Welcome</h2>
 
-            <form id="registrationForm" asp-controller="Account" asp-action="Register" method="post">
-                <img src="~/assets/img/avatar.svg" alt="">
-                <h2 class="title">Welcome</h2>
+    <!-- Input Username -->
+    <div class="input-div one">
+        <div class="i">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="div">
+            <h5>Username</h5>
+            <input type="text" class="input" asp-for="UserName" required>
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
 
-                <!-- Input Username -->
-                <div class="input-div one">
-                    <div class="i">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Username</h5>
-                        <input type="text" class="input" asp-for="UserName" required>
-                        <span asp-validation-for="UserName" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <!-- Input Email -->
-                <div class="input-div one">
-                    <div class="i">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Email</h5>
-                        <input type="email" class="input" asp-for="Email" required>
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                </div>
+    <!-- Input Email -->
+    <div class="input-div one">
+        <div class="i">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="div">
+            <h5>Email</h5>
+            <input type="email" class="input" asp-for="Email" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+    </div>
 
     <!-- Input Phone Number -->
     <div class="input-div pass">
@@ -47,41 +45,38 @@
         </div>
     </div>
 
-                <!-- Input Password -->
-                <div class="input-div pass">
-                    <div class="i">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="div">
-                        <h5>Password</h5>
-                        <input type="password" class="input" asp-for="PasswordHash" required>
-                        <span asp-validation-for="PasswordHash" class="text-danger"></span>
-                    </div>
-                </div>
+    <!-- Input Password -->
+    <div class="input-div pass">
+        <div class="i">
+            <i class="fas fa-lock"></i>
+        </div>
+        <div class="div">
+            <h5>Password</h5>
+            <input type="password" class="input" asp-for="PasswordHash" required>
+            <span asp-validation-for="PasswordHash" class="text-danger"></span>
+        </div>
+    </div>
 
-         
-                <input type="submit" class="btn" value="Register">
+    <!-- Role Selection Dropdown -->
+    <div class="input-div pass">
+        <div class="i">
+            <i class="fas fa-user-tag"></i>
+        </div>
+        <div class="div">
+            <h5>Role</h5>
+            <select asp-for="Role" class="input" required>
+                <option value="">Select Role</option>
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+                <option value="Agent">Agent</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+    </div>
 
-                <div class="text-center mt-3">
-                    <p style="color: #999;">Already have an account? <a asp-controller="Account" asp-action="Login">Log in here</a></p>
-                </div>
-            </form>
-@*
-    <script type="text/javascript" src="~/assets/js/main.js"></script>
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', function (event) {
-            const password = document.querySelector('input[name="PasswordHash"]').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const confirmPasswordError = document.getElementById('confirmPasswordError');
+    <input type="submit" class="btn" value="Register">
 
-            // Clear previous error message
-            confirmPasswordError.textContent = '';
-
-            if (password !== confirmPassword) {
-                event.preventDefault(); // Prevent form submission
-                confirmPasswordError.textContent = 'Passwords do not match.';
-                confirmPasswordError.style.display = 'block';
-            }
-        });
-    </script>
-*@
+    <div class="text-center mt-3">
+        <p style="color: #999;">Already have an account? <a asp-controller="Account" asp-action="Login">Log in here</a></p>
+    </div>
+</form>

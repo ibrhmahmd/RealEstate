@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace PresentationLayer.Views.Home
+namespace PresentationLayer.Views.Contract
 {
-    public class ListPropertiesModel : PageModel
+    public class ContractSaveModel : PageModel
     {
         public void OnGet()
         {

@@ -4,149 +4,111 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
-namespace WebAPI.Controllers
+namespace PresentationLayer.Controllers 
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PropertyController : ControllerBase
+    [Route("Properties")]
+    public class PropertiesController : Controller
     {
         private readonly PropertyService _propertyService;
 
-        public PropertyController(PropertyService propertyService)
+        public PropertiesController(PropertyService propertyService)
         {
             _propertyService = propertyService;
         }
 
-        // GET: api/Property
+
+        // Render a single property details page
         [HttpGet]
-        public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllProperties()
-        {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return Ok(properties);
-        }
-
-
-
-
-
-        // GET: api/Property/deleted
-        [HttpGet("deleted")]
-        public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllPropertiesIncludingDeleted()
-        {
-            var properties = await _propertyService.GetAllPropertiesIncludingDeletedAsync();
-            return Ok(properties);
-        }
-
-
-
-
-
-        // GET: api/Property/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PropertyDTO>> GetPropertyById(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
             try
             {
                 var property = await _propertyService.GetPropertyByIdAsync(id);
-                return Ok(property);
+                return View("~/Views/Home/PropertySingle.cshtml", property);
             }
             catch (KeyNotFoundException e)
             {
-                return NotFound(new { message = e.Message });
+                ViewBag.ErrorMessage = e.Message;
+                return View("NotFound");
             }
         }
 
 
 
 
-        // POST: api/Property
+        [HttpGet("api/all")]
+        public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllProperties()
+        {
+            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
+            return Ok(properties);
+        }
+
+
+
+        // Render the Create property view
+        [HttpGet]
+        [Route("Create")]
+        public IActionResult Create()
+        {
+            return View("Create"); 
+        }
+
+        // POST: Create a new property and redirect to the Index view
         [HttpPost]
-        public async Task<ActionResult<PropertyDTO>> CreateProperty([FromBody] PropertyDTO propertyDto)
+        [Route("Create")]
+        public async Task<IActionResult> CreateProperty([FromForm] PropertyDTO propertyDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return View("Create", propertyDto);
             }
-
-            var createdProperty = await _propertyService.CreatePropertyAsync(propertyDto);
-            return CreatedAtAction(nameof(GetPropertyById), new { id = createdProperty.Id }, createdProperty); // Returns 201 status with location header
-        }
-
-
-
-
-        // PUT: api/Property/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult<PropertyDTO>> UpdateProperty(Guid id, [FromBody] PropertyDTO propertyDto)
-        {
-            if (id != propertyDto.Id)
-            {
-                return BadRequest("Property ID mismatch.");
-            }
-
-            try
-            {
-                var updatedProperty = await _propertyService.UpdatePropertyAsync(propertyDto);
-                return Ok(updatedProperty);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            // Here to send  request for offring the user`s Property
+            return RedirectToAction("Index"); 
         }
 
 
 
 
 
-        // DELETE: api/Property/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> SoftDeleteProperty(Guid id)
+
+
+        [HttpPost]
+        [Route("Edit/{id}")]
+        public async Task<IActionResult> UpdatePropertyListRequest(Guid id, [FromForm] PropertyDTO propertyDto)
         {
-            try
+            if (id != propertyDto.Id || !ModelState.IsValid)
             {
-                await _propertyService.SoftDeletePropertyAsync(id);
-                return NoContent(); // Returns 204 status
+                return View("Edit", propertyDto);
             }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+                // here to add the updated user`s property
+            return RedirectToAction("Index"); 
         }
 
-        // DELETE: api/Property/hard/{id}
-        [HttpDelete("hard/{id}")]
-        public async Task<ActionResult> HardDeleteProperty(Guid id)
+
+
+
+        // Render the Delete property listing request confirmation view
+        [HttpGet]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> DeleteListingRequset(Guid id)
         {
-            try
-            {
-                await _propertyService.HardDeletePropertyAsync(id);
-                return NoContent(); 
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
+            var property = await _propertyService.GetPropertyByIdAsync(id);
+            return View("Delete", property);
         }
 
-        // POST: api/Property/restore/{id}
-        [HttpPost("restore/{id}")]
-        public async Task<ActionResult> RestoreProperty(Guid id)
+        // DELETE: Soft delete a  property listing request 
+        [HttpPost]
+        [Route("Delete/{id}")]
+        public async Task<IActionResult> DeleteListingRequset(Guid id, [FromForm] bool confirm = true)
         {
-            try
+            if (!confirm)
             {
-                await _propertyService.RestorePropertyAsync(id);
-                return NoContent(); 
+                return RedirectToAction("Index");
             }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(new { message = e.Message });
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(new { message = e.Message });
-            }
+            // Add implementation here 
+            return RedirectToAction("Index"); 
         }
     }
 }

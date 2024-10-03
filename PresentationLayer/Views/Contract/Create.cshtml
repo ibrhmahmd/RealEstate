@@ -1,0 +1,120 @@
+﻿@model BusinessLayer.DTOModels.ContractDTO
+@{
+    ViewBag.Title = "Create Contract";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Create New Contract</h2>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Create", "Contract", FormMethod.Post, new { @id = "contractForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <p class="text-muted">Please fill in the details for the new contract.</p>
+
+                @Html.HiddenFor(model => model.PropertyId)
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.PropertyLocation, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.PropertyLocation, new { @class = "form-control", @placeholder = "Enter property location" })
+                    @Html.ValidationMessageFor(model => model.PropertyLocation, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.StartDate, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") })
+                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.EndDate, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddMonths(6).ToString("yyyy-MM-dd") })
+                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.ContractType, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.ContractType, new { @class = "form-control", @placeholder = "Enter contract type (e.g., Lease)" })
+                    @Html.ValidationMessageFor(model => model.ContractType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.InitialPayment, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.InitialPayment, new { @class = "form-control", @type = "number", @step = "0.01", @min = "0", @placeholder = "Enter initial payment" })
+                    @Html.ValidationMessageFor(model => model.InitialPayment, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.RecurringPaymentAmount, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.RecurringPaymentAmount, new { @class = "form-control", @type = "number", @step = "0.01", @min = "0", @placeholder = "Enter recurring payment amount" })
+                    @Html.ValidationMessageFor(model => model.RecurringPaymentAmount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.RecurringPaymentFrequency, new { @class = "form-control", @placeholder = "Enter payment frequency (e.g., Monthly)" })
+                    @Html.ValidationMessageFor(model => model.RecurringPaymentFrequency, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group mb-3">
+                    @Html.LabelFor(model => model.LateFee, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.LateFee, new { @class = "form-control", @type = "number", @step = "0.01", @min = "0", @placeholder = "Enter late fee amount" })
+                    @Html.ValidationMessageFor(model => model.LateFee, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Create Contract</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.validator.addMethod("greaterThan", function (value, element, param) {
+                var startDate = new Date($('#StartDate').val());
+                var endDate = new Date(value);
+                return this.optional(element) || endDate > startDate;
+            }, "End date must be after the start date.");
+
+            $.validator.addMethod("minMonthsFromNow", function (value, element, monthsFromNow) {
+                var inputDate = new Date(value);
+                var currentDate = new Date();
+                currentDate.setMonth(currentDate.getMonth() + monthsFromNow);
+                return this.optional(element) || inputDate >= currentDate;
+            }, "Date must be at least {0} months from now.");
+
+            $("#contractForm").validate({
+                rules: {
+                    StartDate: {
+                        required: true,
+                        date: true,
+                        minMonthsFromNow: 0
+                    },
+                    EndDate: {
+                        required: true,
+                        date: true,
+                        greaterThan: "#StartDate",
+                        minMonthsFromNow: 3
+                    }
+                },
+                messages: {
+                    StartDate: {
+                        minMonthsFromNow: "Start date must be today or later."
+                    },
+                    EndDate: {
+                        minMonthsFromNow: "End date must be at least 3 months from now."
+                    }
+                }
+            });
+        });
+    </script>
+}

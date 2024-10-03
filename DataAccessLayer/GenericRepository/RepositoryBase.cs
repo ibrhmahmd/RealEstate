@@ -20,20 +20,51 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
-
-        // Get all records excluding soft-deleted entities
-        public async Task<IQueryable<T>> GetAllAsync()
+        public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
         {
             try
             {
-                return Context.Set<T>().Where(e => EF.Property<bool>(e, "IsDeleted") == false);
+                return Context.Set<T>()
+                              .Where(e => EF.Property<bool>(e, "IsDeleted") == false);
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred while retrieving all records.", ex);
+                throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+
+
+
+
+        // Get all Items in Paged list
+        public async Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false);
+
+                var totalRecords = await query.CountAsync();
+
+                var items = await query.OrderBy(e => EF.Property<int>(e, "Id")) // Ensure ordering to avoid paging inconsistencies
+                                       .Skip((pageNumber - 1) * pageSize)
+                                       .Take(pageSize)
+                                       .ToListAsync();
+
+                return new PagedResult<T>
+                {
+                    Items = items,
+                    TotalRecords = totalRecords,
+                    CurrentPage = pageNumber,
+                    PageSize = pageSize
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
+
 
 
         // Get entities by name
@@ -56,7 +87,7 @@ namespace DataAccessLayer.GenericRepository
         {
             try
             {
-                return Context.Set<T>(); 
+                return Context.Set<T>();
             }
             catch (Exception ex)
             {
@@ -78,7 +109,7 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception($"An error occurred while retrieving the entity by name: {Id}.", ex);
             }
         }
- 
+
 
 
         // Get a record by ID, excluding soft-deleted entities

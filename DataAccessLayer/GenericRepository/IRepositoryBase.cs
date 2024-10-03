@@ -5,10 +5,13 @@ namespace DataAccessLayer.GenericRepository
 {
     public interface IRepositoryBase<T> where T : class
     {
-        Task<IQueryable<T>> GetAllAsync();
+        Task<PagedResult<T>> GetAllPagedAsync(int pageNumber , int pageSize);
+        Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize);
+        Task<IQueryable<T>> GetAllIncludingDeletedAsync();
+
+
         Task<T> GetByIdAsync(Guid Id);
         Task<IQueryable<T>> GetByNameAsync(string name);
-        Task<IQueryable<T>> GetAllIncludingDeletedAsync();
         Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id);
 
         Task<T> GetByUniqueAsync(string uniqueString, string propertyName);

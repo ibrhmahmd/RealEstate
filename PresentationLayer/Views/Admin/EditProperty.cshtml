@@ -23,11 +23,11 @@
 }
 
 @section content {
-   
-        <!-- Page Title -->
-<br />
 
-        <!-- Edit Property Card -->
+    <!-- Page Title -->
+    <br />
+
+    <!-- Edit Property Card -->
 
     <div class="row justify-content-center">
         <div class="col-md-6 custom-card-container">
@@ -36,9 +36,9 @@
                     <h5 class="card-title">Edit Property</h5>
                 </div>
                 <div class="card-body">
-                            <form id="editPropertyForm" asp-action="EditProperty" enctype="multipart/form-data" asp-controller="Admin" method="post">
-                     
-                                <!-- Property Details Fields -->
+                    <form id="editPropertyForm" asp-action="EditProperty" enctype="multipart/form-data" asp-controller="Admin" method="post">
+
+                        <!-- Property Details Fields -->
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label">Name</label>
                             <input asp-for="Name" class="form-control" id="propertyName" required>

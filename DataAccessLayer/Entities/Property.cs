@@ -55,7 +55,6 @@ namespace DataAccessLayer.Entities
     }
 
 
-
     public enum PropertStatus
     {
         Lease,
