@@ -30,6 +30,7 @@ namespace BusinessLayer.Services
 
             var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
             {
+                Id = property.Id,
                 Name = property.Name,
                 Location = property.Location,
                 Description = property.Description,
@@ -56,7 +57,7 @@ namespace BusinessLayer.Services
         public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
         {
             var properties = await _context.Properties
-                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted == false).ToListAsync();
+                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted ==false).ToListAsync();
             return _mapper.Map<List<PropertyDTO>>(properties);
         }
 
@@ -193,7 +194,7 @@ namespace BusinessLayer.Services
             return existingProperty != null;
         }
 
-
+        
 
 
     }
