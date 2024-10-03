@@ -203,11 +203,25 @@ namespace PresentationLayer.Controllers
             }
             return View(contract);
         }
-        public async Task<IActionResult> ListPayments()
+        public async Task<IActionResult> ListPayments(int pageNumber = 1, int pageSize = 5)
         {
+            if (User.IsInRole("Admin"))
+            {
 
-            var payment = await _paymentService.GetAllPaymentsAsync();
-            return View(payment);
+            }
+            var Pagedpayments = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<PaymentDTO>
+            {
+                Items = Pagedpayments.Items,
+                PageNumber = Pagedpayments.CurrentPage,
+                PageSize = Pagedpayments.PageSize,
+                TotalRecords = Pagedpayments.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+
         }
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
