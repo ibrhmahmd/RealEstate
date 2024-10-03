@@ -41,9 +41,9 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
+               
             }
             var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
-
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = pagedProperties.Items,

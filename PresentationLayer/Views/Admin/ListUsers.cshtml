@@ -39,8 +39,7 @@
                                 <td>@item.UserName</td>
                                 <td>@item.Email</td>
                                 <td>@item.PhoneNumber</td>
-                                <th>@item.IsVerified</th>
-                                <th>@item.IsDeleted</th>
+
                                 <td>
                                     <span class="status-label @(item.IsVerified.GetValueOrDefault() ? "status-Verified" : "status-NotVerified")">
                                         @(item.IsVerified.HasValue ? (item.IsVerified.Value ? "Verified" : "Not Verified") : "Unknown")
@@ -88,11 +87,11 @@
                             </li>
                         }
                     </ul>
-
-                <!-- Back Button -->
-                <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
-                    <i class="fas fa-rotate-back"></i> Back
-                </a>
+                 </div>
+                    <!-- Back Button -->
+                    <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                        <i class="fas fa-rotate-back"></i> Back
+                    </a>
             </form>
         </div>
     </div>

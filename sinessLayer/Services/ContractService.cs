@@ -171,9 +171,12 @@ namespace BusinessLayer.Services
         }
 
 
+
+
         public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
         {
             var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+           
             if (property == null)
             {
                 throw new KeyNotFoundException($"Property with ID {propertyId} not found.");
@@ -183,7 +186,6 @@ namespace BusinessLayer.Services
             {
                 PropertyId = property.Id,
                 PropertyLocation = property.Location,
-                StartDate = DateTime.Now,
                 IsFurnished = property.IsFUrnished,
                 Rooms = property.Rooms,
                 ContractType = property.Status.ToString()

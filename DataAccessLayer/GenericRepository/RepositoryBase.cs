@@ -44,7 +44,6 @@ namespace DataAccessLayer.GenericRepository
                 var query = Context.Set<T>().AsNoTracking()
                                     .Where(e => EF.Property<bool>(e, "IsDeleted")== false);
 
-
                 var totalRecords = await query.CountAsync();
 
                 var items = await query.OrderBy(e => EF.Property<int>(e, "Id")) // Ensure ordering to avoid paging inconsistencies
@@ -60,12 +59,12 @@ namespace DataAccessLayer.GenericRepository
                     PageSize = pageSize
                 };
             }
-
             catch (Exception ex)
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+
 
 
         // Get entities by name
