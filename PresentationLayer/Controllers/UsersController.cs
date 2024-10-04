@@ -80,17 +80,17 @@ namespace PresentationLayer.Controllers
 
 
 
+
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.Value);
+                var user = await _userService.GetUserByIdAsync(id);
                 return View(user);
             }
             catch (KeyNotFoundException)
@@ -98,33 +98,20 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
-
-        // POST: Users/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] User user)
+          [HttpPost]
+        public async Task<IActionResult> Edit(User user)
         {
-       
-            if (id != user.Id)
+            if (user.UserPicture != null)
             {
-                return NotFound();
-            }
 
+                var fileName = UploadFile.UploadImage("userpicture", user.UserPicture);
+                user.UserPictureUrl = fileName;
+            }
             if (ModelState.IsValid)
             {
-                try
-                {
+               
                     await _userService.UpdateUserAsync(user);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException)
-                {
-                    return NotFound();
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Email", ex.Message);
-                }
+                    return RedirectToAction("profile", "account");  
             }
             return View(user);
         }

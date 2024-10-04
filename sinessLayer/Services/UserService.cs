@@ -174,6 +174,7 @@ namespace BusinessLayer.Services
             existingUser.UserName = user.UserName;
             existingUser.Email = user.Email;
             existingUser.PhoneNumber = user.PhoneNumber;
+            existingUser.UserPictureUrl = user.UserPictureUrl;
             await _unitOfWork.UserRepository.UpdateAsync(existingUser);
             await _unitOfWork.SaveAsync();
 

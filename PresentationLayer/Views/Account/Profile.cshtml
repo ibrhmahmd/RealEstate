@@ -174,7 +174,7 @@
          
             <a asp-controller="Contract" asp-action="Details" class="profile-btn">Contract</a><br />
             <a asp-controller="Home" asp-action="Properties" class="profile-btn">Properties</a><br />
-            <a asp-controller="Account" asp-action="EditUser" class="profile-btn">Update</a>
+            <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="profile-btn">Update</a>
         </div>
     </div>
     <div class="container">
