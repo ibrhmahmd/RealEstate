@@ -7,6 +7,8 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using BusinessLayer.DTOModels;
+using PresentationLayer.helper;
 
 
 namespace PresentationLayer.Controllers
@@ -15,11 +17,12 @@ namespace PresentationLayer.Controllers
     {
         private readonly UserService _userService;
         private readonly SignInManager<User> _signInManager;
-
-        public AccountController(UserService userService, SignInManager<User> signInManager)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AccountController(UserService userService, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
             _signInManager = signInManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: /Account/Admin
@@ -33,6 +36,26 @@ namespace PresentationLayer.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+
+        public IActionResult Profile(User users)
+        {
+          
+            if (users.UserPicture != null)
+            {
+
+                var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
+                users.UserPictureUrl = fileName;
+            }
+            var user = _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         // POST: /Account/Login
@@ -154,5 +177,61 @@ namespace PresentationLayer.Controllers
 
             return BadRequest("Failed to seed admin user.");
         }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> EditUser(Guid id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Manually map the User entity to UserDTO (if not using AutoMapper)
+            //var userDto = new UserDTO
+            //{
+            //    Id = user.Id,
+            //    UserName = user.UserName,
+            //    Email = user.Email,
+            //    UserPictureUrl = user.UserPictureUrl,
+            //    // Map other properties as needed
+            //};
+
+            return View(user); // Pass the DTO to the view
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(User users)
+        {
+            if (ModelState.IsValid) // Check if the model state is valid
+            {
+                var user = await _userService.GetUserByIdAsync(users.Id); // Fetch existing user
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Update user properties from DTO
+                user.UserName = users.UserName;
+                user.Email = users.Email;
+
+                // Handle user picture upload if a new file is provided
+                if (users.UserPicture != null)
+                {
+                    var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
+                    user.UserPictureUrl = fileName; // Set the UserPictureUrl with the uploaded file name
+                }
+
+                // Call the service to update the user
+                await _userService.UpdateUserAsync(user);
+
+                return RedirectToAction("Home"); // Redirect to the Home action after successful update
+            }
+
+            return View(users); // If model state is invalid, return the same view with DTO data
+        }
+
+
     }
 }

@@ -60,9 +60,9 @@ namespace PresentationLayer
                     // Get the necessary services
                     var userService = services.GetRequiredService<UserService>();
                     var signInManager = services.GetRequiredService<SignInManager<User>>();
-
+                    var web = services.GetRequiredService<IWebHostEnvironment>();
                     // Create the AccountController with the resolved services
-                    var accountController = new AccountController(userService, signInManager);
+                    var accountController = new AccountController(userService, signInManager,web);
 
                     // Call the method to seed the admin user
                     await accountController.SeedAdminUser();

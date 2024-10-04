@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -19,15 +20,17 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly MyDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper , UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper ,MyDbContext context , UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
 
@@ -67,17 +70,18 @@ namespace BusinessLayer.Services
             return (List<User>)users; // No mapping needed if returning the entity directly
         }
 
-        // Get user by ID
         public async Task<User> GetUserByIdAsync(Guid id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
-            return user; // Return the User entity directly
+            return user; // Return the user entity directly
         }
 
+       
 
 
 
@@ -121,6 +125,25 @@ namespace BusinessLayer.Services
         }
 
 
+        public User GetCurrentUser(ClaimsPrincipal userPrincipal)
+        {
+            // Get the user ID from the claims
+            var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return null; // No user is logged in
+            }
+
+            // Parse the userId (which is a string) to Guid
+            if (Guid.TryParse(userId, out Guid parsedUserId))
+            {
+                // Fetch the user from the database using the parsed Guid userId
+                return _context.Users.SingleOrDefault(e => e.Id == parsedUserId);
+            }
+
+            return null; // If the userId cannot be parsed to Guid, return null
+        }
 
 
 

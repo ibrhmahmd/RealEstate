@@ -22,6 +22,9 @@ namespace DataAccessLayer.Entities
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
 
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+
         [MaxLength(50)]
         public string Location { get; set; }
         public Guid? ProjectId { get; set; }

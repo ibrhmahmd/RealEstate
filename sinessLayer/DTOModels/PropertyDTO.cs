@@ -30,6 +30,9 @@ namespace BusinessLayer.DTOModels
         [Required]
         public bool IsFUrnished { get; set; }
 
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 

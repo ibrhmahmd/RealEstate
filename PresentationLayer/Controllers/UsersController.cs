@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using PresentationLayer.helper;
 
 namespace PresentationLayer.Controllers
 {
@@ -103,6 +104,7 @@ namespace PresentationLayer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] User user)
         {
+       
             if (id != user.Id)
             {
                 return NotFound();

@@ -1,0 +1,227 @@
+﻿@model DataAccessLayer.Entities.User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        /* Existing global styles */
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:#fff;
+            position: relative; /* To allow absolute positioning of inner elements */
+        }
+
+        .profile-card {
+            background: linear-gradient(to right, #32be8f, #38d39f, #32be8f);
+            width: 350px;
+            height: 600px;
+            margin-right: 920px; /* Adjusted margin to center align */
+            margin-top: 85px;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #fff;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+        .profile-card h3 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-card p {
+            font-size: 1rem;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .profile-btn {
+            display: inline-block;
+            width: 300px; /* Make the button take the full width */
+            padding: 10px; /* Adjust padding for uniform size */
+            background-color: white;
+            color: green;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 5px 0; /* Consistent margin for vertical spacing */
+        }
+
+        .profile-btn:hover {
+            background-color: #38d39f;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
+            background-color: #38d39f;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background-color: #32be8f;
+        }
+
+        /* Responsive adjustments */
+        @@media screen and (max-width: 900px) {
+            .profile-card {
+                width: 90%;
+                padding: 30px;
+            }
+
+            .profile-pic {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .file-input {
+            display: none; /* Hide the file input */
+        }
+
+        .image-button {
+            cursor: pointer; /* Change cursor to pointer for the button effect */
+        }
+
+        .profile-pic {
+            max-width: 100px; /* Set the size of the upload image */
+            height: auto;
+        }
+
+        /* Center properties list */
+        .properties-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1400px; /* Space above properties */
+            margin-left:100px;
+            text-align: center; /* Center the text */
+            color: #333; /* Text color */
+        }
+
+        .properties-list ul {
+            list-style: none; /* Remove bullets */
+            padding: 0; /* Remove padding */
+        }
+
+        .properties-list li {
+            margin: 5px 0; /* Spacing between items */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="profile-card">
+            @if (Model.UserPictureUrl == null)
+            {
+                <form enctype="multipart/form-data" method="post" action="@Url.Action("EditUser", "Account")">
+                    <label for="fileInput" class="image-button">
+                        <img id="uploadImage" src="~/assets/img/upload.png" alt="Upload Image" class="profile-pic" />
+                    </label>
+                    <input hidden asp-for="UserPicture" type="file" name="profilePicture" id="fileInput" class="file-input" accept="image/*" onchange="previewImage(event)" />
+                   <img id="imagePreview" src="" alt="Image Preview" class="profile-pic" style="display:none;" />
+                </form>
+            }
+            else
+            {
+
+                // Display the user's profile picture
+                <img id="imagePreview" src="@Url.Content("~/properties/userpicture/" + Model.UserPictureUrl)" alt="User Profile Picture" class="profile-pic" />
+            }
+            <hr />
+
+            <h3>@(Model?.UserName ?? "Unknown User")</h3>
+            <p>@(Model?.Email ?? "No Email")</p>
+            <hr />
+         
+            <a asp-controller="Contract" asp-action="Details" class="profile-btn">Contract</a><br />
+            <a asp-controller="Home" asp-action="Properties" class="profile-btn">Properties</a><br />
+            <a asp-controller="Account" asp-action="EditUser" class="profile-btn">Update</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="properties-list">
+            <h4>Owned Properties</h4>
+            @if (Model.Properties != null && Model.Properties.Any())
+            {
+                <ul>
+                    @foreach (var property in Model.Properties)
+                    {
+                        <li>
+                            <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.Id">
+                                @property.Name - @property.Location
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No Properties Owned.</p>
+            }
+        </div>
+        </div>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const imagePreview = document.getElementById('imagePreview');
+            const uploadImage = document.getElementById('uploadImage'); // Get the upload image
+            const fileInput = event.target; // Get the input field
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result; // Set the image source to the selected file
+                    imagePreview.style.display = 'block'; // Show the image preview
+                    uploadImage.style.display = 'none'; // Hide the upload icon
+                    fileInput.style.display = 'none'; // Hide the input field
+                };
+                reader.readAsDataURL(file); // Read the file as a data URL
+            } else {
+                imagePreview.src = ""; // Clear the preview if no file is selected
+                imagePreview.style.display = 'none'; // Hide the image preview
+                uploadImage.style.display = 'block'; // Show the upload icon if no file is selected
+            }
+        }
+    </script>
+</body>
+</html>
