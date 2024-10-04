@@ -32,6 +32,7 @@ namespace BusinessLayer.Services
 
             var PaymentDTOs = paymentsPaged.Items.Select(payment => new PaymentDTO
             {
+				Id = payment.Id,
                 Amount = payment.Amount,
                 PaymentMethod = payment.PaymentMethod,
                 PaymentDate = payment.PaymentDate,
