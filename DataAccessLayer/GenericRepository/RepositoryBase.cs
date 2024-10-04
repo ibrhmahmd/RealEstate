@@ -35,7 +35,6 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-
         // Get all Items in Paged list
         public async Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize)
         {
@@ -97,7 +96,6 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-
         public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
         {
             try
@@ -220,7 +218,6 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-        // Soft delete an entity by setting IsDeleted to true
         // Soft delete an entity by setting IsDeleted to true
         public async Task SoftDeleteAsync(Guid id)
         {

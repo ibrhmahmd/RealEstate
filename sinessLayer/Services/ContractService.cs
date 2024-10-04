@@ -30,6 +30,7 @@ namespace BusinessLayer.Services
 
             var ContractDTOs = contractsPaged.Items.Select(contract => new ContractDTO
             {
+                Id = contract.Id,
                 ContractType = contract.ContractType,
                 AgentId = contract.AgentId,
                 EndDate = contract.EndDate,
