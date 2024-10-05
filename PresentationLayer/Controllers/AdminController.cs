@@ -12,7 +12,7 @@ using PresentationLayer.Models;
 using System.Drawing.Printing;
 namespace PresentationLayer.Controllers
 {
-    [Authorize]
+    
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
