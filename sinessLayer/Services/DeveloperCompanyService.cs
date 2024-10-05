@@ -24,7 +24,7 @@ namespace BusinessLayer.Services
         // Get all Developer Companies
         public async Task<IQueryable<DeveloperCompanyDTO>> GetAllDeveloperCompaniesAsync()
         {
-            var companies = await _unitOfWork.DeveloperCompaniesRepository.GetAllAsync();
+            var companies = await _unitOfWork.DeveloperCompaniesRepository.GetAllAsync(1,5);
             return _mapper.Map<IQueryable<DeveloperCompanyDTO>>(companies);
         }
 

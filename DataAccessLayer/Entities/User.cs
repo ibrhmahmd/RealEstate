@@ -17,7 +17,13 @@ namespace DataAccessLayer.Entities
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
 
+        public bool? IsVerified { get; set; }
+        public string? UserPictureUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? UserPicture { get; set; }
         public virtual ICollection<Contract>? Contracts { get; set; }
+        public virtual ICollection<Property>? Properties { get; set; }
         public virtual ICollection<Payment>? Payments { get; set; }
     }
 }

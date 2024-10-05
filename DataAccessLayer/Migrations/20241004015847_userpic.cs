@@ -5,24 +5,23 @@
 namespace DataAccessLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class addroletouser : Migration
+    public partial class userpic : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Role",
+                name: "UserPictureUrl",
                 table: "Users",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Role",
+                name: "UserPictureUrl",
                 table: "Users");
         }
     }

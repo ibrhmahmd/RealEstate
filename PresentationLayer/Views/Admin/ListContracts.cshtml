@@ -1,4 +1,4 @@
-﻿@model List<BusinessLayer.DTOModels.ContractDTO>
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.ContractDTO>
 @{
     ViewData["Title"] = "Contract List";
     ViewData["ActionName"] = "Contract";
@@ -13,10 +13,9 @@
 }
 
 @section content {
-    <br />
+    <br/>
     <div class="container">
         <h2 class="header-title">Contract Management</h2>
-
         <div class="header-container">
 
             <input type="text" id="searchInput" class="search-bar" placeholder="Search Contract..." />
@@ -31,18 +30,18 @@
                         <th>Agent</th>
                         <th>End Date</th>
                         <th>Location</th>
-
                         <th>Actions</th>
-
                     </tr>
                 </thead>
-                <tbody id="UserTable">
-                    @foreach (var contract in Model)
+                <tbody id="contractTable">
+                    @foreach (var contract in Model.Items)
                     {
                         <tr>
                             <td>@contract.ContractType</td>
                             <td>@contract.AgentId</td>
                             <td>@contract.EndDate</td>
+                            <td>@contract.TotalAmount</td>
+                            <td>@contract.IsTerminated</td>
                             <td>@contract.PropertyLocation</td>
 
                             <td>
@@ -62,9 +61,52 @@
                     }
                 </tbody>
             </table>
-            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
-                <i class="fas fa-rotate-back"></i> Back
-            </a>
+            <!-- Pagination and Back Button Container -->
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Back Button on the left -->
+                <div>
+                    <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                        <i class="fas fa-rotate-back"></i> Back
+                    </a>
+                </div>
+
+                <!-- Pagination on the right -->
+                <div>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                            </li>
+                        }
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -132,7 +174,7 @@
             // Search function
             $('#searchInput').on('keyup', function () {
                 var value = $(this).val().toLowerCase();
-                $('#PropertyTable tbody tr').filter(function () {
+                $('#contractTable tbody tr').filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });

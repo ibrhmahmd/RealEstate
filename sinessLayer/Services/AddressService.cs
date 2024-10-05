@@ -22,7 +22,7 @@ namespace BusinessLayer.Services
         // Get all Addresses
         public async Task<IQueryable<AddressDTO>> GetAllAddressesAsync()
         {
-            var addresses = await _unitOfWork.AddressesRepository.GetAllAsync();
+            var addresses = await _unitOfWork.AddressesRepository.GetAllAsync(1,5);
             return _mapper.Map<IQueryable<AddressDTO>>(addresses);
         }
 

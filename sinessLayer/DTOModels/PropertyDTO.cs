@@ -9,8 +9,8 @@ namespace BusinessLayer.DTOModels
     {
         [Required, StringLength(100)]
         public string Name { get; set; }
-		public Guid? ProjectId { get; set; }
-		public string? PropertyPictureUrl { get; set; }
+        public Guid? ProjectId { get; set; }
+        public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
@@ -29,6 +29,9 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsFUrnished { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
@@ -56,4 +59,5 @@ namespace BusinessLayer.DTOModels
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
     }
+
 }

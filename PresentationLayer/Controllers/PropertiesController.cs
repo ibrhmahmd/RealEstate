@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace PresentationLayer.Controllers 
 {
+
     [Route("Properties")]
     public class PropertiesController : Controller
     {
@@ -18,14 +19,6 @@ namespace PresentationLayer.Controllers
             _propertyService = propertyService;
         }
 
-        
-        [HttpGet]
-        [Route("Index")] 
-        public async Task<IActionResult> Index()
-        {
-            var properties = await _propertyService.GetAllPropertiesAsync();
-            return View("Index", properties.ToList()); 
-        }
 
         // Render a single property details page
         [HttpGet]
@@ -35,8 +28,6 @@ namespace PresentationLayer.Controllers
             {
                 var property = await _propertyService.GetPropertyByIdAsync(id);
                 return View("~/Views/Home/PropertySingle.cshtml", property);
-
-
             }
             catch (KeyNotFoundException e)
             {
@@ -45,10 +36,13 @@ namespace PresentationLayer.Controllers
             }
         }
 
+
+
+
         [HttpGet("api/all")]
         public async Task<ActionResult<IQueryable<PropertyDTO>>> GetAllProperties()
         {
-            var properties = await _propertyService.GetAllPropertiesAsync();
+            var properties = await _propertyService.GetAllPropertiesAsync(1,5);
             return Ok(properties);
         }
 

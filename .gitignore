@@ -13,4 +13,8 @@ obj/
 /DataAccessLayer/appsettings.json
 /PresentationLayer/appsettings.json
 /PresentationLayer/appsettings.json
+<<<<<<< HEAD
 /PresentationLayer/appsettings.json
+=======
+/PresentationLayer/appsettings.Development.json
+>>>>>>> master

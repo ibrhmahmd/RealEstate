@@ -1,0 +1,100 @@
+﻿@model DataAccessLayer.Entities.User
+
+@{
+
+    ViewData["Title"] = "User Profile Dashboard";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        .sidebar { width: 80px; }
+        .sidebar-icon { width: 50px; height: 50px; margin: 10px 0; }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="sidebar bg-white shadow-lg p-4 flex flex-col items-center">
+            <div class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" />
+            </div>
+            <div class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" />
+            </div>
+            <div class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" />
+            </div>
+            <div class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" />
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6">
+            <!-- Header -->
+            <header class="flex justify-between items-center bg-white shadow-md rounded p-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Welcome, Amanda</h1>
+                    <p class="text-gray-500">Tue, 07 June 2022</p>
+                </div>
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 h-10 rounded-full" />
+                </div>
+            </header>
+
+            <!-- Profile Section -->
+            <section class="bg-white rounded shadow-md p-6">
+                <div class="flex items-center mb-6">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-16 h-16 rounded-full mr-4" />
+                    <div>
+                        <h2 class="text-xl font-semibold">Alexa Rawles</h2>
+                        <p class="text-gray-500">alexarawles@gmail.com</p>
+                    </div>
+                    <button class="ml-auto bg-blue-500 text-white rounded px-4 py-2">Edit</button>
+                </div>
+
+                <!-- User Details Form -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-600 mb-1">Full Name</label>
+                        <input type="text" value="Your First Name" class="w-full border rounded p-2">
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-1">Country</label>
+                        <select class="w-full border rounded p-2">
+                            <option>Your First Name</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-1">Phone Number</label>
+                        <input type="text" value="Your Phone Number" class="w-full border rounded p-2">
+                    </div>
+                </div>
+
+                <!-- Email Address Section -->
+                <div class="mt-6">
+                    <h3 class="text-gray-700 mb-2">My Email Address</h3>
+                    <div class="flex items-center bg-gray-100 p-4 rounded">
+                        <img src="https://img.icons8.com/ios-filled/50/4a90e2/new-post.png" class="w-8 h-8 mr-4" />
+                        <div>
+                            <p class="font-semibold">alexarawles@gmail.com</p>
+                            <p class="text-gray-500 text-sm">1 month ago</p>
+                        </div>
+                    </div>
+                    <button class="mt-4 bg-blue-500 text-white rounded px-4 py-2">+Add Email Address</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

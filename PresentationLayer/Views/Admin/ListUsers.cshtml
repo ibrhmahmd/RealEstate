@@ -1,85 +1,126 @@
-﻿@model List<DataAccessLayer.Entities.User>
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.UserDTO>
 @{
     ViewData["Title"] = "User List";
     ViewData["ActionName"] = "Users";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
-
 }
+
 @section Styles {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-   
 }
+
 @section content {
     <br />
-	<div class="container">
-		<h2 class="header-title">User Management</h2>
-		<div class="header-container">
-
+    <div class="container">
+        <h2 class="header-title">User Management</h2>
+        <div class="header-container">
             <input type="text" id="searchInput" class="search-bar" placeholder="Search Users..." />
-	
         </div>
 
-    <div class="container table-container">
-  
-        <form method="post" asp-action="ListUsers" asp-controller="Admin">
-            <table class="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th>UserName</th>
-                        <th>Email</th>
-                        <th>Phone Number</th>
-                            <th>Is Verified</th>
-                        <th>Delete</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody id="UserTable">
-                    @foreach (var item in Model)
-                    {
-                        var statusClass = item.IsDeleted == true ? "status-deleted" : "status-active"; // Inverted logic
+        <div class="container table-container">
+            <form method="post" asp-action="ListUsers" asp-controller="Admin">
+                <table class="table table-hover table-bordered">
+                    <thead>
                         <tr>
-                                <td>@item.UserName</td>
-                            <td>@item.Email</td>
-                            <td>@item.PhoneNumber</td>
-                            <td>
-                                <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
-                                    @(item.IsDeleted ? "False" : "True")
-                                </span>
-                            </td>
-                            <td>
-                                <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
-                                    <i class="fas fa-trash"></i> Delete
-                                </a>
-                                </td>
-                            <td>
-                                <a asp-action="Details" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </a>
-                            </td>
+                            <th>UserName</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Verified</th>
+                            <th>Deleted</th>
+                            <th>Delete</th>
+                            <th>Details</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-            <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
-                    <i class="fas fa-rotate-back"></i> Back
-            </a>
-        </form>
+                    </thead>
+                    <tbody id="UserTable">
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>@item.PhoneNumber</td>
+
+                                <td>
+                                    <span class="status-label @(item.IsVerified.GetValueOrDefault() ? "status-Verified" : "status-NotVerified")">
+                                        @(item.IsVerified.HasValue ? (item.IsVerified.Value ? "Verified" : "Not Verified") : "Unknown")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
+                                        @(item.IsDeleted ? "Deleted" : "Active")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-details">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Back Button on the left -->
+                    <div>
+                        <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </div>
+                <!-- Pagination Controls -->
+                <div>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                            </li>
+                        }
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
+                    </ul>
+
+                 </div>
+                 </div>
+                    <!-- Back Button -->
+              
+            </form>
+        </div>
     </div>
- </div>
+
     <br />
     <div class="services section">
-
         <div class="container">
-
             <div class="row gy-4">
-
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="service-item position-relative">
-                        <div class="icon">
-                            <i class="bi bi-activity"></i>
-                        </div>
+                        <div class="icon"><i class="bi bi-activity"></i></div>
                         <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
                             <h3>Users</h3>
                         </a>
@@ -87,23 +128,19 @@
                     </div>
                 </div><!-- End Service Item -->
 
-
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="service-item position-relative">
-                        <div class="icon">
-                            <i class="bi bi-broadcast"></i>
-                        </div>
+                        <div class="icon"><i class="bi bi-broadcast"></i></div>
                         <a href="service-details.html" class="stretched-link">
                             <h3>Contracts</h3>
                         </a>
-                        <p>Viewe Contracts.</p>
+                        <p>View Contracts.</p>
                     </div>
                 </div><!-- End Service Item -->
+
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="service-item position-relative">
-                        <div class="icon">
-                            <i class="bi bi-easel"></i>
-                        </div>
+                        <div class="icon"><i class="bi bi-easel"></i></div>
                         <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
                             <h3>Properties</h3>
                         </a>
@@ -113,8 +150,8 @@
             </div>
         </div>
     </div>
-    }
-    @section scripts {
+}
+@section scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -131,5 +168,4 @@
             });
         });
     </script>
-    }
-     
+}

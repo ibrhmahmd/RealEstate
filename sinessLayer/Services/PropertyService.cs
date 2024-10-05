@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,11 +24,34 @@ namespace BusinessLayer.Services
 
 
         // Get all properties
-        public async Task<List<PropertyDTO>> GetAllPropertiesAsync()
+        public async Task<PagedResult<PropertyDTO>> GetAllPropertiesAsync(int pageNumber, int pageSize)
         {
-            var properties = await _unitOfWork.PropertiesRepository.GetAllAsync();
-            return _mapper.Map<List<PropertyDTO>>(properties);
+            var propertiesPaged = await _unitOfWork.PropertiesRepository.GetAllPagedAsync(pageNumber, pageSize);
+
+            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            {
+                Id = property.Id,
+                Name = property.Name,
+                Location = property.Location,
+                Description = property.Description,
+                Area = property.Area,
+                Price = property.Price,
+                Type = property.Type,
+            }).ToList();
+
+
+
+
+            return new PagedResult<PropertyDTO>
+            {
+                Items = propertyDTOs,
+                CurrentPage = propertiesPaged.CurrentPage,
+                PageSize = propertiesPaged.PageSize,
+                TotalRecords = propertiesPaged.TotalRecords
+            };
         }
+
+
 
 
         public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
@@ -142,6 +166,25 @@ namespace BusinessLayer.Services
 
 
 
+        public async Task PropertyOccupiedAsync(Guid id)
+        {
+            // Retrieve the selected property using the provided ID
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+
+            // Check if the property exists
+            if (selectedProperty != null)
+            {
+                // Set the property as unavailable
+                selectedProperty.IsAvailable = false;
+
+                // Update the property in the repository
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
 
 
         // Helper method to check if a property already exists by some unique identifier
@@ -150,5 +193,9 @@ namespace BusinessLayer.Services
             var existingProperty = await _unitOfWork.PropertiesRepository.GetByUniqueAsync(propertyName, "Name");
             return existingProperty != null;
         }
+
+        
+
+
     }
 }

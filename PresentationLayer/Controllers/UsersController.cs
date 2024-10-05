@@ -18,13 +18,6 @@ namespace PresentationLayer.Controllers
         }
 
 
-        // GET: Users
-        public async Task<IActionResult> Index()
-        {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
-        }
-
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(Guid? id)

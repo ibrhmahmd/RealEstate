@@ -113,7 +113,8 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid>("OccupantId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PaymentMethodId")
+                    b.Property<Guid?>("PaymentMethodId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PropertyId")
@@ -414,9 +415,14 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Properties");
                 });
@@ -445,6 +451,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsVerified")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -483,6 +492,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UserPictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -689,6 +701,12 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.Project", null)
                         .WithMany("properties")
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("DataAccessLayer.Entities.User", "User")
+                        .WithMany("Properties")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -767,6 +785,8 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Contracts");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
         }

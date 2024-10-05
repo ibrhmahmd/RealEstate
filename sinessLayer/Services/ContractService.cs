@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure;
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,20 +14,39 @@ namespace BusinessLayer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly PropertyService _propertyService;
 
-        public ContractService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _propertyService = propertyService;
         }
 
         // Get all Contracts
-        public async Task<List<ContractDTO>> GetAllContractsAsync()
+        public async Task<PagedResult<ContractDTO>> GetAllContractsAsync(int pageNumber, int pageSize)
         {
-            var contracts = await _unitOfWork.ContractsRepository.GetAllAsync();
-            return _mapper.Map<List<ContractDTO>>(contracts);
-        }
+            var contractsPaged = await _unitOfWork.ContractsRepository.GetAllPagedAsync(pageNumber, pageSize);
 
+            var ContractDTOs = contractsPaged.Items.Select(contract => new ContractDTO
+            {
+                Id = contract.Id,
+                ContractType = contract.ContractType,
+                AgentId = contract.AgentId,
+                EndDate = contract.EndDate,
+                TotalAmount = contract.TotalAmount,
+                IsTerminated = contract.IsTerminated,
+                PropertyLocation = contract.PropertyLocation,
+
+            }).ToList();
+            return new PagedResult<ContractDTO>
+            {
+                Items = ContractDTOs,
+                CurrentPage = contractsPaged.CurrentPage,
+                PageSize = contractsPaged.PageSize,
+                TotalRecords = contractsPaged.TotalRecords
+            };
+        }
 
 
 
@@ -35,7 +56,6 @@ namespace BusinessLayer.Services
             var contracts = await _unitOfWork.ContractsRepository.GetAllIncludingDeletedAsync();
             return _mapper.Map<IQueryable<ContractDTO>>(contracts);
         }
-
 
 
         // Get contract by ID
@@ -57,8 +77,12 @@ namespace BusinessLayer.Services
             // contract AutoMapper to map ContractDTO to Contract entity
             var contract = _mapper.Map<Contract>(contractDto);
 
+
             await _unitOfWork.ContractsRepository.InsertAsync(contract);
             await _unitOfWork.SaveAsync();
+
+
+            await _propertyService.PropertyOccupiedAsync(contract.PropertyId);
 
             // Return the mapped ContractDTO (this might return a contract with an ID if you need it)
             return _mapper.Map<ContractDTO>(contract);
@@ -147,5 +171,55 @@ namespace BusinessLayer.Services
             await _unitOfWork.SaveAsync();
         }
 
+
+
+
+        public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
+        {
+            var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+
+            if (property == null)
+            {
+                throw new KeyNotFoundException($"Property with ID {propertyId} not found.");
+            }
+
+            var contractModel = new ContractDTO
+            {
+                PropertyId = property.Id,
+                PropertyLocation = property.Location,
+                IsFurnished = property.IsFUrnished,
+                Rooms = property.Rooms,
+                ContractType = property.Status.ToString()
+            };
+
+            if (property.Status.HasValue)
+            {
+                switch (property.Status.Value)
+                {
+                    case PropertStatus.Lease:
+                        contractModel.RecurringPaymentFrequency = "Monthly";
+                        contractModel.RecurringPaymentAmount = property.Price / 12;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 12) * 2;
+                        break;
+
+                    case PropertStatus.Ownership:
+                        contractModel.RecurringPaymentFrequency = "Quarterly";
+                        contractModel.RecurringPaymentAmount = property.Price / 4;
+                        contractModel.TotalAmount = property.Price;
+                        contractModel.InitialPayment = (property.Price / 4) * 3;
+                        break;
+
+                    default:
+                        throw new InvalidOperationException("Unknown property status.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Property status is not defined.");
+            }
+
+            return contractModel;
+        }
     }
 }

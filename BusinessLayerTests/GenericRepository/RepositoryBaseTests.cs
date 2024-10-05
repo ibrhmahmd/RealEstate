@@ -44,7 +44,7 @@ namespace UnitTests.RepositoryTests
 
             // Act
             await repository.InsertAsync(property);
-            var result = await repository.GetAllAsync();
+            var result = await repository.GetAllAsync(1,5);
 
             // Assert
             Assert.AreEqual(1, result.Count());
@@ -87,7 +87,7 @@ namespace UnitTests.RepositoryTests
             await context.SaveChangesAsync();
 
             // Act
-            var result = await repository.GetAllAsync();
+            var result = await repository.GetAllAsync(1,5);
 
             // Assert
             Assert.AreEqual(2, result.Count());
@@ -151,7 +151,7 @@ namespace UnitTests.RepositoryTests
 
             // Act
             await repository.HardDeleteAsync(Id);
-            var result = await repository.GetAllAsync();
+            var result = await repository.GetAllAsync(1,5);
 
             // Assert
             Assert.AreEqual(0, result.Count());
