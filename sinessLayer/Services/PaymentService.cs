@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,10 +26,31 @@ namespace BusinessLayer.Services
 			var payments = await _unitOfWork.PaymentsRepository.GetAllAsync(1,5);
 			return _mapper.Map<List<PaymentDTO>>(payments);
 		}
+        public async Task<PagedResult<PaymentDTO>> GetAllPaymentsAsync(int pageNumber, int pageSize)
+        {
+            var paymentsPaged = await _unitOfWork.PaymentsRepository.GetAllPagedAsync(pageNumber, pageSize);
 
+            var PaymentDTOs = paymentsPaged.Items.Select(payment => new PaymentDTO
+            {
+				Id = payment.Id,
+                Amount = payment.Amount,
+                PaymentMethod = payment.PaymentMethod,
+                PaymentDate = payment.PaymentDate,
+                Status = payment.Status,
+                ContractId = payment.ContractId
 
-		// Get all Payments including soft deleted
-		public async Task<IQueryable<PaymentDTO>> GetAllPaymentsIncludingDeletedAsync()
+            }).ToList();
+            return new PagedResult<PaymentDTO>
+            {
+                Items = PaymentDTOs,
+                CurrentPage = paymentsPaged.CurrentPage,
+                PageSize = paymentsPaged.PageSize,
+                TotalRecords = paymentsPaged.TotalRecords
+            };
+        }
+
+        // Get all Payments including soft deleted
+        public async Task<IQueryable<PaymentDTO>> GetAllPaymentsIncludingDeletedAsync()
 		{
 			var payments = await _unitOfWork.PaymentsRepository.GetAllIncludingDeletedAsync();
 			return _mapper.Map<IQueryable<PaymentDTO>>(payments);

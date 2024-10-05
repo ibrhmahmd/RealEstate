@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20241003130844_IsVerified")]
-    partial class IsVerified
+    [Migration("20241004051316_updateuser")]
+    partial class updateuser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -418,9 +418,14 @@ namespace DataAccessLayer.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Properties");
                 });
@@ -490,6 +495,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UserPictureUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -696,6 +704,12 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.Project", null)
                         .WithMany("properties")
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("DataAccessLayer.Entities.User", "User")
+                        .WithMany("Properties")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -774,6 +788,8 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Contracts");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Properties");
                 });
 #pragma warning restore 612, 618
         }

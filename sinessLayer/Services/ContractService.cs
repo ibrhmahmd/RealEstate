@@ -16,7 +16,7 @@ namespace BusinessLayer.Services
         private readonly IMapper _mapper;
         private readonly PropertyService _propertyService;
 
-        public ContractService(IUnitOfWork unitOfWork, IMapper mapper , PropertyService propertyService)
+        public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -177,7 +177,7 @@ namespace BusinessLayer.Services
         public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
         {
             var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
-           
+
             if (property == null)
             {
                 throw new KeyNotFoundException($"Property with ID {propertyId} not found.");
