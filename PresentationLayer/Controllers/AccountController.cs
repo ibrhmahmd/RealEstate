@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using BusinessLayer.DTOModels;
 using PresentationLayer.helper;
+using PresentationLayer.Models;
 
 
 namespace PresentationLayer.Controllers
@@ -54,8 +55,19 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
 
-            return View("~/Views/Account/FileName.cshtml",user);
+            var userviewmodel = new UserEditViewModel 
+            {
+                Id= user.Id,
+                Email= user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UserPictureUrl = user.UserPictureUrl,
+
+            };
+
+
+            return View("~/Views/Account/FileName.cshtml", userviewmodel);
         }
+
 
         public IActionResult Profile(User users)
         {
