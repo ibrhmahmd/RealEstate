@@ -1,4 +1,4 @@
-﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
+@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
 @{
     Layout = "_Layout";
     var uniqueLocations = Model.Items.Select(p => p.Location).Distinct().ToList();

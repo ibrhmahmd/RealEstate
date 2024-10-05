@@ -12,7 +12,7 @@ using PresentationLayer.Models;
 using System.Drawing.Printing;
 namespace PresentationLayer.Controllers
 {
-    [Authorize]
+    
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
@@ -37,11 +37,11 @@ namespace PresentationLayer.Controllers
 
 
         // Property CRUD Operations
-        public async Task<IActionResult> ListProperties(int pageNumber= 1, int pageSize = 5)
+        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
             {
-               
+
             }
             var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
@@ -192,7 +192,7 @@ namespace PresentationLayer.Controllers
             }
             return View(user);
         }
-        
+
         public async Task<IActionResult> ContractDetails(Guid id)
         {
 
@@ -203,11 +203,24 @@ namespace PresentationLayer.Controllers
             }
             return View(contract);
         }
-        public async Task<IActionResult> ListPayments()
+        public async Task<IActionResult> ListPayments(int pageNumber = 1, int pageSize = 5)
         {
+            if (User.IsInRole("Admin"))
+            {
 
-            var payment = await _paymentService.GetAllPaymentsAsync();
-            return View(payment);
+            }
+            var Pagedpayment = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<PaymentDTO>
+            {
+                Items = Pagedpayment.Items,
+                PageNumber = Pagedpayment.CurrentPage,
+                PageSize = Pagedpayment.PageSize,
+                TotalRecords = Pagedpayment.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
         }
         public async Task<IActionResult> PaymentDetails(Guid id)
         {

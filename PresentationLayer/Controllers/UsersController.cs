@@ -5,16 +5,21 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
+using PresentationLayer.helper;
+using PresentationLayer.Models;
 
 namespace PresentationLayer.Controllers
 {
+
     public class UsersController : Controller
     {
         private readonly UserService _userService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -79,18 +84,27 @@ namespace PresentationLayer.Controllers
 
 
 
+
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             try
             {
-                var user = await _userService.GetUserByIdAsync(id.Value);
-                return View(user);
+                var user = await _userService.GetUserByIdAsync(id);
+
+                var UserEditViewModel = new UserEditViewModel
+                {
+                    Id = user.Id,
+                    Name = user.UserName,
+                    Email = user.Email,
+                    UserPictureUrl = user.UserPictureUrl,
+                    PhoneNumber = user.PhoneNumber
+                };
+                return View(UserEditViewModel);
             }
             catch (KeyNotFoundException)
             {
@@ -98,33 +112,29 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        // POST: Users/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserName,Email,PasswordHash,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            if (id != user.Id)
+            if (model.UserPicture != null)
             {
-                return NotFound();
+                var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
+                model.UserPictureUrl = fileName;
             }
+            var user = new User
+            {
+                Id = model.Id,
+                UserName = model.Name,
+                Email = model.Email,
+               UserPictureUrl = model.UserPictureUrl,
+                PhoneNumber = model.PhoneNumber,
+            };
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _userService.UpdateUserAsync(user);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException)
-                {
-                    return NotFound();
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Email", ex.Message);
-                }
+                await _userService.UpdateUserAsync(user);
+                return RedirectToAction("profile", "account");
             }
-            return View(user);
+            return View(model);
         }
 
         // GET: Users/Delete/5

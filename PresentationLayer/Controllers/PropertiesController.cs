@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace PresentationLayer.Controllers 
 {
+
     [Route("Properties")]
     public class PropertiesController : Controller
     {

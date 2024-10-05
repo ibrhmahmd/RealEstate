@@ -11,7 +11,7 @@ namespace PresentationLayer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly PropertyService _propertyService;
-        public HomeController(ILogger<HomeController> logger, PropertyService propertyService )
+        public HomeController(ILogger<HomeController> logger, PropertyService propertyService)
         {
             _logger = logger;
             _propertyService = propertyService;
@@ -34,7 +34,7 @@ namespace PresentationLayer.Controllers
 
 
 
-        public async Task<IActionResult> Properties(int pageNumber=1, int pageSize = 8)
+        public async Task<IActionResult> Properties(int pageNumber = 1, int pageSize = 8)
         {
             var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
 
@@ -45,7 +45,7 @@ namespace PresentationLayer.Controllers
                 PageNumber = pagedProperties.CurrentPage,
                 PageSize = pagedProperties.PageSize,
                 TotalRecords = pagedProperties.TotalRecords
-            }; 
+            };
 
             return View("Properties", viewModel);
         }

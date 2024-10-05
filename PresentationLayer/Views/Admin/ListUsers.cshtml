@@ -64,14 +64,26 @@
                         }
                     </tbody>
                 </table>
-
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Back Button on the left -->
+                    <div>
+                        <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </div>
                 <!-- Pagination Controls -->
                 <div>
-                    <ul class="pagination">
+                    <ul class="pagination justify-content-center">
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
                                 <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
                             </li>
                         }
                         @for (int i = 1; i <= Model.TotalPages; i++)
@@ -86,12 +98,18 @@
                                 <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
                     </ul>
+
+                 </div>
                  </div>
                     <!-- Back Button -->
-                    <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
-                        <i class="fas fa-rotate-back"></i> Back
-                    </a>
+              
             </form>
         </div>
     </div>

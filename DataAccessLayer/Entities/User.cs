@@ -17,8 +17,12 @@ namespace DataAccessLayer.Entities
         public string Role { get; set; } // Add this property if it's not present
 
         public bool? IsVerified { get; set; }
+        public string? UserPictureUrl { get; set; }
 
+        [NotMapped]
+        public IFormFile? UserPicture { get; set; }
         public virtual ICollection<Contract>? Contracts { get; set; }
+        public virtual ICollection<Property>? Properties { get; set; }
         public virtual ICollection<Payment>? Payments { get; set; }
     }
 }

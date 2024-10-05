@@ -21,7 +21,7 @@ namespace DataAccessLayer.Entities
         [StringLength(50)]
         public string? ReferenceNumber { get; set; }  // Optional reference number for tracking
 
-        public bool? IsLate { get; set; } = false;  
+        public bool? IsLate { get; set; } = false;
 
         [Range(0, double.MaxValue, ErrorMessage = "Late fee must be a positive value.")]
         public decimal? LateFee { get; set; }  // Nullable if no late fee is applicable
