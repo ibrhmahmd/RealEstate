@@ -6,16 +6,19 @@ using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using PresentationLayer.helper;
+using PresentationLayer.Models;
 
 namespace PresentationLayer.Controllers
 {
     public class UsersController : Controller
     {
         private readonly UserService _userService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -91,29 +94,46 @@ namespace PresentationLayer.Controllers
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
-                return View(user);
+
+                var UserEditViewModel = new UserEditViewModel
+                {
+                    Id = user.Id,
+                    Name = user.UserName,
+                    Email = user.Email,
+                    UserPictureUrl = user.UserPictureUrl,
+                    PhoneNumber = user.PhoneNumber
+                };
+                return View(UserEditViewModel);
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
             }
         }
-          [HttpPost]
-        public async Task<IActionResult> Edit(User user)
-        {
-            if (user.UserPicture != null)
-            {
 
-                var fileName = UploadFile.UploadImage("userpicture", user.UserPicture);
-                user.UserPictureUrl = fileName;
+        [HttpPost]
+        public async Task<IActionResult> Edit(UserEditViewModel model)
+        {
+            if (model.UserPicture != null)
+            {
+                var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
+                model.UserPictureUrl = fileName;
             }
+            var user = new User
+            {
+                Id = model.Id,
+                UserName = model.Name,
+                Email = model.Email,
+               UserPictureUrl = model.UserPictureUrl,
+                PhoneNumber = model.PhoneNumber,
+            };
+
             if (ModelState.IsValid)
             {
-               
-                    await _userService.UpdateUserAsync(user);
-                    return RedirectToAction("profile", "account");  
+                await _userService.UpdateUserAsync(user);
+                return RedirectToAction("profile", "account");
             }
-            return View(user);
+            return View(model);
         }
 
         // GET: Users/Delete/5
