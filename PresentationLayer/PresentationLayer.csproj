@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Properties\Contract\**" />
+    <Content Remove="wwwroot\Properties\Contract\**" />
+    <EmbeddedResource Remove="wwwroot\Properties\Contract\**" />
+    <None Remove="wwwroot\Properties\Contract\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\assets\css\style.css" />
     <None Include="wwwroot\assets\img\avatar.svg" />
     <None Include="wwwroot\assets\img\bg.svg" />
@@ -27,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Properties\Contract\" />
     <Folder Include="wwwroot\Properties\UserPicture\" />
     <Folder Include="wwwroot\Properties\userpicture\" />
     <Folder Include="wwwroot\Properties\PropertyPicture\" />

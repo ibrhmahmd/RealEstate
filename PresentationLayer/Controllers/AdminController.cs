@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Models;
 using System.Drawing.Printing;
+using Azure.Messaging;
 namespace PresentationLayer.Controllers
 {
     
@@ -185,13 +186,61 @@ namespace PresentationLayer.Controllers
         // User Details
         public async Task<IActionResult> Details(Guid id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            if (id == null)
             {
                 return NotFound();
             }
-            return View(user);
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+
+                var UserDto = new UserDTO
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    UserPictureUrl = user.UserPictureUrl,
+                    PhoneNumber = user.PhoneNumber,
+                    Role = user.Role,
+                    IsVerified = user.IsVerified,
+                };
+                return View("~/Views/Admin/UserDetails.cshtml", UserDto);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
+
+
+
+
+
+        public async Task<IActionResult> VerifyUser(Guid id)
+        {
+            try
+            {
+                var verify = await _userService.VerifyUser(id);
+                if (verify)
+                {
+                    TempData["SuccessMessage"] = "User verified successfully.";
+                    return RedirectToAction("Details", new { id = id });
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "User verification failed.";
+                    return RedirectToAction("ListUsers");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error in VerifyUser: {ex.Message}");
+                TempData["ErrorMessage"] = "An error occurred while verifying the user.";
+                return RedirectToAction("ListUsers");
+            }
+        }
+
 
         public async Task<IActionResult> ContractDetails(Guid id)
         {
@@ -222,6 +271,14 @@ namespace PresentationLayer.Controllers
             return View(viewModel);
             return Unauthorized();
         }
+
+
+
+
+
+
+
+
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
             var pay = await _paymentService.GetPaymenttByIdAsync(id);
@@ -231,6 +288,14 @@ namespace PresentationLayer.Controllers
             }
             return View(pay);
         }
+
+
+
+
+
+
+
+
         public async Task<IActionResult> Terminate(Guid id)
         {
             try

@@ -29,6 +29,8 @@
                         <th>Type</th>
                         <th>Agent</th>
                         <th>End Date</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
                         <th>Location</th>
                         <th>Actions</th>
                     </tr>
@@ -41,23 +43,20 @@
                             <td>@contract.AgentId</td>
                             <td>@contract.EndDate</td>
                             <td>@contract.TotalAmount</td>
-                            <td>@contract.IsTerminated</td>
+                            <td>@((contract.IsTerminated ?? false) ? "Terminated" : "Active")</td>
                             <td>@contract.PropertyLocation</td>
-
                             <td>
                                 <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-delete">
-                                    <i class="fas fa-info-trash"></i>Archive
+                                    <i class="fas fa-trash"></i> Archive
                                 </a>
                                 <a asp-action="ContractDetails" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i>Details
+                                    <i class="fas fa-info-circle"></i> Details
                                 </a>
                                 <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-success">
-                                    <i class="fas fa-info-accept"></i>Accept
+                                    <i class="fas fa-check"></i> Accept
                                 </a>
                             </td>
-
                         </tr>
-
                     }
                 </tbody>
             </table>

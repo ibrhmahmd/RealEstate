@@ -20,7 +20,6 @@ namespace BusinessLayer.DTOModels
 		[Required]
 		public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
-
 		public virtual ICollection<Payment>? Payments { get; set; } // Payments associated with the contract
 
 		// Additional Contract Information
@@ -52,7 +51,6 @@ namespace BusinessLayer.DTOModels
 
 		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
 
-		public string? Document { get; set; } // Path to the contract document (optional)
 
 		[Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property
@@ -61,6 +59,11 @@ namespace BusinessLayer.DTOModels
 
 		[Range(0, 20)]
 		public int Rooms { get; set; } // Number of rooms in the property
-	
-	}
+
+
+        public IFormFile? ContractDocument { get; set; }
+        public string? Document { get; set; } // Path to the contract document (optional)
+
+
+    }
 }

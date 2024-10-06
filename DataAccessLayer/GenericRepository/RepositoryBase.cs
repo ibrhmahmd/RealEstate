@@ -297,5 +297,31 @@ namespace DataAccessLayer.GenericRepository
 
             return existingUser;
         }
+
+
+
+
+        public async Task VerifyUser(Guid Id)
+        {
+            try
+            {
+                var entity = await GetByIdAsync(Id);
+                if (entity != null)
+                {
+                    var deletedEntity = entity as dynamic;
+                    deletedEntity.IsVerified = true; 
+
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Entity not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
+            }
+        }
     }
 }

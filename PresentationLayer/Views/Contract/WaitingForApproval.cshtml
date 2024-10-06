@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Contract Waiting for Approval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h2 class="text-center">Contract Status</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-center">Your contract is waiting for approval.</h4>
+                    <p class="text-center mt-4">
+                        Thank you for submitting your contract. Our team will review it shortly.
+                        You will be notified once the approval process is complete.
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

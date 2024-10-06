@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PresentationLayer.helper;
 using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
@@ -51,6 +52,8 @@ namespace PresentationLayer.Controllers
             }
         }
 
+
+
         public async Task<IActionResult> Create(Guid? propertyId)
         {
             if (propertyId == null)
@@ -81,7 +84,7 @@ namespace PresentationLayer.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create( ContractDTO contractDto)
+        public async Task<IActionResult> Create(ContractDTO contractDto)
         {
             if (contractDto == null)
             {
@@ -101,17 +104,33 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
+                    if (contractDto.ContractDocument == null || contractDto.ContractDocument.Length == 0)
+                    {
+                        ModelState.AddModelError("ContractDocument", "Please upload a contract document.");
+                        return View(contractDto);
+                    }
+
+                    var fileName = UploadFile.UploadImage("Contracts", contractDto.ContractDocument);
+                    if (string.IsNullOrEmpty(fileName))
+                    {
+                        ModelState.AddModelError("ContractDocument", "Failed to upload the contract document. Please try again.");
+                        return View(contractDto);
+                    }
+
+                    contractDto.Document = fileName;
                     var createdContract = await _contractService.CreateContractAsync(contractDto);
                     return RedirectToAction(nameof(Details), new { id = createdContract.Id });
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error creating contract.");
-                    ModelState.AddModelError("", $"Error creating contract: {ex.Message}");
+                    _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
+                    ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
+                    return View(contractDto);
                 }
             }
 
-            return View("ContractSave");
+            // If we get here, something went wrong
+            return View(contractDto);
         }
 
 

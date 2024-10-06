@@ -81,7 +81,7 @@ namespace BusinessLayer.Services
             return user; // Return the user entity directly
         }
 
-       
+
 
 
 
@@ -355,6 +355,29 @@ namespace BusinessLayer.Services
             var roles = await _userManager.GetRolesAsync(user);
 
             return (List<string>)roles; // Return the list of roles
+        }
+
+
+
+
+
+
+        public async Task<bool> VerifyUser(Guid id)
+        {
+            try
+            {
+                await _unitOfWork.UserRepository.VerifyUser(id);
+                await _unitOfWork.SaveAsync();
+
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+                return user != null && user.IsVerified == true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error verifying user: {ex.Message}");
+                return false;
+            }
         }
 
     }

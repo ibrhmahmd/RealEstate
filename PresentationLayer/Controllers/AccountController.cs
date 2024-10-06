@@ -28,7 +28,6 @@ namespace PresentationLayer.Controllers
         // GET: /Account/Admin
         public IActionResult Admin()
         {
-            
             return View("~/Views/Admin/view.cshtml");
         }
 
@@ -62,8 +61,6 @@ namespace PresentationLayer.Controllers
                 UserPictureUrl = user.UserPictureUrl,
 
             };
-
-
             return View("~/Views/Account/FileName.cshtml", userviewmodel);
         }
 

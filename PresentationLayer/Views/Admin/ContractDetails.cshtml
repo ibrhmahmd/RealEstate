@@ -32,7 +32,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Property Details</h1>
+            <h1 class="header-title" style="color:darkgreen">Contract Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -59,9 +59,8 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <embed src="@Url.Content("~/properties/Residential Lease Agreement.pdf")" width="800px" height="740px" type="application/pdf" />
+                                <iframe src="@Url.Content($"~/properties/Contracts/{Model.Document}")" width="100%" height="740px" style="border: none;"></iframe>
                             </div>
-
                         </div>
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
