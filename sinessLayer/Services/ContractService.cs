@@ -4,6 +4,8 @@ using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
+using DataAccessLayer.Migrations;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -47,6 +49,7 @@ namespace BusinessLayer.Services
                 TotalRecords = contractsPaged.TotalRecords
             };
         }
+  
 
 
 
@@ -172,9 +175,7 @@ namespace BusinessLayer.Services
         }
 
 
-
-
-        public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
+            public async Task<ContractDTO> ProcessContractAsync(Guid propertyId)
         {
             var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
 

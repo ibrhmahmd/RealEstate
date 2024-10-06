@@ -20,6 +20,15 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+        // Get all Items in Paged list
+       
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Context.Set<T>().CountAsync(predicate);
+        }
+
+
+
         public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
         {
             try

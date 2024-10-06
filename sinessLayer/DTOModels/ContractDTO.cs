@@ -29,7 +29,7 @@ namespace BusinessLayer.DTOModels
 
 		public DateTime? EndDate { get; set; }
 
-		[Required, MaxLength(20)]
+        [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.
 
 		[Range(0, double.MaxValue)]

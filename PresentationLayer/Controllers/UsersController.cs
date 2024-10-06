@@ -7,6 +7,10 @@ using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using PresentationLayer.helper;
 using PresentationLayer.Models;
+using DataAccessLayer.Migrations;
+using System.Diagnostics.Contracts;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
@@ -14,12 +18,15 @@ namespace PresentationLayer.Controllers
     public class UsersController : Controller
     {
         private readonly UserService _userService;
+        private readonly ContractService _contractService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly MyDbContext _context;
 
-        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment)
+        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment, MyDbContext context)
         {
             _userService = userService;
             _webHostEnvironment = webHostEnvironment;
+            _context = context;
         }
 
 
@@ -172,5 +179,65 @@ namespace PresentationLayer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> ListContracts()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Ensure the user ID is parsed to Guid
+            if (!Guid.TryParse(userIdString, out Guid userId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            var contracts = await _context.Contracts
+                .Where(c => c.OccupantId == userId) // Assuming 'UserId' is the property that links to the user
+                .Include(c => c.Agent) // Include agent details
+                .ToListAsync();
+
+            // Map the contracts to ContractDTO
+            var contractDTOs = contracts.Select(c => new ContractDTO
+            {
+                Id = c.Id,
+                ContractType = c.ContractType,
+                AgentId = c.AgentId,
+                EndDate = c.EndDate,
+                TotalAmount = c.TotalAmount,
+                PropertyLocation = c.PropertyLocation,
+            }).ToList();
+
+            return View(contractDTOs);
+        }
+        //public async Task<IActionResult> ListProperties()
+        //{
+        //    var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    // Ensure the user ID is parsed to Guid
+        //    if (!Guid.TryParse(userIdString, out Guid userId))
+        //    {
+        //        return BadRequest("Invalid user ID.");
+        //    }
+
+        //    var properties = await _context.Properties
+        //        .Where(p => p.UserId == userId) // Filtering properties by UserId
+        //        .ToListAsync();
+
+   
+
+        //    // Map the properties to PropertyDTO
+        //    var propertyDTOs = properties.Select(p => new PropertyDTO
+        //    {
+        //        Id = p.Id,
+        //        Name = p.Name,
+        //        Location = p.Location,
+        //        Description = p.Description,
+        //        Area = p.Area,
+        //        Price = p.Price,
+        //        Type = p.Type,
+        //    }).ToList();
+
+        //    return View(propertyDTOs);
+        //}
+
+
     }
 }

@@ -1,240 +1,124 @@
-﻿@model DataAccessLayer.Entities.User
+﻿@model PresentationLayer.Models.UserEditViewModel
+@{
+    ViewData["Title"] = "User Profile Dashboard";
+ 
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Existing global styles */
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            background-color: lightgrey;
+            font-family: 'Nunito', sans-serif;
         }
 
-        .container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background:lightgrey;
-            position: relative; /* To allow absolute positioning of inner elements */
+        .sidebar {
+            width: 80px;
+            height: 80vh;
+            position: fixed;
+            left: 0;
+            top: 0;
         }
 
-        .profile-card {
-            background: linear-gradient(to right, #007f5b, #00b894, #007f5b);
-            width: 350px;
-            height: 600px;
-            margin-right: 900px; /* Adjusted margin to center align */
-            margin-top: 95px;
-            padding: 10px;
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            position: relative;
-            border: 4px solid whitesmoke;
+        .sidebar-icon {
+            width: 50px;
+            height: 50px;
+     
         }
 
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: #fff;
-            margin: 0 auto;
-            margin-bottom: 20px;
-            border: 3px solid white;
-        }
-
-        .profile-card h3 {
-            font-size: 1.8rem;
-            color: white;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .profile-card p {
-            font-size: 1rem;
-            color: white;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .profile-btn {
-            display: inline-block;
-            width: 250px;
-            padding: 10px;
-            background: linear-gradient(135deg, #38d39f, #32be8f);
-            color: white;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            text-align: center;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            margin: 10px 0;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid darkgreen;
-        }
-
-            .profile-btn:hover {
-                background: linear-gradient(135deg, #32be8f, #38d39f);
-                transform: translateY(-5px);
-                box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
-            }
-
-
-        .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 5px 15px;
-            background-color: #38d39f;
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .logout-btn:hover {
-            background-color: #32be8f;
-        }
-
-        /* Responsive adjustments */
-        @@media screen and (max-width: 900px) {
-            .profile-card {
-                width: 90%;
-                padding: 20px;
-            }
-
-            .profile-pic {
-                width: 80px;
-                height: 80px;
-            }
-        }
-
-        .file-input {
-            display: none; /* Hide the file input */
-        }
-
-        .image-button {
-            cursor: pointer; /* Pointer effect for image button */
-        }
-
-        .image-preview {
-            display: none; /* Hide the image preview initially */
-        }
-        .profile-pic {
-            max-width: 100px; /* Set the size of the upload image */
-            height: auto;
-        }
-
-        /* Center properties list */
-        .properties-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 1400px; /* Space above properties */
-            margin-left:100px;
-            text-align: center; /* Center the text */
-            color: #333; /* Text color */
-        }
-
-        .properties-list ul {
-            list-style: none; /* Remove bullets */
-            padding: 0; /* Remove padding */
-        }
-
-        .properties-list li {
-            margin: 5px 0; /* Spacing between items */
+        .custom-green {
+            background-color: rgb(46,202,106);
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
 
-    <div class="container">
-        <div class="profile-card">
-            @if (Model.UserPictureUrl == null)
-            {
-                <form enctype="multipart/form-data" method="post" action="@Url.Action("Edit", "users")">
-                    <label for="fileInput" class="image-button">
-                        <img id="uploadImage" src="~/assets/img/upload.png" alt="Upload Image" class="profile-pic" />
-                    </label>
-                    <input hidden asp-for="UserPicture" type="file" name="profilePicture" id="fileInput" class="file-input" accept="image/*" onchange="previewImage(event)" />
-                   <img id="imagePreview" src="" alt="Image Preview" class="profile-pic" style="display:none;" />
-                </form>
-            }
-            else
-            {
+    <div class="flex min-h-screen">
+        <br />
+        <br />
+        <br />
+        <br />
+        <!-- Sidebar -->
+        <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img  src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
+            </a>
+            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
+            </a>
+            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
+            </a>
 
-                // Display the user's profile picture
-                <img id="imagePreview" src="@Url.Content("~/properties/userpicture/" + Model.UserPictureUrl)" alt="~/assets/img/upload.png" class="profile-pic" />
-            }
-            <hr />
+            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
+            </a>
+        </aside>
 
-            <h3>@(Model?.UserName ?? "Unknown User")</h3>
-            <p>@(Model?.Email ?? "No Email")</p>
-            <hr />
-         
-            <a asp-controller="Contract" asp-action="Details" class="profile-btn">Contract</a><br />
-            <a asp-controller="Home" asp-action="Properties" class="profile-btn">Properties</a><br />
-            <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="profile-btn">Update Profile</a>
+        <!-- Main Content Area -->
+        <div class="flex-1 p-6 ml-20">
+            <br />
+            <br />
+            <br />
+            <br />
+            <!-- Header -->
+            <header class="flex justify-between items-center bg-white shadow-md rounded p-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Welcome, @Model.Name</h1>
+                    <p class="text-gray-500">@DateTime.Now.ToString("ddd, dd MMMM yyyy")</p>
+                </div>
+                <div class="flex items-center">
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-10 h-10 rounded-full" alt="/assets/img/upload.png" />
+                </div>
+            </header>
+            <!-- Profile Section -->
+            <section class="bg-white rounded shadow-md p-6">
+                <div class="flex items-center mb-6">
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-16 h-16 rounded-full mr-4" alt="/assets/img/upload.png" />
+                    <div>
+                        <h2 class="text-xl font-semibold">@Model.Name</h2>
+                        <p class="text-gray-500">@Model.Email</p>
+                    </div>
+                    <a class="ml-auto custom-green text-white rounded px-4 py-2" asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id">Update Profile</a>
+               
+
+                </div>
+
+                <!-- User Details Form -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-gray-600 mb-1">UserName</label>
+                        <input type="text" value="@Model.Name" class="w-full border rounded p-2" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-1">Phone Number</label>
+                        <input type="text" value="@Model.PhoneNumber" class="w-full border rounded p-2" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-1">Email</label>
+                        <input type="text" value="@Model.Email" class="w-full border rounded p-2" readonly>
+                    </div>
+                </div>
+
+                <!-- Email Address Section -->
+                <div class="mt-6">
+                    <h3 class="text-gray-700 mb-2">In Box</h3>
+                    <div class="flex items-center bg-gray-100 p-4 rounded">
+                        <img src="https://img.icons8.com/ios-filled/50/4a90e2/new-post.png" class="w-8 h-8 mr-4" alt="email" />
+                        <div>
+                            <p class="font-semibold">@Model.Email</p>
+                            <p class="text-gray-500 text-sm">1 month ago</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-    <div class="container">
-        <div class="properties-list">
-            <h4>Owned Properties</h4>
-            @if (Model.Properties != null && Model.Properties.Any())
-            {
-                <ul>
-                    @foreach (var property in Model.Properties)
-                    {
-                        <li>
-                            <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.Id">
-                                @property.Name - @property.Location
-                            </a>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>No Properties Owned.</p>
-            }
-        </div>
-        </div>
 
-    <script>
-        function previewImage(event) {
-            const file = event.target.files[0];
-            const imagePreview = document.getElementById('imagePreview');
-            const uploadImage = document.getElementById('uploadImage'); // Get the upload image
-            const fileInput = event.target; // Get the input field
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result; // Set the image source to the selected file
-                    imagePreview.style.display = 'block'; // Show the image preview
-                    uploadImage.style.display = 'none'; // Hide the upload icon
-                    fileInput.style.display = 'none'; // Hide the input field
-                };
-                reader.readAsDataURL(file); // Read the file as a data URL
-            } else {
-                imagePreview.src = ""; // Clear the preview if no file is selected
-                imagePreview.style.display = 'none'; // Hide the image preview
-                uploadImage.style.display = 'block'; // Show the upload icon if no file is selected
-            }
-        }
-    </script>
 </body>
 </html>
