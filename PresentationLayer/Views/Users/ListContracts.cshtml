@@ -16,7 +16,7 @@
     <style>
         .sidebar {
             width: 80px;
-            height: 70vh;
+            height: 80vh;
             position: fixed;
             left: 0;
             top: 0;
@@ -27,9 +27,8 @@
             height: 50px;
         }
 
-        .btn-custom {
-            background-color: #38d39f; /* Use your custom color */
-            color: white;
+        .custom-green {
+            background-color: rgb(46,202,106);
         }
     </style>
 }
@@ -39,7 +38,7 @@
     <br />
 
     <div class="flex min-h-screen">
-        <aside style="margin-left:10px; margin-top:150px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+        <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
             <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
             </a>
@@ -49,6 +48,7 @@
             <a asp-controller="users" asp-action="ListContracts" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
             </a>
+
             <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
             </a>
@@ -56,13 +56,13 @@
 
 
     <div class="container">
-        <h2 class="header-title">User Contracts</h2>
+        <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
 
 
         <div class="container table-container">
             @if (Model == null || !Model.Any())
             {
-                <div class="alert alert-info" role="alert">
+                <div class="alert alert-success" role="alert">
                     No Contracts found for this user.
                 </div>
                 <a asp-action="Create" asp-controller="Admin" class="btn btn-custom">
@@ -105,7 +105,7 @@
             <!-- Pagination and Back Button Container -->
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <a asp-action="profile" asp-controller="account" class="btn btn-custom btn-details">
+                        <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
                         <i class="fas fa-rotate-back"></i> Back
                     </a>
                 </div>

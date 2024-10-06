@@ -132,7 +132,7 @@ namespace PresentationLayer.Controllers
                 Id = model.Id,
                 UserName = model.Name,
                 Email = model.Email,
-               UserPictureUrl = model.UserPictureUrl,
+                UserPictureUrl = model.UserPictureUrl,
                 PhoneNumber = model.PhoneNumber,
             };
 
@@ -207,37 +207,39 @@ namespace PresentationLayer.Controllers
 
             return View(contractDTOs);
         }
-        //public async Task<IActionResult> ListProperties()
-        //{
-        //    var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        public async Task<IActionResult> ListProperties()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    // Ensure the user ID is parsed to Guid
-        //    if (!Guid.TryParse(userIdString, out Guid userId))
-        //    {
-        //        return BadRequest("Invalid user ID.");
-        //    }
-
-        //    var properties = await _context.Properties
-        //        .Where(p => p.UserId == userId) // Filtering properties by UserId
-        //        .ToListAsync();
-
-   
-
-        //    // Map the properties to PropertyDTO
-        //    var propertyDTOs = properties.Select(p => new PropertyDTO
-        //    {
-        //        Id = p.Id,
-        //        Name = p.Name,
-        //        Location = p.Location,
-        //        Description = p.Description,
-        //        Area = p.Area,
-        //        Price = p.Price,
-        //        Type = p.Type,
-        //    }).ToList();
-
-        //    return View(propertyDTOs);
-        //}
+            // Ensure the user ID is parsed to Guid
+            if (!Guid.TryParse(userIdString, out Guid userId))
+            {
+                return BadRequest("Invalid user ID.");
+            }
 
 
+            var properties = await _context.Contracts
+            .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
+            .Join(_context.Properties,               // Join Contracts with Properties
+                  contract => contract.PropertyId,  // Match on PropertyId
+                  property => property.Id,          // The Id in the Properties table
+                  (contract, property) => property) // Select the property
+            .ToListAsync();
+
+
+            // Map the properties to PropertyDTO
+            var propertyDTOs = properties.Select(p => new PropertyDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Location = p.Location,
+                Description = p.Description,
+                Area = p.Area,
+                Price = p.Price,
+                Type = p.Type,
+            }).ToList();
+
+            return View(propertyDTOs);
+        }
     }
 }
