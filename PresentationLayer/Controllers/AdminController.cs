@@ -76,6 +76,7 @@ namespace PresentationLayer.Controllers
                 PageNumber = pagedUsers.CurrentPage,
                 PageSize = pagedUsers.PageSize,
                 TotalRecords = pagedUsers.TotalRecords
+
             };
             return View(viewModel);
             return Unauthorized();

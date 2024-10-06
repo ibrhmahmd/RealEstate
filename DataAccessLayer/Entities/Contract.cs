@@ -20,7 +20,6 @@ namespace DataAccessLayer.Entities
         [Required]
         public Guid? PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
 
-
         public bool? IsArcheives { get; set; } = false;
 
 

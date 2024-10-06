@@ -37,7 +37,6 @@
             margin-right: 10px;
             padding: 10px 15px;
             border: 2px solid #003366;
-          
             border-radius: 20px;
             outline: none;
             transition: box-shadow 0.3s ease-in-out;
@@ -125,7 +124,7 @@
             margin-right: 5px;
         }
 
-    
+
         .table-container {
             margin-top: 20px;
             padding: 20px;
@@ -184,7 +183,6 @@
                 border-color: #38d39f;
                 box-shadow: 0 0 5px rgba(56, 211, 159, 0.5);
             }
-
 
     </style>
 
@@ -252,16 +250,15 @@
         <br />
         <br />
         <br />
-   
         <!-- Page Title -->
-        <div  class="page-title" data-aos="fade">
+        <div class="page-title" data-aos="fade">
             <nav class="breadcrumbs">
                 <div class="container">
                     <ol>
                         <!-- Breadcrumb links -->
                         <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                        <li><a asp-action="Admin" asp-controller="Account">Admin</a></li>
-						@* <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>*@
+                        <li><a asp-action="Admin" asp-controller="Account">Profile</a></li>
+                        @* <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>*@
                         <li class="current">@ViewData["ActionName"]</li>
                         <li class="current">@ViewData["Title"]</li> <!-- Current Page -->
                     </ol>

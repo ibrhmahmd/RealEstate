@@ -1,0 +1,127 @@
+﻿@model List<BusinessLayer.DTOModels.ContractDTO>
+@{
+    ViewData["Title"] = "Contract List";
+    ViewData["ActionName"] = "Contracts";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+
+
+    <style>
+        .sidebar {
+            width: 80px;
+            height: 80vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .custom-green {
+            background-color: rgb(46,202,106);
+        }
+    </style>
+}
+
+@section content {
+    <br />
+    <br />
+
+    <div class="flex min-h-screen">
+        <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+            <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
+            </a>
+            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
+            </a>
+            <a asp-controller="users" asp-action="ListContracts" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
+            </a>
+
+            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
+            </a>
+        </aside>
+
+
+    <div class="container">
+        <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
+
+
+        <div class="container table-container">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-success" role="alert">
+                    No Contracts found for this user.
+                </div>
+          
+            }
+            else
+            {
+                <table class="table table-hover table-bordered" id="PropertyTable">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Agent</th>
+                            <th>End Date</th>
+                            <th>Total Amount</th>
+                            <th>Location</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractTable">
+                        @foreach (var contract in Model)
+                        {
+                            <tr>
+                                <td>@contract.ContractType</td>
+                                <td>@contract.AgentId</td>
+                                <td>@contract.EndDate</td> <!-- Shorten date format -->
+                                <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
+                                <td>@contract.PropertyLocation</td>
+                                <td>
+                                    <a asp-action="ContractDetails" asp-controller="users" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+            <!-- Pagination and Back Button Container -->
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                        <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                        <i class="fas fa-rotate-back"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+}
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+   
+    
+}

@@ -24,6 +24,7 @@ namespace DataAccessLayer.Entities
 
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
+   
 
         [MaxLength(50)]
         public string Location { get; set; }

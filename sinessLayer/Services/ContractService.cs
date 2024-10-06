@@ -7,6 +7,7 @@ using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging; // Added for ILogger
 
 namespace BusinessLayer.Services
 {
@@ -15,12 +16,14 @@ namespace BusinessLayer.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PropertyService _propertyService;
+        private readonly ILogger<ContractService> _logger; // Added for ILogger
 
-        public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService)
+        public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService, ILogger<ContractService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _propertyService = propertyService;
+            _logger = logger; // Added for ILogger
         }
 
         // Get all Contracts
@@ -180,46 +183,81 @@ namespace BusinessLayer.Services
 
             if (property == null)
             {
+                _logger.LogError($"Property with ID {propertyId} not found.");
                 throw new KeyNotFoundException($"Property with ID {propertyId} not found.");
             }
 
-            var contractModel = new ContractDTO
+            ValidatePropertyPrice(property.Price);
+
+            var contractModel = CreateBaseContractModel(property);
+
+            if (property.Status.HasValue)
+            {
+                ProcessContractByStatus(contractModel, property);
+            }
+            else
+            {
+                _logger.LogError($"Property status is not defined for property ID {propertyId}.");
+                throw new InvalidOperationException("Property status is not defined.");
+            }
+
+            return contractModel;
+        }
+
+
+
+
+        private void ValidatePropertyPrice(decimal price)
+        {
+            if (price <= 0 || price > 1_000_000_000) // Adjust the upper limit as needed
+            {
+                throw new ArgumentOutOfRangeException(nameof(price), "Property price must be positive and within a reasonable range.");
+            }
+        }
+
+        private ContractDTO CreateBaseContractModel(Property property)
+        {
+            return new ContractDTO
             {
                 PropertyId = property.Id,
                 PropertyLocation = property.Location,
                 IsFurnished = property.IsFUrnished,
                 Rooms = property.Rooms,
-                ContractType = property.Status.ToString()
+                ContractType = property.Status.ToString(),
+                TotalAmount = property.Price
             };
+        }
 
-            if (property.Status.HasValue)
+        private void ProcessContractByStatus(ContractDTO contractModel, Property property)
+        {
+            switch (property.Status.Value)
             {
-                switch (property.Status.Value)
-                {
-                    case PropertStatus.Lease:
-                        contractModel.RecurringPaymentFrequency = "Monthly";
-                        contractModel.RecurringPaymentAmount = property.Price / 12;
-                        contractModel.TotalAmount = property.Price;
-                        contractModel.InitialPayment = (property.Price / 12) * 2;
-                        break;
+                case PropertStatus.Lease:
+                    ProcessLeaseContract(contractModel, property.Price);
+                    break;
 
-                    case PropertStatus.Ownership:
-                        contractModel.RecurringPaymentFrequency = "Quarterly";
-                        contractModel.RecurringPaymentAmount = property.Price / 4;
-                        contractModel.TotalAmount = property.Price;
-                        contractModel.InitialPayment = (property.Price / 4) * 3;
-                        break;
+                case PropertStatus.Ownership:
+                    ProcessOwnershipContract(contractModel, property.Price);
+                    break;
 
-                    default:
-                        throw new InvalidOperationException("Unknown property status.");
-                }
+                default:
+                    _logger.LogError($"Unsupported property status: {property.Status.Value} for property ID {property.Id}");
+                    throw new InvalidOperationException($"Unsupported property status: {property.Status.Value}");
             }
-            else
-            {
-                throw new InvalidOperationException("Property status is not defined.");
-            }
+        }
 
-            return contractModel;
+        private void ProcessLeaseContract(ContractDTO contractModel, decimal price)
+        {
+            contractModel.RecurringPaymentFrequency = "Monthly";
+            contractModel.RecurringPaymentAmount = Math.Round(price / 12, 2);
+            contractModel.InitialPayment = Math.Round(price / 6, 2);
+        }
+
+        private void ProcessOwnershipContract(ContractDTO contractModel, decimal price)
+        {
+            contractModel.RecurringPaymentFrequency = "Quarterly";
+            contractModel.RecurringPaymentAmount = Math.Round(price / 4, 2);
+            contractModel.InitialPayment = Math.Round(price * 0.75m, 2);
         }
     }
 }

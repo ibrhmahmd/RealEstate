@@ -1,9 +1,8 @@
-﻿@model BusinessLayer.DTOModels.ContractDTO
-
+﻿@model BusinessLayer.DTOModels.PropertyDTO
 @{
-    ViewData["Title"] = "Contract Details";
-    ViewData["ActionName"] = "Contract";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["Title"] = "Property Details";
+    ViewData["ActionName"] = "Property List";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
 
 }
 @section Styles {
@@ -30,12 +29,14 @@
     <!-- Page Title -->
     <div class="container">
 
+        <!-- Real Estate Edit Section -->
 
         <div class="header-container">
             <h1 class="header-title" style="color:darkgreen">Property Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
+                <!-- Property Image Slider -->
                 <div class="col-lg-9" data-aos="fade-up">
                     <div class="portfolio-details-slider swiper init-swiper">
                         <script type="application/json" class="swiper-config">
@@ -59,7 +60,8 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <embed src="@Url.Content("~/properties/Residential Lease Agreement.pdf")" width="800px" height="740px" type="application/pdf" />
+                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img">
+
                             </div>
 
                         </div>
@@ -68,9 +70,11 @@
                         <div class="swiper-pagination"></div>
                     </div>
                     <br />
-                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
+                
 
                 </div>
+
+                <!-- Property Summary Sidebar in Card Format -->
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-header">
@@ -78,29 +82,28 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>Contract Type:</strong> @Model.ContractType</li>
-                                <li class="list-group-item"><strong>Location:</strong> @Model.PropertyLocation</li>
-                                <li class="list-group-item"><strong>Agent:</strong> @Model.AgentId</li>
-                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate</li>
-                                <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethodId</li>
-                                <li class="list-group-item"><strong>Intial Payment:</strong> @Model.InitialPayment</li>
-                                <li class="list-group-item"><strong>Recurring Payment Amount:</strong> @Model.RecurringPaymentAmount</li>
-                                <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
-                                <li class="list-group-item"><strong>Total Amount:</strong> @Model.TotalAmount</li>
-                                <li class="list-group-item"><strong>LateFee:</strong> @Model.LateFee</li>
-                                <li class="list-group-item"><strong>Is Terminated:</strong> @Model.IsTerminated</li>
-                                <li class="list-group-item"><strong>Is Furnished:</strong> @Model.IsFurnished</li>
+                                <li class="list-group-item"><strong>Property Name:</strong> @Model.Name</li>
+                                <li class="list-group-item"><strong>Location:</strong> @Model.Location</li>
+                                <li class="list-group-item"><strong>Property Description:</strong> @Model.Description</li>
+                                <li class="list-group-item"><strong>Property Price:</strong> @Model.Price</li>
+                                <li class="list-group-item"><strong>Property Type:</strong> @Model.Type</li>
+                                <li class="list-group-item"><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
+                                @*<li class="list-group-item"><strong>Beds:</strong> @Model.Beds</li>
+                            <li class="list-group-item"><strong>Baths:</strong> @Model.Baths</li> *@
+
                             </ul>
 
                         </div>
                     </div>
                     <br />
+                    <a asp-action="ListProperties" style="margin-left:100px" asp-controller="Users" class="btn btn-success btn-sm ">Back To List</a>
 
-                    <a asp-action="Terminate" asp-controller="Admin" class="btn btn-success btn-sm ">Terminate</a>
-                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+
+
                 </div>
             </div>
         </div>
+        <!-- End Real Estate Edit Section -->
     </div>
 
 }
@@ -108,5 +111,4 @@
 @section Scripts {
     <!-- Add your JS scripts here -->
     <script src="~/assets/js/property-details.js"></script>
-
 }

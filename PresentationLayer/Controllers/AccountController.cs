@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using BusinessLayer.DTOModels;
 using PresentationLayer.helper;
+using PresentationLayer.Models;
 
 
 namespace PresentationLayer.Controllers
@@ -39,25 +40,6 @@ namespace PresentationLayer.Controllers
             return View();
         }
 
-
-        public IActionResult Profile(User users)
-        {
-          
-            if (users.UserPicture != null)
-            {
-
-                var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
-                users.UserPictureUrl = fileName;
-            }
-            var user = _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
 
         // POST: /Account/Login
         [AllowAnonymous]
@@ -233,6 +215,30 @@ namespace PresentationLayer.Controllers
             return View(users); // If model state is invalid, return the same view with DTO data
         }
 
+        public IActionResult Profile(User users)
+        {
+            if (users.UserPicture != null)
+            {
+                var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
+                users.UserPictureUrl = fileName;
+            }
+            var user = _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userviewmodel = new UserEditViewModel
+            {
+                Id = user.Id,
+                Name = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UserPictureUrl = user.UserPictureUrl,
+
+            };
+            return View("~/Views/Account/profile.cshtml", userviewmodel);
+        }
     }
 }
