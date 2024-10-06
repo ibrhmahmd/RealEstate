@@ -11,10 +11,8 @@ using BusinessLayer.DTOModels;
 using PresentationLayer.helper;
 using PresentationLayer.Models;
 
-
 namespace PresentationLayer.Controllers
 {
-
     public class AccountController : Controller
     {
         private readonly UserService _userService;
@@ -58,6 +56,7 @@ namespace PresentationLayer.Controllers
             var userviewmodel = new UserEditViewModel 
             {
                 Id= user.Id,
+                Name = user.UserName,
                 Email= user.Email,
                 PhoneNumber = user.PhoneNumber,
                 UserPictureUrl = user.UserPictureUrl,
