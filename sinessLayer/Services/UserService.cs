@@ -119,8 +119,6 @@ namespace BusinessLayer.Services
             }
 
             await _unitOfWork.SaveAsync();
-
-            // Return the newly created User entity with its ID populated
             return user;
         }
 

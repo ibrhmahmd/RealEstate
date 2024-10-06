@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -44,31 +45,19 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-
         // Get all Items in Paged list
         public async Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize)
         {
             try
             {
                 var query = Context.Set<T>().AsNoTracking()
-                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false);
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false)
+                                    .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
 
-                var totalRecords = await query.CountAsync();
-
-                var items = await query.OrderBy(e => EF.Property<int>(e, "Id")) // Ensure ordering to avoid paging inconsistencies
-                                       .Skip((pageNumber - 1) * pageSize)
-                                       .Take(pageSize)
-                                       .ToListAsync();
-
-                return new PagedResult<T>
-                {
-                    Items = items,
-                    TotalRecords = totalRecords,
-                    CurrentPage = pageNumber,
-                    PageSize = pageSize
-                };
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
             catch (Exception ex)
+            
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
@@ -106,7 +95,6 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-
         public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
         {
             try
@@ -229,7 +217,6 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-        // Soft delete an entity by setting IsDeleted to true
         // Soft delete an entity by setting IsDeleted to true
         public async Task SoftDeleteAsync(Guid id)
         {
