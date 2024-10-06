@@ -2,8 +2,8 @@
 
 @{
     ViewData["Title"] = "Contract Details";
-    ViewData["ActionName"] = "Contract";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["ActionName"] = "Contract List";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
 
 }
 @section Styles {
@@ -68,7 +68,6 @@
                         <div class="swiper-pagination"></div>
                     </div>
                     <br />
-                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
 
                 </div>
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
@@ -88,16 +87,15 @@
                                 <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
                                 <li class="list-group-item"><strong>Total Amount:</strong> @Model.TotalAmount</li>
                                 <li class="list-group-item"><strong>LateFee:</strong> @Model.LateFee</li>
-                                <li class="list-group-item"><strong>Is Terminated:</strong> @Model.IsTerminated</li>
-                                <li class="list-group-item"><strong>Is Furnished:</strong> @Model.IsFurnished</li>
+
                             </ul>
 
                         </div>
                     </div>
                     <br />
 
-                    <a asp-action="Terminate" asp-controller="Admin" class="btn btn-success btn-sm ">Terminate</a>
-                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+
+                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Users" class="btn btn-success btn-sm ">Back To List</a>
                 </div>
             </div>
         </div>

@@ -1,8 +1,8 @@
 ﻿@model List<BusinessLayer.DTOModels.ContractDTO>
 @{
     ViewData["Title"] = "Contract List";
-    ViewData["ActionName"] = "User Profile";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["ActionName"] = "Contracts";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 
 @section Styles {
@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+
 
     <style>
         .sidebar {
@@ -65,9 +66,7 @@
                 <div class="alert alert-success" role="alert">
                     No Contracts found for this user.
                 </div>
-                <a asp-action="Create" asp-controller="Admin" class="btn btn-custom">
-                    <i class="fas fa-plus"></i> Add New Contract
-                </a>
+          
             }
             else
             {
@@ -92,7 +91,7 @@
                                 <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
                                 <td>@contract.PropertyLocation</td>
                                 <td>
-                                    <a asp-action="ContractDetails" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
+                                    <a asp-action="ContractDetails" asp-controller="users" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
                                         <i class="fas fa-info-circle"></i> Details
                                     </a>
                                 </td>

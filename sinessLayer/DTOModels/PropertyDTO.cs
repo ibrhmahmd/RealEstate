@@ -54,6 +54,7 @@ namespace BusinessLayer.DTOModels
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
+
     }
 
 }

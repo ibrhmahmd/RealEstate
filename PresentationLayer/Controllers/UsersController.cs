@@ -20,13 +20,16 @@ namespace PresentationLayer.Controllers
         private readonly UserService _userService;
         private readonly ContractService _contractService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly PropertyService _propertyService;
         private readonly MyDbContext _context;
 
-        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment, MyDbContext context)
+        public UsersController(UserService userService,ContractService contractService, IWebHostEnvironment webHostEnvironment, MyDbContext context, PropertyService propertyService)
         {
             _userService = userService;
             _webHostEnvironment = webHostEnvironment;
             _context = context;
+            _propertyService = propertyService;
+            _contractService = contractService;
         }
 
 
@@ -57,8 +60,25 @@ namespace PresentationLayer.Controllers
             }
         }
 
+        public async Task<IActionResult> ShowProperty(Guid id)
+        {
+            var property = await _propertyService.GetPropertyByIdAsync(id);
+            if (property == null)
+            {
+                return NotFound();
+            }
+            return View(property);
+        }
+        public async Task<IActionResult> ContractDetails(Guid id)
+        {
 
-
+            var contract = await _contractService.GetContractByIdAsync(id);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return View(contract);
+        }
 
         // GET: Users/Create
         public IActionResult Create()
@@ -207,6 +227,7 @@ namespace PresentationLayer.Controllers
 
             return View(contractDTOs);
         }
+    
         public async Task<IActionResult> ListProperties()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

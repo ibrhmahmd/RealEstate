@@ -1,8 +1,8 @@
 ﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
 @{
     ViewData["Title"] = "Property List";
-    ViewData["ActionName"] = "User Profile";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["ActionName"] = "Properties";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 
 @section Styles {
@@ -87,7 +87,7 @@
                                 <td>@property.Price</td>
                                 <td>@property.Type</td>
                                 <td>
-                                    <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details" aria-label="View details for @property.Name">
+                                    <a asp-action="ShowProperty" asp-controller="Users" asp-route-Id="@property.Id" class="btn btn-custom btn-details" aria-label="View details for @property.Name">
                                         <i class="fas fa-info-circle"></i> Details
                                     </a>
                                 </td>
