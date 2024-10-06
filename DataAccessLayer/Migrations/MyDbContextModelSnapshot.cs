@@ -57,7 +57,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
@@ -164,7 +164,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Contracts");
+                    b.ToTable("Contracts", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.DeveloperCompany", b =>
@@ -220,7 +220,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeveloperCompanies");
+                    b.ToTable("DeveloperCompanies", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Payment", b =>
@@ -282,7 +282,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Project", b =>
@@ -336,7 +336,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("DeveloperCompanyId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
@@ -424,7 +424,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Properties");
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.User", b =>

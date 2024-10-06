@@ -28,7 +28,7 @@ namespace BusinessLayer.DTOModels
 
 		public DateTime? EndDate { get; set; }
 
-		[Required, MaxLength(20)]
+        [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.
 
 		[Range(0, double.MaxValue)]
@@ -51,6 +51,7 @@ namespace BusinessLayer.DTOModels
 
 		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
 
+		public string? Document { get; set; } // Path to the contract document (optional)
 
 		[Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property
@@ -62,7 +63,6 @@ namespace BusinessLayer.DTOModels
 
 
         public IFormFile? ContractDocument { get; set; }
-        public string? Document { get; set; } // Path to the contract document (optional)
 
 
     }

@@ -1,0 +1,127 @@
+﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+@{
+    ViewData["Title"] = "Property List";
+    ViewData["ActionName"] = "Properties";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+
+        .sidebar {
+            width: 80px;
+            height: 80vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .custom-green {
+            background-color: rgb(46,202,106);
+        }
+
+     
+    </style>
+}
+
+@section content {
+    <br />
+    <br />
+
+    <div class="flex min-h-screen">
+    <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+        <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+            <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
+        </a>
+        <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+            <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
+        </a>
+        <a asp-controller="users" asp-action="ListContracts"  class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+            <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
+        </a>
+
+        <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+            <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
+        </a>
+    </aside>
+
+    <div class="container">
+            <h2 class="header-title" style="color:darkgreen;">User Properties</h2>
+        <div class="container table-container">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="alert alert-success" role="alert">
+                    No properties found for this user.
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover table-bordered" id="PropertyTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Description</th>
+                            <th>Area</th>
+                            <th>Price</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="Table">
+                        @foreach (var property in Model)
+                        {
+                            <tr>
+                                <td>@property.Name</td>
+                                <td>@property.Location</td>
+                                <td>@property.Description</td>
+                                <td>@property.Area</td>
+                                <td>@property.Price</td>
+                                <td>@property.Type</td>
+                                <td>
+                                    <a asp-action="ShowProperty" asp-controller="Users" asp-route-Id="@property.Id" class="btn btn-custom btn-details" aria-label="View details for @property.Name">
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center">
+                    @* Add your pagination logic here *@
+                </div>
+            }
+
+            <!-- Back Button -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                    <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                        <i class="fas fa-rotate-back"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <br />
+}
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+}
