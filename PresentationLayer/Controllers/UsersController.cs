@@ -262,5 +262,24 @@ namespace PresentationLayer.Controllers
 
             return View(propertyDTOs);
         }
+
+        public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
+        {
+
+            if (propertyDto.PropertyPicture != null)
+            {
+
+                var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
+                propertyDto.PropertyPictureUrl = fileName;
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _propertyService.CreatePropertyAsync(propertyDto);
+                return RedirectToAction("profile", "account");
+            }
+            return View(propertyDto);
+        }
+
     }
 }
