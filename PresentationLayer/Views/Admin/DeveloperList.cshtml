@@ -49,13 +49,13 @@
                             <td>@developer.City</td>
                             <td>
                                 <a asp-action="DeleteDeveloper" asp-controller="Admin" asp-route-Id="@developer.Id" class="btn btn-custom btn-delete">
-                                    <i class="fas fa-info-trash"></i>Delete
+                                    <i class="fas fa-trash"></i> Delete
                                 </a>
                                 <a asp-action="DeveloperDetails" asp-controller="Admin" asp-route-Id="@developer.Id" class="btn btn-custom btn-details">
                                     <i class="fas fa-info-circle"></i>Details
                                 </a>
-                                <a asp-action="" asp-controller="Admin" asp-route-Id="@developer.Id" class="btn btn-custom btn-success">
-                                    <i class="fas fa-info-accept"></i>Edit
+                                <a asp-action="EditDeveloper" asp-controller="Admin" asp-route-Id="@developer.Id" class="btn btn-custom btn-success">
+                                    <i class="fas fa-edit"></i> Edit
                                 </a>
                             </td>
 

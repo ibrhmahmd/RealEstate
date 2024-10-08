@@ -1,9 +1,8 @@
-﻿@model  BusinessLayer.DTOModels.DeveloperCompanyDTO
+﻿@model BusinessLayer.DTOModels.DeveloperCompanyDTO
 @{
-    ViewData["Title"] = "Developer Details";
+    ViewData["Title"] = "Details";
     ViewData["ActionName"] = "Developer";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
-
 }
 @section Styles {
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -13,59 +12,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+
 }
+
 @section content {
 
-
-    <div class="container table-container">
-
-        <div class="container mt-3">
-            <form method="post">
-                <div asp-validation-summary="All" class="text-danger"></div>
-
-                <div class="form-group">
-                    <label asp-for="CompanyName" class="control-label"></label>
-                    <input asp-for="CompanyName" class="form-control" readonly />
-                    <span asp-validation-for="CompanyName" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="YearFounded" class="control-label"></label>
-                    <input asp-for="YearFounded" class="form-control" readonly />
-                    <span asp-validation-for="YearFounded" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Email" class="control-label"></label>
-                    <input asp-for="Email" class="form-control" readonly />
-                    <span asp-validation-for="Email" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Developer Details</h5>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="PhoneNumber" class="control-label"></label>
-                    <input asp-for="PhoneNumber" class="form-control" readonly />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Address" class="control-label"></label>
-                    <input asp-for="Address" class="form-control" readonly />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="City" class="control-label"></label>
-                    <input asp-for="City" class="form-control" readonly />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
-            
+                <div class="card-body">
 
 
-                <br />
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
 
-                <input asp-action="DeveloperList" asp-controller="Admin" type="submit" value="GO to List" class="btn btn-success w-100" />
-            </form>
+                        <div class="mb-3">
+                            <label asp-for="CompanyName" class="control-label"></label>
+                            <input asp-for="CompanyName" class="form-control" readonly />
+                            <span asp-validation-for="CompanyName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="YearFounded" class="control-label"></label>
+                            <input asp-for="YearFounded" class="form-control" readonly />
+                            <span asp-validation-for="YearFounded" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" readonly />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="control-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" readonly />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" readonly />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" readonly />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+
+
+                        <br />
+
+
+                        <a style="margin-left:275px; width:150px;" asp-action="DeveloperList" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </form>
+                </div>
+            </div>
         </div>
-        <br />
+    </div>
+    <br />
+
 }
+
 @section scripts {
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 }

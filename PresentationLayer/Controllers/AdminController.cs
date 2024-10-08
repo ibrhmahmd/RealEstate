@@ -319,9 +319,27 @@ namespace PresentationLayer.Controllers
             await _developerCompanyService.SoftDeleteDeveloperCompanyAsync(id);
             return RedirectToAction("DeveloperList");
         }
-       
-    
-   
+        public async Task<IActionResult> EditDeveloper(Guid id)
+        {
+            var developer = await _developerCompanyService.GetDeveloperCompanyByIdAsync(id);
+            if (developer == null)
+            {
+                return NotFound();
+            }
+            return View(developer);
+        }
+        [HttpPost]
+       public async Task<IActionResult> EditDeveloper(DeveloperCompanyDTO developer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _developerCompanyService.UpdateDeveloperCompanyAsync(developer);
+                return RedirectToAction("DeveloperList");
+            }
+            return View(developer);
+        }
+
+
 
 
 
