@@ -19,6 +19,35 @@
             gap: 20px;
             align-items: center;
         }
+
+        .custom-dropdown {
+            width: 100%;
+            padding: 8px 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 16px;
+            color: #495057;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+            .custom-dropdown:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            .custom-dropdown option {
+                padding: 10px;
+            }
+
+        /* Optional: Customize label styling */
+        .control-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
     </style>
 }
 
@@ -36,6 +65,7 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="EditProject" asp-controller="Admin" method="post">
+
 
                         <!-- Property Details Fields -->
                         <div class="mb-3">
@@ -59,14 +89,17 @@
                             <label asp-for="Status" class="form-label">Status</label>
                             <input asp-for="Status" class="form-control" required />
                         </div>
-                     
+                        <div class="mb-3">
+                            <label asp-for="DeveloperCompanyId" class="control-label">DeveloperCompany</label>
+                            <select asp-for="DeveloperCompanyId" class="custom-dropdown" asp-items="@(new SelectList(ViewBag.depts, "Id", "CompanyName"))"></select>
+                        </div>
 
 
 
 
                         <!-- Save Property Button -->
                         <button type="submit" class="btn btn-success">Update Project</button>
-                        <a style="margin-left:470px" asp-action="ProjectList" asp-controller="Admin" class="btn btn-success">
+                        <a style="margin-left:495px" asp-action="ProjectList" asp-controller="Admin" class="btn btn-success">
                             <i class="fas fa-rotate-back"></i> Back
                         </a>
                     </form>

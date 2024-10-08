@@ -19,7 +19,12 @@ namespace BusinessLayer.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
+        // Get all Projects
+        public async Task<List<DeveloperCompanyDTO>> GetAllDeveloperCompaniesAsync()
+        {
+            var developer = await _unitOfWork.DeveloperCompaniesRepository.GetAllAsync(1, 5);
+            return _mapper.Map<List<DeveloperCompanyDTO>>(developer);
+        }
 
         // Get all DeveloperCompany
         public async Task<PagedResult<DeveloperCompanyDTO>> GetAllDeveloperCompaniesAsync(int pageNumber, int pageSize)

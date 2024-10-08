@@ -13,6 +13,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        .custom-dropdown {
+            width: 100%;
+            padding: 8px 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 16px;
+            color: #495057;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+            .custom-dropdown:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            .custom-dropdown option {
+                padding: 10px;
+            }
+
+        /* Optional: Customize label styling */
+        .control-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+    </style>
 }
 @section content {
 
@@ -55,6 +84,11 @@
                             <label asp-for="Status" class="control-label"></label>
                             <input asp-for="Status" class="form-control" readonly />
                             <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DeveloperCompanyId" class="control-label">Developer Company</label>
+                            <select asp-for="DeveloperCompanyId" class="custom-dropdown" asp-items="@(new SelectList(ViewBag.depts, "Id", "CompanyName"))" disabled>
+                            </select>
                         </div>
 
 

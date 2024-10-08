@@ -14,8 +14,9 @@ namespace DataAccessLayer.Entities
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
 		public string Status { get; set; }
-		[ForeignKey("DeveloperCompanyId")]
-		public DeveloperCompany DeveloperCompany { get; set; }
-		public ICollection<Property>? properties { get; set; }
+	
+        public Guid? DeveloperCompanyId { get; set; }
+
+        public ICollection<Property>? properties { get; set; }
 	}
 }

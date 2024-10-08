@@ -40,6 +40,7 @@ namespace BusinessLayer.Services
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 Status = project.Status,
+                DeveloperCompanyId=project.DeveloperCompanyId,
             }).ToList();
 
 
@@ -77,14 +78,20 @@ namespace BusinessLayer.Services
         // Update a project
         public async Task<ProjectDTO> UpdateProjectAsync(ProjectDTO projectDto)
         {
+            // Retrieve the existing project from the database
             var existingProject = await _unitOfWork.ProjectsRepository.GetByIdAsync(projectDto.Id);
             if (existingProject == null)
             {
                 throw new KeyNotFoundException($"Project with ID {projectDto.Id} not found.");
             }
-            var newproject =_mapper.Map<Project>(projectDto);
-            await _unitOfWork.ProjectsRepository.UpdateAsync(newproject);
+
+            // Map the changes from projectDto to the existing project instance
+            _mapper.Map(projectDto, existingProject);
+
+            // No need to call UpdateAsync here since the entity is already tracked
             await _unitOfWork.SaveAsync();
+
+            // Return the updated project DTO
             return _mapper.Map<ProjectDTO>(existingProject);
         }
 

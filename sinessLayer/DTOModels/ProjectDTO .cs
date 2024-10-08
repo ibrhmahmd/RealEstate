@@ -19,7 +19,7 @@ namespace BusinessLayer.DTOModels
 		public DateTime StartDate { get; set; }
 		public DateTime EndDate { get; set; }
 		public string Status { get; set; }
-
+        public Guid? DeveloperCompanyId { get; set; }
         public ICollection<Property>? properties { get; set; }
 
 	}

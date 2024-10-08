@@ -402,7 +402,9 @@ namespace PresentationLayer.Controllers
         //Project
         public async Task<IActionResult> ProjectList(int pageNumber = 1, int pageSize = 5)
         {
-
+            ViewBag.depts = _context.DeveloperCompanies
+.Where(d => d.IsDeleted == false)
+.ToList();
             if (User.IsInRole("Admin"))
             {
 
@@ -422,6 +424,9 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> ProjectDetails(Guid id)
         {
+            ViewBag.depts = _context.DeveloperCompanies
+.Where(d => d.IsDeleted == false)
+.ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             if (project == null)
             {
@@ -431,7 +436,10 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> CreateProject(ProjectDTO projectdto)
         {
-
+            ViewBag.depts = _context.DeveloperCompanies
+       .Where(d => d.IsDeleted == false)
+       .ToList();
+            //ViewBag.depts = await _developerCompanyService.GetAllDeveloperCompaniesAsync();
             if (ModelState.IsValid)
             {
               await _projectService.CreateProjectAsync(projectdto);
@@ -441,6 +449,9 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> EditProject(Guid id)
         {
+            ViewBag.depts = _context.DeveloperCompanies
+.Where(d => d.IsDeleted == false)
+.ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             if (project == null)
             {
@@ -458,8 +469,14 @@ namespace PresentationLayer.Controllers
             }
             return View(project);
         }
+
+
+
         public async Task<IActionResult> DeleteProject(Guid id)
         {
+            ViewBag.depts = _context.DeveloperCompanies
+.Where(d => d.IsDeleted == false)
+.ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             return View(project);
         }
