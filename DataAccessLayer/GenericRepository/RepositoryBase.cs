@@ -22,7 +22,7 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all Items in Paged list
-       
+
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
             return await Context.Set<T>().CountAsync(predicate);
@@ -30,7 +30,7 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-        public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
+        public async Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize)
         {
             try
             {
@@ -51,13 +51,13 @@ namespace DataAccessLayer.GenericRepository
             try
             {
                 var query = Context.Set<T>().AsNoTracking()
-                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false)
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
                                     .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
             catch (Exception ex)
-            
+
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
@@ -108,7 +108,6 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
         // Get a record by ID, excluding soft-deleted entities
         public async Task<T> GetByIdAsync(Guid id)
         {
@@ -118,7 +117,7 @@ namespace DataAccessLayer.GenericRepository
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while retrieving the record with ID {id}.", ex);
+                throw new Exception($"An error occurred while retrieving the entity by name: {id}.", ex);
             }
         }
 
@@ -306,6 +305,32 @@ namespace DataAccessLayer.GenericRepository
             var existingUser = await Context.Set<T>().FirstOrDefaultAsync(lambda);
 
             return existingUser;
+        }
+
+
+
+
+        public async Task VerifyUser(Guid Id)
+        {
+            try
+            {
+                var entity = await GetByIdAsync(Id);
+                if (entity != null)
+                {
+                    var deletedEntity = entity as dynamic;
+                    deletedEntity.IsVerified = true;
+
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Entity not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace BusinessLayer.Services
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper ,MyDbContext context , UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, MyDbContext context, UserManager<User> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -46,9 +46,9 @@ namespace BusinessLayer.Services
             var userDTOs = usersPaged.Items.Select(user => new UserDTO
             {
                 Id = user.Id,
-                UserName= user.UserName,
-                Email= user.Email,
-                PhoneNumber= user.PhoneNumber,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
                 Role = user.Role,
                 IsVerified = user.IsVerified ?? false // Default to false if null
             }).ToList();
@@ -59,7 +59,7 @@ namespace BusinessLayer.Services
                 CurrentPage = usersPaged.CurrentPage,
                 PageSize = usersPaged.PageSize,
                 TotalRecords = usersPaged.TotalRecords
-            }; 
+            };
         }
 
 
@@ -81,7 +81,7 @@ namespace BusinessLayer.Services
             return user; // Return the user entity directly
         }
 
-       
+
 
 
 
@@ -241,7 +241,7 @@ namespace BusinessLayer.Services
         // Authenticate user based on email and password
         public async Task<User> AuthenticateUserAsync(string email, string password)
         {
-            var users = await _unitOfWork.UserRepository.GetAllAsync(1,5);
+            var users = await _unitOfWork.UserRepository.GetAllAsync(1, 5);
             var user = await users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
@@ -356,6 +356,40 @@ namespace BusinessLayer.Services
 
             return (List<string>)roles; // Return the list of roles
         }
+
+
+        public async Task<bool> VerifyUser(Guid id)
+        {
+            try
+            {
+                await _unitOfWork.UserRepository.VerifyUser(id);
+                await _unitOfWork.SaveAsync();
+
+                var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+                return user != null && user.IsVerified == true;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"Error verifying user: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<List<Property>> GetUserPropertiesAsync(Guid userId)
+        {
+            // Use a join between Contracts and Properties
+            var properties = await _context.Contracts
+                .Where(c => c.OccupantId == userId)
+                .Join(_context.Properties,
+                      contract => contract.PropertyId,
+                      property => property.Id,
+                      (contract, property) => property)
+                .ToListAsync();
+
+            return properties;
+        }
+
 
     }
 }

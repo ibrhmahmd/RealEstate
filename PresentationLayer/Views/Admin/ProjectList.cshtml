@@ -1,7 +1,7 @@
-﻿@model PagedListViewModel<BusinessLayer.DTOModels.ContractDTO>
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.ProjectDTO>
 @{
-    ViewData["Title"] = "Contract List";
-    ViewData["ActionName"] = "Contract";
+    ViewData["Title"] = "Project List";
+    ViewData["ActionName"] = "Project";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
@@ -13,48 +13,49 @@
 }
 
 @section content {
-    <br/>
+    <br />
     <div class="container">
-        <h2 class="header-title">Contract Management</h2>
+        <h2 class="header-title">Project Management</h2>
+
         <div class="header-container">
 
-            <input type="text" id="searchInput" class="search-bar" placeholder="Search Contract..." />
-
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Projects..." />
+            <a asp-action="CreateProject" asp-controller="Admin" class="btn btn-add">Add Project</a>
         </div>
 
         <div class="container table-container">
-            <table class="table table-hover table-bordered" id="contractTable">
+            <table class="table table-hover table-bordered" id="projectTable">
                 <thead>
                     <tr>
-                        <th>Type</th>
-                        <th>Agent</th>
-                        <th>End Date</th>
-						<th>Total Amount</th>
-						<th>Terminated</th>
-						<th>Location</th>
+                        <th>Project Name</th>
+                        <th>Description</th>
+                        <th>StartDate</th>
+                        <th>EndDate</th>
+                        <th>Status</th>
                         <th>Actions</th>
+          
+
                     </tr>
                 </thead>
                 <tbody id="contractTable">
-                    @foreach (var contract in Model.Items)
+                    @foreach (var project in Model.Items)
                     {
                         <tr>
-                            <td>@contract.ContractType</td>
-                            <td>@contract.AgentId</td>
-                            <td>@contract.EndDate</td>
-                            <td>@contract.TotalAmount</td>
-                            <td>@contract.IsTerminated</td>
-                            <td>@contract.PropertyLocation</td>
-
+                            <td>@project.ProjectName</td>
+                            <td>@project.Description</td>
+                            <td>@project.StartDate</td>
+                            <td>@project.EndDate</td>
+                            <td>@project.Status</td>
+                    
                             <td>
-                                <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-delete">
-                                    <i class="fas fa-info-trash"></i>Archive
+                                <a asp-action="DeleteProject" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
                                 </a>
-                                <a asp-action="ContractDetails" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
+                                <a asp-action="ProjectDetails" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-details">
                                     <i class="fas fa-info-circle"></i>Details
                                 </a>
-                                <a asp-action="" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-success">
-                                    <i class="fas fa-info-accept"></i>Accept
+                                <a asp-action="EditProject" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-success">
+                                    <i class="fas fa-edit"></i> Edit
                                 </a>
                             </td>
 
@@ -78,7 +79,7 @@
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
                             </li>
                         }
                         else
@@ -90,13 +91,13 @@
                         @for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
                             </li>
                         }
                         @if (Model.PageNumber < Model.TotalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
                         else
@@ -172,15 +173,16 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <script>
-        $(document).ready(function () {
-            // Search function
-            $('#searchInput').on('keyup', function () {
-                var value = $(this).val().toLowerCase();
-                $('#contractTable tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        
+            $(document).ready(function () {
+                // Search function
+                $('#searchInput').on('keyup', function () {
+                    var value = $(this).val().toLowerCase();
+                    $('#projectTable tr').filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    });
                 });
             });
-        });
     </script>
 
 }

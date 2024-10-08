@@ -1,0 +1,151 @@
+﻿@model BusinessLayer.DTOModels.PropertyDTO
+
+@{
+    ViewData["Title"] = "Add Property";
+    ViewData["ActionName"] = "Property";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
+    <style>
+        .custom-card-container {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+    </style>
+}
+
+@section content {
+
+    <br />
+    <!-- Add Property Card -->
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Add New Property</h5>
+                </div>
+                <div class="card-body">
+                    <form id="addPropertyForm" enctype="multipart/form-data" asp-action="CreateProperty" asp-controller="Users" method="post">
+                        <!-- Property Details Fields -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Name</label>
+                            <input asp-for="Name" class="form-control" id="propertyName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PropertyPicture" class="form-label">Property Picture</label>
+                            <input asp-for="PropertyPicture" type="file" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Location" class="form-label">Location</label>
+                            <input asp-for="Location" class="form-control" id="location" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control" id="propertyDescription" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Area" class="form-label">Area (sqft)</label>
+                            <input asp-for="Area" class="form-control" id="propertyArea" type="number" min="200" max="10000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">Price ($)</label>
+                            <input asp-for="Price" class="form-control" id="propertyPrice" type="number" min="10000" max="1000000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Rooms" class="form-label">Number of Rooms</label>
+                            <input asp-for="Rooms" class="form-control" id="propertyRooms" type="number" min="1" max="20" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Type" class="form-label">Type</label>
+                            <select asp-for="Type" class="form-select" id="propertyType" required>
+                                <option value="Apartment">Apartment</option>
+                                <option value="House">House</option>
+                                <option value="Commercial">Commercial</option>
+                            </select>
+                        </div>
+
+                        <!-- Property Status Section -->
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label">Property Status</label>
+                            <select asp-for="Status" class="form-select" id="Status" required>
+                                <option value="">Select Status</option>
+                                <option value="Lease">Lease</option>
+                                <option value="ownership">ownership</option>
+                            </select>
+                        </div>
+
+                        <!-- Property Availability Section -->
+                        <h5 class="mb-3">Property Status</h5>
+                        <div class="mb-3 checkbox-container">
+                            <div class="form-check">
+                                <input asp-for="IsAvailable" class="form-check-input" type="checkbox" id="propertyAvailable" required>
+                                <label class="form-check-label" for="propertyAvailable">Is Available</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="IsOccupied" class="form-check-input" type="checkbox" id="propertyOccupied">
+                                <label class="form-check-label" for="propertyOccupied">Is Occupied</label>
+                            </div>
+                            <div class="form-check">
+                                <input asp-for="IsFUrnished" class="form-check-input" type="checkbox" id="propertyFurnished">
+                                <label class="form-check-label" for="propertyFurnished">Is Furnished</label>
+                            </div>
+                        </div>
+
+                        <!-- Save Property Button -->
+                        <button type="submit" class="btn btn-success">Save Property</button>
+                        <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+}
+
+@section scripts {
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add Property Form Submission using AJAX
+            $('#addPropertyForm').submit(function (e) {
+                e.preventDefault();  // Prevent the default form submission
+
+                // Validate the Location field before submitting
+                let location = $('#location').val();
+                if (!location) {
+                    alert('Please enter the location.');
+                    return;
+                }
+
+                // Submit form data using AJAX
+                $.ajax({
+                    url: this.action,
+                    type: this.method,
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        alert("Property added successfully!");
+                        window.location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('An error occurred while saving the property. Please try again.');
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+}

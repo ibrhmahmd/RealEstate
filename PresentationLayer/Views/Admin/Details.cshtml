@@ -16,25 +16,32 @@
 }
 @section content {
 
-	
-    <div class="container table-container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">User Details</h5>
+                </div>
 
-        <div class="container mt-3">
+                <div class="card-body">
+
             <form method="post">
                 <div asp-validation-summary="All" class="text-danger"></div>
 
-                <div class="form-group">
+
+                        <div class="mb-3">
                     <label asp-for="UserName" class="control-label"></label>
                     <input asp-for="UserName" class="form-control" readonly />
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
-                <div class="form-group">
+
+                        <div class="mb-3">
                     <label asp-for="Email" class="control-label"></label>
                     <input asp-for="Email" class="form-control" readonly />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                        <div class="mb-3">
                     <label asp-for="PhoneNumber" class="control-label"></label>
                     <input asp-for="PhoneNumber" class="form-control" readonly />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -43,9 +50,16 @@
 
                 <br />
 
-                <input asp-action="ListUsers" asp-controller="Admin" type="submit" value="GO to List" class="btn btn-success w-100" />
+     
+                        <a style="margin-left:275px; width:150px;" asp-action="ListUsers" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
             </form>
         </div>
+        </div>
+        </div>
+        </div>
+       
         <br />
      }
           @section scripts {

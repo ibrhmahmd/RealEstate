@@ -1,0 +1,87 @@
+﻿@model BusinessLayer.DTOModels.DeveloperCompanyDTO
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["ActionName"] = "Developer List";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
+    <style>
+        .custom-card-container {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+    </style>
+}
+
+@section content {
+
+    <!-- Page Title -->
+    <br />
+
+    <!-- Edit Property Card -->
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Edit Developer</h5>
+                </div>
+                <div class="card-body">
+                    <form  asp-action="EditDeveloper" asp-controller="Admin" method="post">
+
+                        <!-- Property Details Fields -->
+                        <div class="mb-3">
+                            <label asp-for="CompanyName" class="form-label">Company Name</label>
+                            <input asp-for="CompanyName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="YearFounded" class="form-label">Year Founded</label>
+                            <input asp-for="YearFounded" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control"  required>
+                        </div>
+						<div class="mb-3">
+							<label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+							<input asp-for="PhoneNumber" class="form-control" type="number"required>
+						</div>
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label">Address</label>
+                            <textarea asp-for="Address" class="form-control" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="City" class="form-label">City</label>
+                            <input asp-for="City" class="form-control"  required>
+                        </div>
+                       
+                 
+
+
+                        <!-- Save Property Button -->
+                        <button type="submit" class="btn btn-success">Update Developer</button>
+                        <a style="margin-left:470px" asp-action="DeveloperList" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+}
+
+@section scripts {
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+}

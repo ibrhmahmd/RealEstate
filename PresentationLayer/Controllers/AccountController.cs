@@ -11,10 +11,8 @@ using BusinessLayer.DTOModels;
 using PresentationLayer.helper;
 using PresentationLayer.Models;
 
-
 namespace PresentationLayer.Controllers
 {
-
     public class AccountController : Controller
     {
         private readonly UserService _userService;
@@ -30,7 +28,6 @@ namespace PresentationLayer.Controllers
         // GET: /Account/Admin
         public IActionResult Admin()
         {
-            
             return View("~/Views/Admin/view.cshtml");
         }
 
@@ -58,15 +55,15 @@ namespace PresentationLayer.Controllers
                         new Claim(ClaimTypes.Name, email),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim("UserId", user.Id.ToString()),
-                        new Claim(ClaimTypes.Role, user.Role.ToString() )
+                        new Claim(ClaimTypes.Role, user.Role.ToString())
                     };
 
                     // Create the ClaimsIdentity and AuthenticationProperties
                     var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
                     var authProperties = new AuthenticationProperties
                     {
-                        IsPersistent = rememberMe, 
-                        ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null 
+                        IsPersistent = rememberMe,
+                        ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null
                     };
 
                     // Sign in the user with the new claims
@@ -97,7 +94,6 @@ namespace PresentationLayer.Controllers
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View();
         }
-
 
 
 
@@ -148,7 +144,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> SeedAdminUser()
         {
             var email = "admin@a.com";
-            var password = "admin";
+            var password = "Admin123";
             var role = "Admin";
 
             var result = await _userService.RegisterUserAsync(email, password, role);
@@ -169,6 +165,8 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
+
+
             return View(user); // Pass the DTO to the view
         }
 
