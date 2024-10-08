@@ -10,25 +10,32 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Models;
 using System.Drawing.Printing;
+using DataAccessLayer.Entities;
 namespace PresentationLayer.Controllers
 {
-    
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
         private readonly UserService _userService;
         private readonly ContractService _contractService;
         private readonly PaymentService _paymentService;
+        private readonly DeveloperCompanyService _developerCompanyService;
+        private readonly ProjectService _projectService;
         private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AdminController(PropertyService propertyService, UserService userService,
-            ContractService contractService, PaymentService paymentService, MyDbContext context, IWebHostEnvironment webHostEnvironment)
+            ContractService contractService, PaymentService paymentService,
+            DeveloperCompanyService developerCompanyService,ProjectService projectService,
+            MyDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
             _userService = userService;
             _contractService = contractService;
             _paymentService = paymentService;
+            _projectService = projectService;
+            _developerCompanyService = developerCompanyService;
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -260,8 +267,152 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListContracts");
         }
 
+        //Developer
+        public async Task<IActionResult> DeveloperList(int pageNumber = 1, int pageSize = 5)
+        {
+
+            if (User.IsInRole("Admin"))
+            {
+
+            }
+            var PagedDeveloper = await _developerCompanyService.GetAllDeveloperCompaniesAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<DeveloperCompanyDTO>
+            {
+                Items = PagedDeveloper.Items,
+                PageNumber = PagedDeveloper.CurrentPage,
+                PageSize = PagedDeveloper.PageSize,
+                TotalRecords = PagedDeveloper.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+        }
+        public async Task<IActionResult> DeveloperDetails(Guid id)
+        {
+            var Developer = await _developerCompanyService.GetDeveloperCompanyByIdAsync(id);
+            if (Developer == null)
+            {
+                return NotFound();
+            }
+            return View(Developer);
+
+        }
+
+        public async Task<IActionResult> CreateDeveloper(DeveloperCompanyDTO developer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _developerCompanyService.CreateDeveloperCompanyAsync(developer);
+                return RedirectToAction("DeveloperList");
+            }
+            return View(developer);
+        }
+        public async Task<IActionResult> DeleteDeveloper(Guid id)
+        {
+            var developer = await _developerCompanyService.GetDeveloperCompanyByIdAsync(id);
+            return View(developer);
+        }
+        [HttpPost, ActionName("DeleteDeveloper")]
+        public async Task<IActionResult> DeleteDeveloperCompany(Guid id)
+        {
+            await _developerCompanyService.SoftDeleteDeveloperCompanyAsync(id);
+            return RedirectToAction("DeveloperList");
+        }
+        public async Task<IActionResult> EditDeveloper(Guid id)
+        {
+            var developer = await _developerCompanyService.GetDeveloperCompanyByIdAsync(id);
+            if (developer == null)
+            {
+                return NotFound();
+            }
+            return View(developer);
+        }
+        [HttpPost]
+       public async Task<IActionResult> EditDeveloper(DeveloperCompanyDTO developer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _developerCompanyService.UpdateDeveloperCompanyAsync(developer);
+                return RedirectToAction("DeveloperList");
+            }
+            return View(developer);
+        }
 
 
+
+
+
+        //Project
+        public async Task<IActionResult> ProjectList(int pageNumber = 1, int pageSize = 5)
+        {
+
+            if (User.IsInRole("Admin"))
+            {
+
+            }
+            var PagedProject = await _projectService.GetAllProjectsAsync(pageNumber, pageSize);
+
+            // Pass the paginated result to the view model
+            var viewModel = new PagedListViewModel<ProjectDTO>
+            {
+                Items = PagedProject.Items,
+                PageNumber = PagedProject.CurrentPage,
+                PageSize = PagedProject.PageSize,
+                TotalRecords = PagedProject.TotalRecords
+            };
+            return View(viewModel);
+            return Unauthorized();
+        }
+        public async Task<IActionResult> ProjectDetails(Guid id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+        public async Task<IActionResult> CreateProject(ProjectDTO projectdto)
+        {
+
+            if (ModelState.IsValid)
+            {
+              await _projectService.CreateProjectAsync(projectdto);
+                return RedirectToAction("ProjectList");
+            }
+            return View(projectdto);
+        }
+        public async Task<IActionResult> EditProject(Guid id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditProject(ProjectDTO project)
+        {
+            if (ModelState.IsValid)
+            {
+                await _projectService.UpdateProjectAsync(project);
+                return RedirectToAction("ProjectList");
+            }
+            return View(project);
+        }
+        public async Task<IActionResult> DeleteProject(Guid id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            return View(project);
+        }
+        [HttpPost, ActionName("DeleteProject")]
+        public async Task<IActionResult> ConfirmDeleteProject(Guid id)
+        {
+            await _projectService.SoftDeleteProjectAsync(id);
+            return RedirectToAction("ProjectList");
+        }
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");

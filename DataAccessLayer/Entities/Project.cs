@@ -16,6 +16,6 @@ namespace DataAccessLayer.Entities
 		public string Status { get; set; }
 		[ForeignKey("DeveloperCompanyId")]
 		public DeveloperCompany DeveloperCompany { get; set; }
-		public ICollection<Property> properties { get; set; }
+		public ICollection<Property>? properties { get; set; }
 	}
 }
