@@ -14,20 +14,13 @@ using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController(UserService userService, IWebHostEnvironment webHostEnvironment, MyDbContext context) : Controller
     {
-        private readonly UserService _userService;
+        private readonly UserService _userService = userService;
         private readonly ContractService _contractService;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
         private readonly PropertyService _propertyService;
-        private readonly MyDbContext _context;
-
-        public UsersController(UserService userService, IWebHostEnvironment webHostEnvironment, MyDbContext context)
-        {
-            _userService = userService;
-            _webHostEnvironment = webHostEnvironment;
-            _context = context;
-        }
+        private readonly MyDbContext _context = context;
 
 
 

@@ -64,6 +64,5 @@ namespace DataAccessLayer.Entities
         Lease,
         Ownership,
         Rent
-
     }
 }

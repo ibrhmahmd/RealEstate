@@ -42,9 +42,6 @@ namespace BusinessLayer.DTOModels
         [MaxLength(50)]
         public string? Location { get; set; } // Address -{State, City, PostalCode?}
 
-        [Required]
-        [MaxLength(50)]
-        public string Developer { get; set; } // Rent, Sale , Hotel  
 
         [Required]
         public bool IsAvailable { get; set; }
