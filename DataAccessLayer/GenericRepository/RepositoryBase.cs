@@ -308,8 +308,6 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
-
         public async Task VerifyUser(Guid Id)
         {
             try
@@ -332,5 +330,30 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
             }
         }
+
+
+
+
+        public async Task<bool> IsUserVerified(Guid Id)
+        {
+            try
+            {
+                var entity = await GetByIdAsync(Id);
+                if (entity != null)
+                {
+                    var Entity = entity as dynamic;
+                    if (Entity.IsVerified == true) return true;
+                    else return false;
+                }
+                else
+                {
+                    throw new Exception("Entity not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while checking Verifecation of the user with ID {Id}.", ex);
+            }
+        } 
     }
 }

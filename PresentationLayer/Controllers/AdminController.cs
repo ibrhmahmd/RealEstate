@@ -261,19 +261,19 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
+                var Pagedpayment = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
 
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<PaymentDTO>
+                {
+                    Items = Pagedpayment.Items,
+                    PageNumber = Pagedpayment.CurrentPage,
+                    PageSize = Pagedpayment.PageSize,
+                    TotalRecords = Pagedpayment.TotalRecords
+                };
+                return View(viewModel);
             }
-            var Pagedpayment = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
-
-            // Pass the paginated result to the view model
-            var viewModel = new PagedListViewModel<PaymentDTO>
-            {
-                Items = Pagedpayment.Items,
-                PageNumber = Pagedpayment.CurrentPage,
-                PageSize = Pagedpayment.PageSize,
-                TotalRecords = Pagedpayment.TotalRecords
-            };
-            return View(viewModel);
+            
             return Unauthorized();
         }
 

@@ -26,6 +26,8 @@ namespace DataAccessLayer.GenericRepository
         Task<bool> Terminate(Guid Id);
 
         Task VerifyUser(Guid Id);
+        Task<bool> IsUserVerified(Guid Id);
+
         Task SaveChangesAsync();
     }
 }

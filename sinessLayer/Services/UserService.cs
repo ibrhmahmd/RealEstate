@@ -380,6 +380,11 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task<bool> IsUserVerified(Guid Id)
+        {
+            var userVerificationState = await _unitOfWork.UserRepository.IsUserVerified(Id);
+            return userVerificationState;
+        }
         public async Task<List<Property>> GetUserPropertiesAsync(Guid userId)
         {
             // Use a join between Contracts and Properties
