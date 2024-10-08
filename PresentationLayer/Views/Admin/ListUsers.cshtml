@@ -39,7 +39,7 @@
                                 <td>@item.UserName</td>
                                 <td>@item.Email</td>
                                 <td>@item.PhoneNumber</td>
-                              
+
                                 <td>
                                     <span class="status-label @(item.IsVerified.GetValueOrDefault() ? "status-Verified" : "status-NotVerified")">
                                         @(item.IsVerified.HasValue ? (item.IsVerified.Value ? "Verified" : "Not Verified") : "Unknown")
@@ -64,7 +64,8 @@
                         }
                     </tbody>
                 </table>
-                <!-- Pagination and Back Button Container -->
+                </form>
+
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Back Button on the left -->
                     <div>
@@ -111,9 +112,15 @@
                 </div>
                     
 
+
                 <!-- Back Button -->
-      
-            </form>
+
+                 </div>
+                 </div>
+                    <!-- Back Button -->
+              
+
+           
         </div>
     </div>
 

@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,32 @@ namespace BusinessLayer.Services
         {
             var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1,5);
             return _mapper.Map<IQueryable<ProjectDTO>>(projects);
+        }
+
+        public async Task<PagedResult<ProjectDTO>> GetAllProjectsAsync(int pageNumber, int pageSize)
+        {
+            var projectsPaged = await _unitOfWork.ProjectsRepository.GetAllPagedAsync(pageNumber, pageSize);
+
+            var ProjectDTOs = projectsPaged.Items.Select(project => new ProjectDTO
+            {
+                Id = project.Id,
+                ProjectName = project.ProjectName,
+                Description = project.Description,
+                StartDate = project.StartDate,
+                EndDate = project.EndDate,
+                Status = project.Status,
+            }).ToList();
+
+
+
+
+            return new PagedResult<ProjectDTO>
+            {
+                Items = ProjectDTOs,
+                CurrentPage = projectsPaged.CurrentPage,
+                PageSize = projectsPaged.PageSize,
+                TotalRecords = projectsPaged.TotalRecords
+            };
         }
 
         // Get Project by ID

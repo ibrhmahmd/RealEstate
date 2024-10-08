@@ -7,6 +7,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Controllers;
+using System.Security.Claims;
 
 namespace PresentationLayer
 {
@@ -26,12 +27,13 @@ namespace PresentationLayer
             // Configure Identity to use our custom User class and IdentityRole
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false; // Change to true if you want to require email confirmation
+                options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;  // Ensure roles are correctly included
             })
             .AddEntityFrameworkStores<MyDbContext>()
             .AddDefaultTokenProviders();
@@ -42,6 +44,8 @@ namespace PresentationLayer
             builder.Services.AddScoped<PropertyService>();
             builder.Services.AddScoped<ContractService>();
             builder.Services.AddScoped<PaymentService>();
+            builder.Services.AddScoped<DeveloperCompanyService>();
+            builder.Services.AddScoped<ProjectService>();
 
             // Add AutoMapper and mapping profile
             builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -60,9 +64,9 @@ namespace PresentationLayer
                     // Get the necessary services
                     var userService = services.GetRequiredService<UserService>();
                     var signInManager = services.GetRequiredService<SignInManager<User>>();
-
+                    var web = services.GetRequiredService<IWebHostEnvironment>();
                     // Create the AccountController with the resolved services
-                    var accountController = new AccountController(userService, signInManager);
+                    var accountController = new AccountController(userService, signInManager,web);
 
                     // Call the method to seed the admin user
                     await accountController.SeedAdminUser();

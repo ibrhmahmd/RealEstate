@@ -232,15 +232,41 @@
 
             <nav id="navmenu" class="navmenu">
                 <ul>
-                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
-                    <li><a href="@Url.Action("About", "Home")">About</a></li>
-                    <li><a href="@Url.Action("Services", "Home")">Services</a></li>
-                    <li><a href="@Url.Action("Properties", "Home")">Properties</a></li>
-                    <li><a href="@Url.Action("Agents", "Home")">Agents</a></li>
-                    <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
-                    <li><a href="@Url.Action("Login", "Account")">Account</a></li>
-                    <li><a href="@Url.Action("Admin", "Account")">Admin</a></li>
-                </ul>
+
+                        <!-- Common links for all users -->
+                        <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                        <li><a href="@Url.Action("About", "Home")">About</a></li>
+                        <li><a href="@Url.Action("Services", "Home")">Services</a></li>
+                        <li><a href="@Url.Action("Properties", "Home")">Properties</a></li>
+                        <li><a href="@Url.Action("Agents", "Home")">Agents</a></li>
+                        <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- Links for authenticated users -->
+                            <li><a href="@Url.Action("Profile", "Account")">Profile</a></li>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <!-- Links for Admin users -->
+                                <li><a href="@Url.Action("Admin", "Account")">Admin</a></li>
+                            }
+
+                            <li>
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button style="border-radius:30px; width:80px; padding:6px;" type="submit" class="btn btn-danger logout-btn">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Links for non-authenticated users -->
+                
+                            <li><a  href="@Url.Action("Login", "Account")">Account</a></li>
+                        }
+                    </ul>
+
+
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 

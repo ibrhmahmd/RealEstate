@@ -14,7 +14,11 @@
         </div>
 
         <div class="container table-container">
+
             <table class="table table-hover table-bordered" id="PaymentTable">
+
+            <table class="table table-hover table-bordered" id="paymentTable">
+
                 <thead>
                     <tr>
                         <th>Payment Date</th>
@@ -41,6 +45,7 @@
                     }
                 </tbody>
             </table>
+
 
             <!-- Pagination and Back Button Container -->
             <div class="d-flex justify-content-between align-items-center">
@@ -89,6 +94,8 @@
                 </div>
             </div>
       
+
+
             </div>
         </div>
     </div>
@@ -100,10 +107,15 @@
             // Search function
             $('#searchInput').on('keyup', function () {
                 var value = $(this).val().toLowerCase();
+
                 $('#paymentTable tbody tr').filter(function () {
+
+                $('#paymentTable tr').filter(function () {
+
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
         });
     </script>
+
 }

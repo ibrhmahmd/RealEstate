@@ -23,13 +23,15 @@
         </div>
 
         <div class="container table-container">
-            <table class="table table-hover table-bordered" id="PropertyTable">
+            <table class="table table-hover table-bordered" id="contractTable">
                 <thead>
                     <tr>
                         <th>Type</th>
                         <th>Agent</th>
                         <th>End Date</th>
-                        <th>Location</th>
+						<th>Total Amount</th>
+						<th>Terminated</th>
+						<th>Location</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -174,9 +176,11 @@
             // Search function
             $('#searchInput').on('keyup', function () {
                 var value = $(this).val().toLowerCase();
-                $('#contractTable tbody tr').filter(function () {
+                $('#contractTable tr').filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
                 });
             });
+        });
     </script>
+
 }

@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>@ViewBag.Title - EstateAgency</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    @RenderSection("Styles", required: false) <!-- Ensure this line exists -->
+    <!-- Favicons -->
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="~/assets/css/main.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .search-bar {
+            flex: 1;
+            margin-right: 10px;
+            padding: 10px 15px;
+            border: 2px solid #003366;
+            border-radius: 20px;
+            outline: none;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .search-bar:focus {
+                box-shadow: 0 0 10px rgba(0, 51, 102, 0.5);
+            }
+
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        .btn-add {
+            background-color: #003366;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-add:hover {
+                background-color: #002244;
+            }
+
+        .table th {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #e0f7fa;
+        }
+
+        .btn-custom {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #0056b3;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-details {
+            background-color: #17a2b8;
+        }
+
+        .btn-custom i {
+            margin-right: 5px;
+        }
+
+
+        .table-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        .page-link {
+            color: #003366; /* Primary color */
+            background-color: #ffffff;
+            border: 2px solid #003366;
+            border-radius: 20px;
+            padding: 8px 15px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .page-item.active .page-link {
+            background-color: #003366;
+            color: white;
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .page-link:hover {
+            background-color: #002244; /* Darker on hover */
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-card-container {
+            margin-top: 50px;
+        }
+
+        input.form-control {
+            transition: border-color 0.3s;
+        }
+
+            input.form-control:focus {
+                border-color: #38d39f;
+                box-shadow: 0 0 5px rgba(56, 211, 159, 0.5);
+            }
+
+    </style>
+
+</head>
+
+<body class="starter-page-page">
+
+    <header id="header" class="header d-flex align-items-center fixed-top">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+            <a href="@Url.Action("Index", "Home")" class="logo d-flex align-items-center">
+                <!-- Uncomment the line below if you also wish to use an image logo -->
+                <img src="~/assets/img/logo.png" alt="">
+                <h1 class="sitename">Estate<span>Agency</span></h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <!-- Common links for all users -->
+                    <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+                    <li><a href="@Url.Action("About", "Home")">About</a></li>
+                    <li><a href="@Url.Action("Services", "Home")">Services</a></li>
+                    <li><a href="@Url.Action("Properties", "Home")">Properties</a></li>
+                    <li><a href="@Url.Action("Agents", "Home")">Agents</a></li>
+                    <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <!-- Links for authenticated users -->
+                        <li><a href="@Url.Action("Profile", "Account")">Profile</a></li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <!-- Links for Admin users -->
+                            <li><a href="@Url.Action("Admin", "Account")">Admin</a></li>
+                        }
+
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button style="border-radius:30px; width:80px; padding:6px;" type="submit" class="btn btn-danger logout-btn">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <!-- Links for non-authenticated users -->
+
+                        <li><a href="@Url.Action("Login", "Account")">Account</a></li>
+                    }
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+
+        </div>
+
+    </header>
+
+    <main class="main">
+        <br />
+        <br />
+        <br />
+        <br />
+        <!-- Page Title -->
+        <div class="page-title" data-aos="fade">
+            <nav class="breadcrumbs">
+                <div class="container">
+                    <ol>
+                        <!-- Breadcrumb links -->
+                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li><a asp-action="Admin" asp-controller="Account">Profile</a></li>
+                        @* <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>*@
+                        <li class="current">@ViewData["ActionName"]</li>
+                        <li class="current">@ViewData["Title"]</li> <!-- Current Page -->
+                    </ol>
+                </div>
+            </nav>
+        </div>
+
+
+
+        <!-- End Page Title -->
+        <!-- Page-specific content will be rendered here -->
+        @RenderBody()
+        @RenderSection("Content", required: false) <!-- Ensure this line exists -->
+
+    </main>
+
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+    <script src="~/assets/vendor/aos/aos.js"></script>
+    <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
+    <script src="~/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+    <!-- Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

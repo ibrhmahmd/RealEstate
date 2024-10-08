@@ -7,6 +7,9 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using BusinessLayer.DTOModels;
+using PresentationLayer.helper;
+using PresentationLayer.Models;
 
 namespace PresentationLayer.Controllers
 {
@@ -14,17 +17,17 @@ namespace PresentationLayer.Controllers
     {
         private readonly UserService _userService;
         private readonly SignInManager<User> _signInManager;
-
-        public AccountController(UserService userService, SignInManager<User> signInManager)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AccountController(UserService userService, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
             _signInManager = signInManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: /Account/Admin
         public IActionResult Admin()
         {
-            
             return View("~/Views/Admin/view.cshtml");
         }
 
@@ -33,6 +36,7 @@ namespace PresentationLayer.Controllers
         {
             return View();
         }
+
 
         // POST: /Account/Login
         [AllowAnonymous]
@@ -51,15 +55,15 @@ namespace PresentationLayer.Controllers
                         new Claim(ClaimTypes.Name, email),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim("UserId", user.Id.ToString()),
-                        new Claim("Role", user.Role.ToString() )
+                        new Claim(ClaimTypes.Role, user.Role.ToString() )
                     };
 
                     // Create the ClaimsIdentity and AuthenticationProperties
                     var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
                     var authProperties = new AuthenticationProperties
                     {
-                        IsPersistent = rememberMe, 
-                        ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null 
+                        IsPersistent = rememberMe,
+                        ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null
                     };
 
                     // Sign in the user with the new claims
@@ -90,7 +94,6 @@ namespace PresentationLayer.Controllers
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View();
         }
-
 
 
 
@@ -141,7 +144,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> SeedAdminUser()
         {
             var email = "admin@a.com";
-            var password = "Admin123";
+            var password = "admin";
             var role = "Admin";
 
             var result = await _userService.RegisterUserAsync(email, password, role);
@@ -152,6 +155,86 @@ namespace PresentationLayer.Controllers
             }
 
             return BadRequest("Failed to seed admin user.");
+        }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> EditUser(Guid id)
+        {
+            var user = await _userService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Manually map the User entity to UserDTO (if not using AutoMapper)
+            //var userDto = new UserDTO
+            //{
+            //    Id = user.Id,
+            //    UserName = user.UserName,
+            //    Email = user.Email,
+            //    UserPictureUrl = user.UserPictureUrl,
+            //    // Map other properties as needed
+            //};
+
+            return View(user); // Pass the DTO to the view
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(User users)
+        {
+            if (ModelState.IsValid) // Check if the model state is valid
+            {
+                var user = await _userService.GetUserByIdAsync(users.Id); // Fetch existing user
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Update user properties from DTO
+                user.UserName = users.UserName;
+                user.Email = users.Email;
+
+                // Handle user picture upload if a new file is provided
+                if (users.UserPicture != null)
+                {
+                    var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
+                    user.UserPictureUrl = fileName; // Set the UserPictureUrl with the uploaded file name
+                }
+
+                // Call the service to update the user
+                await _userService.UpdateUserAsync(user);
+
+                return RedirectToAction("Home"); // Redirect to the Home action after successful update
+            }
+
+            return View(users); // If model state is invalid, return the same view with DTO data
+        }
+
+        public IActionResult Profile(User users)
+        {
+            if (users.UserPicture != null)
+            {
+                var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
+                users.UserPictureUrl = fileName;
+            }
+            var user = _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userviewmodel = new UserEditViewModel
+            {
+                Id = user.Id,
+                Name = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                UserPictureUrl = user.UserPictureUrl,
+
+            };
+            return View("~/Views/Account/profile.cshtml", userviewmodel);
         }
     }
 }

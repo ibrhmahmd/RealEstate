@@ -30,6 +30,7 @@ namespace BusinessLayer.Services
 
             var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
             {
+                Id = property.Id,
                 Name = property.Name,
                 Location = property.Location,
                 Description = property.Description,

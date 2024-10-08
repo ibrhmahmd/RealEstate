@@ -16,11 +16,15 @@ namespace DataAccessLayer.Entities
 
         [MaxLength(200)]
         public string Description { get; set; }
-   
+
         public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
+
+        [ForeignKey("UserId")]
+        public virtual User? User { get; set; }
+   
 
         [MaxLength(50)]
         public string Location { get; set; }
@@ -31,8 +35,8 @@ namespace DataAccessLayer.Entities
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
 
-        [Required, Range(0,20)]
-        public int  Rooms{ get; set; }
+        [Required, Range(0, 20)]
+        public int Rooms { get; set; }
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
@@ -44,11 +48,11 @@ namespace DataAccessLayer.Entities
 
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
-        
+
         [Required]
         public bool IsFUrnished { get; set; }
 
-        public PropertStatus? Status { get; set; } 
+        public PropertStatus? Status { get; set; }
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }

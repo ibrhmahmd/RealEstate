@@ -24,6 +24,6 @@ namespace DataAccessLayer.Entities
 
 		[MaxLength(100)]
 		public string City { get; set; }
-		public ICollection<Project> Projects { get; set; }
+		public ICollection<Project>? Projects { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
@@ -20,7 +21,16 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-        public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
+        // Get all Items in Paged list
+
+        public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Context.Set<T>().CountAsync(predicate);
+        }
+
+
+
+        public async Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize)
         {
             try
             {
@@ -35,37 +45,24 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-
         // Get all Items in Paged list
         public async Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize)
         {
             try
             {
                 var query = Context.Set<T>().AsNoTracking()
-                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false);
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                                    .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
 
-
-                var totalRecords = await query.CountAsync();
-
-                var items = await query.OrderBy(e => EF.Property<int>(e, "Id")) // Ensure ordering to avoid paging inconsistencies
-                                       .Skip((pageNumber - 1) * pageSize)
-                                       .Take(pageSize)
-                                       .ToListAsync();
-
-                return new PagedResult<T>
-                {
-                    Items = items,
-                    TotalRecords = totalRecords,
-                    CurrentPage = pageNumber,
-                    PageSize = pageSize
-                };
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
-
             catch (Exception ex)
+
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+
 
 
         // Get entities by name
@@ -98,7 +95,6 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Get all records including soft-deleted entities by ID
-
         public Task<IQueryable<T>> GetAllIncludingDeletedAsync(Guid Id)
         {
             try
@@ -112,7 +108,6 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
-
         // Get a record by ID, excluding soft-deleted entities
         public async Task<T> GetByIdAsync(Guid id)
         {
@@ -122,7 +117,7 @@ namespace DataAccessLayer.GenericRepository
             }
             catch (Exception ex)
             {
-                throw new Exception($"An error occurred while retrieving the record with ID {id}.", ex);
+                throw new Exception($"An error occurred while retrieving the entity by name: {id}.", ex);
             }
         }
 
@@ -222,7 +217,6 @@ namespace DataAccessLayer.GenericRepository
 
 
         // Soft delete an entity by setting IsDeleted to true
-        // Soft delete an entity by setting IsDeleted to true
         public async Task SoftDeleteAsync(Guid id)
         {
             try
@@ -311,6 +305,32 @@ namespace DataAccessLayer.GenericRepository
             var existingUser = await Context.Set<T>().FirstOrDefaultAsync(lambda);
 
             return existingUser;
+        }
+
+
+
+
+        public async Task VerifyUser(Guid Id)
+        {
+            try
+            {
+                var entity = await GetByIdAsync(Id);
+                if (entity != null)
+                {
+                    var deletedEntity = entity as dynamic;
+                    deletedEntity.IsVerified = true;
+
+                    await SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("Entity not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
+            }
         }
     }
 }

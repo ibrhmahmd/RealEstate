@@ -9,13 +9,14 @@ namespace BusinessLayer.DTOModels
     {
         [Required, StringLength(100)]
         public string Name { get; set; }
-		public Guid? ProjectId { get; set; }
-		public string? PropertyPictureUrl { get; set; }
+        public Guid? ProjectId { get; set; }
+        public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
+        public Guid UserId { get; set; }
 
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
@@ -29,6 +30,8 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsFUrnished { get; set; }
+
+      
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
@@ -51,6 +54,7 @@ namespace BusinessLayer.DTOModels
 
         // Navigation property
         public virtual ICollection<Contract>? Contracts { get; set; }
+
     }
 
 }
