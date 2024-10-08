@@ -7,6 +7,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Controllers;
+using System.Security.Claims;
 
 namespace PresentationLayer
 {
@@ -26,12 +27,13 @@ namespace PresentationLayer
             // Configure Identity to use our custom User class and IdentityRole
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false; // Change to true if you want to require email confirmation
+                options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;  // Ensure roles are correctly included
             })
             .AddEntityFrameworkStores<MyDbContext>()
             .AddDefaultTokenProviders();
