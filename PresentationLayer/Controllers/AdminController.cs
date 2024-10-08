@@ -13,7 +13,7 @@ using System.Drawing.Printing;
 using Azure.Messaging;
 namespace PresentationLayer.Controllers
 {
-    
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
@@ -42,18 +42,18 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
+                var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+                var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+                {
+                    Items = pagedProperties.Items,
+                    PageNumber = pagedProperties.CurrentPage,
+                    PageSize = pagedProperties.PageSize,
+                    TotalRecords = pagedProperties.TotalRecords
+                };
 
+                return View(pagedListViewModel);
             }
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
-            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
-            {
-                Items = pagedProperties.Items,
-                PageNumber = pagedProperties.CurrentPage,
-                PageSize = pagedProperties.PageSize,
-                TotalRecords = pagedProperties.TotalRecords
-            };
 
-            return View(pagedListViewModel);
             return Unauthorized();
         }
 
@@ -66,20 +66,20 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
+                var pagedUsers = await _userService.GetAllUsersAsync(pageNumber, pageSize);
 
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<UserDTO>
+                {
+                    Items = pagedUsers.Items,
+                    PageNumber = pagedUsers.CurrentPage,
+                    PageSize = pagedUsers.PageSize,
+                    TotalRecords = pagedUsers.TotalRecords
+
+                };
+                return View(viewModel);
             }
-            var pagedUsers = await _userService.GetAllUsersAsync(pageNumber, pageSize);
 
-            // Pass the paginated result to the view model
-            var viewModel = new PagedListViewModel<UserDTO>
-            {
-                Items = pagedUsers.Items,
-                PageNumber = pagedUsers.CurrentPage,
-                PageSize = pagedUsers.PageSize,
-                TotalRecords = pagedUsers.TotalRecords
-
-            };
-            return View(viewModel);
             return Unauthorized();
         }
 
@@ -89,19 +89,19 @@ namespace PresentationLayer.Controllers
 
             if (User.IsInRole("Admin"))
             {
+                var Pagedcontracts = await _contractService.GetAllContractsAsync(pageNumber, pageSize);
 
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<ContractDTO>
+                {
+                    Items = Pagedcontracts.Items,
+                    PageNumber = Pagedcontracts.CurrentPage,
+                    PageSize = Pagedcontracts.PageSize,
+                    TotalRecords = Pagedcontracts.TotalRecords
+                };
+                return View(viewModel);
             }
-            var Pagedcontracts = await _contractService.GetAllContractsAsync(pageNumber, pageSize);
-
-            // Pass the paginated result to the view model
-            var viewModel = new PagedListViewModel<ContractDTO>
-            {
-                Items = Pagedcontracts.Items,
-                PageNumber = Pagedcontracts.CurrentPage,
-                PageSize = Pagedcontracts.PageSize,
-                TotalRecords = Pagedcontracts.TotalRecords
-            };
-            return View(viewModel);
+           
             return Unauthorized();
         }
 
@@ -184,6 +184,9 @@ namespace PresentationLayer.Controllers
         }
 
 
+
+
+
         // User Details
         public async Task<IActionResult> Details(Guid id)
         {
@@ -212,6 +215,7 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
+
 
 
 
