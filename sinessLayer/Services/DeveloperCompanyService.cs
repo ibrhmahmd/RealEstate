@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,14 +21,33 @@ namespace BusinessLayer.Services
         }
 
 
-
-        // Get all Developer Companies
-        public async Task<IQueryable<DeveloperCompanyDTO>> GetAllDeveloperCompaniesAsync()
+        // Get all DeveloperCompany
+        public async Task<PagedResult<DeveloperCompanyDTO>> GetAllDeveloperCompaniesAsync(int pageNumber, int pageSize)
         {
-            var companies = await _unitOfWork.DeveloperCompaniesRepository.GetAllAsync(1,5);
-            return _mapper.Map<IQueryable<DeveloperCompanyDTO>>(companies);
-        }
+            var companiesPaged = await _unitOfWork.DeveloperCompaniesRepository.GetAllPagedAsync(pageNumber, pageSize);
 
+            var DeveloperDTOs = companiesPaged.Items.Select(company => new DeveloperCompanyDTO
+            {
+                Id = company.Id,
+                CompanyName = company.CompanyName,
+                YearFounded = company.YearFounded,
+                Email = company.Email,
+                PhoneNumber = company.PhoneNumber,
+                Address = company.Address,
+                City = company.City,
+            }).ToList();
+
+
+
+
+            return new PagedResult<DeveloperCompanyDTO>
+            {
+                Items = DeveloperDTOs,
+                CurrentPage = companiesPaged.CurrentPage,
+                PageSize = companiesPaged.PageSize,
+                TotalRecords = companiesPaged.TotalRecords
+            };
+        }
 
 
 

@@ -27,7 +27,7 @@ namespace DataAccessLayer.UnitOfWork
 
 
 
-        public IRepositoryBase<DeveloperCompany> DeveloperCompanyRepository
+        public IRepositoryBase<DeveloperCompany> DeveloperCompaniesRepository
         {
             get
             {
@@ -35,7 +35,7 @@ namespace DataAccessLayer.UnitOfWork
             }
         }
 
-        public IRepositoryBase<Project> ProjectRepository
+        public IRepositoryBase<Project> ProjectsRepository
         {
             get
             {
@@ -83,10 +83,6 @@ namespace DataAccessLayer.UnitOfWork
                 return _payments ??= new RepositoryBase<Payment>(_context);
             }
         }
-
-        public IRepositoryBase<Project> ProjectsRepository => throw new NotImplementedException();
-
-        public IRepositoryBase<DeveloperCompany> DeveloperCompaniesRepository => throw new NotImplementedException();
 
         public async Task SaveAsync()
         {

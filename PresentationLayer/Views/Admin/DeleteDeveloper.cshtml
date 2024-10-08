@@ -1,0 +1,80 @@
+﻿@model BusinessLayer.DTOModels.DeveloperCompanyDTO
+@{
+    ViewData["Title"] = "Delete";
+    ViewData["ActionName"] = "Developer";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+
+
+}
+
+@section content {
+
+    <div class="container mt-3">
+        <div class="header-container">
+            <h3 style="color:darkgreen"> Are you sure you want to delete this Developer?</h3>
+
+        </div>
+        <div class="container table-container">
+
+
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="CompanyName" class="control-label"></label>
+                    <input asp-for="CompanyName" class="form-control" readonly />
+                    <span asp-validation-for="CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="YearFounded" class="control-label"></label>
+                    <input asp-for="YearFounded" class="form-control" readonly />
+                    <span asp-validation-for="YearFounded" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" readonly />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" readonly />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="City" class="control-label"></label>
+                    <input asp-for="City" class="form-control" readonly />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+     
+
+                <br />
+
+                <input asp-action="DeleteDeveloper" asp-controller="admin" type="submit" value="Delete" class="btn btn-success w-100" />
+
+            </form>
+        </div>
+        <br />
+        <a asp-action="DeveloperList" class="btn btn-outline-success">GO to List</a>
+}
+
+@section scripts {
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
