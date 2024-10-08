@@ -373,8 +373,46 @@ namespace PresentationLayer.Controllers
             }
             return View(project);
         }
+        public async Task<IActionResult> CreateProject(ProjectDTO projectdto)
+        {
 
-
+            if (ModelState.IsValid)
+            {
+              await _projectService.CreateProjectAsync(projectdto);
+                return RedirectToAction("ProjectList");
+            }
+            return View(projectdto);
+        }
+        public async Task<IActionResult> EditProject(Guid id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditProject(ProjectDTO project)
+        {
+            if (ModelState.IsValid)
+            {
+                await _projectService.UpdateProjectAsync(project);
+                return RedirectToAction("ProjectList");
+            }
+            return View(project);
+        }
+        public async Task<IActionResult> DeleteProject(Guid id)
+        {
+            var project = await _projectService.GetProjectByIdAsync(id);
+            return View(project);
+        }
+        [HttpPost, ActionName("DeleteProject")]
+        public async Task<IActionResult> ConfirmDeleteProject(Guid id)
+        {
+            await _projectService.SoftDeleteProjectAsync(id);
+            return RedirectToAction("ProjectList");
+        }
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");

@@ -1,1 +1,188 @@
-﻿
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.ProjectDTO>
+@{
+    ViewData["Title"] = "Project List";
+    ViewData["ActionName"] = "Project";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+}
+
+@section content {
+    <br />
+    <div class="container">
+        <h2 class="header-title">Project Management</h2>
+
+        <div class="header-container">
+
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Projects..." />
+            <a asp-action="CreateProject" asp-controller="Admin" class="btn btn-add">Add Project</a>
+        </div>
+
+        <div class="container table-container">
+            <table class="table table-hover table-bordered" id="projectTable">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Description</th>
+                        <th>StartDate</th>
+                        <th>EndDate</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+          
+
+                    </tr>
+                </thead>
+                <tbody id="contractTable">
+                    @foreach (var project in Model.Items)
+                    {
+                        <tr>
+                            <td>@project.ProjectName</td>
+                            <td>@project.Description</td>
+                            <td>@project.StartDate</td>
+                            <td>@project.EndDate</td>
+                            <td>@project.Status</td>
+                    
+                            <td>
+                                <a asp-action="DeleteProject" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                                <a asp-action="ProjectDetails" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-details">
+                                    <i class="fas fa-info-circle"></i>Details
+                                </a>
+                                <a asp-action="EditProject" asp-controller="Admin" asp-route-Id="@project.Id" class="btn btn-custom btn-success">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <!-- Pagination and Back Button Container -->
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Back Button on the left -->
+                <div>
+                    <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                        <i class="fas fa-rotate-back"></i> Back
+                    </a>
+                </div>
+
+                <!-- Pagination on the right -->
+                <div>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                            </li>
+                        }
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ProjectList" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <br />
+
+
+    <div class="services section">
+
+        <div class="container">
+
+            <div class="row gy-4">
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                        <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
+                            <h3>Users</h3>
+                        </a>
+                        <p>List All Users.</p>
+                    </div>
+                </div><!-- End Service Item -->
+
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-broadcast"></i>
+                        </div>
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
+                            <h3>Contracts</h3>
+                        </a>
+                        <p>Viewe Contracts.</p>
+                    </div>
+                </div><!-- End Service Item -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-easel"></i>
+                        </div>
+                        <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
+                            <h3>Properties</h3>
+                        </a>
+                        <p>CRUD on Properties</p>
+                    </div>
+                </div><!-- End Service Item -->
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        
+            $(document).ready(function () {
+                // Search function
+                $('#searchInput').on('keyup', function () {
+                    var value = $(this).val().toLowerCase();
+                    $('#projectTable tr').filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    });
+                });
+            });
+    </script>
+
+}
