@@ -84,8 +84,14 @@
                         <h2 class="text-xl font-semibold">@Model.Name</h2>
                         <p class="text-gray-500">@Model.Email</p>
                     </div>
-                    <a  asp-action="CreateProperty" asp-controller="Users" class="ml-auto custom-green text-white rounded px-4 py-2">Create Property</a>
-               
+                    @if(User.IsInRole("User"))
+                    {   
+                        <a  asp-action="CreateProperty" asp-controller="Users" class="ml-auto custom-green text-white rounded px-4 py-2">Create Property</a>
+                    }
+                    else
+                    {
+                        
+                    }
 
                 </div>
 
