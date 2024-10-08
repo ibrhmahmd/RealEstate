@@ -58,7 +58,7 @@ namespace PresentationLayer.Controllers
                         new Claim(ClaimTypes.Name, email),
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim("UserId", user.Id.ToString()),
-                        new Claim("Role", user.Role.ToString() )
+                        new Claim(ClaimTypes.Role, user.Role.ToString() )
                     };
 
                     // Create the ClaimsIdentity and AuthenticationProperties
@@ -148,7 +148,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> SeedAdminUser()
         {
             var email = "admin@a.com";
-            var password = "Admin123";
+            var password = "admin";
             var role = "Admin";
 
             var result = await _userService.RegisterUserAsync(email, password, role);
@@ -169,17 +169,6 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
-            // Manually map the User entity to UserDTO (if not using AutoMapper)
-            //var userDto = new UserDTO
-            //{
-            //    Id = user.Id,
-            //    UserName = user.UserName,
-            //    Email = user.Email,
-            //    UserPictureUrl = user.UserPictureUrl,
-            //    // Map other properties as needed
-            //};
-
             return View(user); // Pass the DTO to the view
         }
 

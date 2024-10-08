@@ -12,7 +12,7 @@ using PresentationLayer.Models;
 using System.Drawing.Printing;
 namespace PresentationLayer.Controllers
 {
-    
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
@@ -34,25 +34,23 @@ namespace PresentationLayer.Controllers
         }
 
 
-
-
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
             {
+                var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+                var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+                {
+                    Items = pagedProperties.Items,
+                    PageNumber = pagedProperties.CurrentPage,
+                    PageSize = pagedProperties.PageSize,
+                    TotalRecords = pagedProperties.TotalRecords
+                };
 
+                return View(pagedListViewModel);
             }
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
-            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
-            {
-                Items = pagedProperties.Items,
-                PageNumber = pagedProperties.CurrentPage,
-                PageSize = pagedProperties.PageSize,
-                TotalRecords = pagedProperties.TotalRecords
-            };
-
-            return View(pagedListViewModel);
+           
             return Unauthorized();
         }
 
