@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -360,6 +361,21 @@ namespace DataAccessLayer.GenericRepository
             return await query.ToListAsync();
 
         }
-     
+
+        public async Task UnArchive(Guid contractId)
+        {
+            var contract = await Context.Contracts.FindAsync(contractId);
+            if (contract == null)
+            {
+                throw new Exception("Contract not found.");
+            }
+
+            // Set the IsArchived property to true
+            contract.IsArcheives = true;
+
+            // Update the contract in the database
+            Context.Contracts.Update(contract);
+            await Context.SaveChangesAsync();
+        }
     }
 }

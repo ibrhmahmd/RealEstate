@@ -150,7 +150,28 @@ namespace PresentationLayer.Controllers
                     return BadRequest($"An error occurred: {ex.Message}");
                 }
             }
+        public async Task<IActionResult> UnArchivedContracts(Guid id)
+        {
+            try
+            {
+                // Archive the contract by calling the service
+                await _contractService.UnArchiveContract(id);
 
+                // Redirect to the archived contracts list after successful archiving
+                return RedirectToAction("ListContracts");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // If the contract is not found, return a 404 Not Found result
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Catch any other exceptions and return a Bad Request
+                return BadRequest($"An error occurred: {ex.Message}");
+            }
+        }
+        
 
 
 

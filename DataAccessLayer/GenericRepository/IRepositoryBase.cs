@@ -22,6 +22,7 @@ namespace DataAccessLayer.GenericRepository
         Task HardDeleteAsync(Guid Id);
         Task<bool> Terminate(Guid Id);
         Task Archive(Guid Id);
+        Task UnArchive(Guid Id);
         Task<List<T>> GetArchivedContractsAsync();
         Task VerifyUser(Guid Id);
         Task SaveChangesAsync();

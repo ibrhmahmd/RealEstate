@@ -63,10 +63,24 @@ namespace BusinessLayer.Services
             contract.IsArcheives = true; // Mark contract as archived
             await _unitOfWork.SaveAsync(); // Save changes using UnitOfWork
         }
+        public async Task UnArchiveContract(Guid id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
 
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} was not found.");
+            }
+
+            contract.IsArcheives = false; // Mark contract as archived
+            await _unitOfWork.SaveAsync(); // Save changes using UnitOfWork
+        }
         public async Task<List<Contract>> GetArchivedContractsAsync()
         {
-            return await _unitOfWork.ContractsRepository.GetArchivedContractsAsync();
+            var archivecontract = await _unitOfWork.ContractsRepository.GetArchivedContractsAsync();
+            var filter = archivecontract.Where(c=>c.IsArcheives==true).ToList();
+            return filter;
+
         }
 
 

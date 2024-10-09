@@ -24,7 +24,7 @@
             <th>Total Amount</th>
             <th>Location</th>
             <th>Status</th>
-            <th>Details</th>
+            <th>UnArchive</th>
         </tr>
     </thead>
     
@@ -41,10 +41,9 @@
                 <td>@(contract.IsArcheives ? "Archived" : "Active")</td>
 
                 <td>
-        
-                    <a asp-action="ContractDetails" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
-                        <i class="fas fa-info-circle"></i>Details
-                    </a>
+                            <a asp-action="UnArchivedContracts" asp-controller="Admin" style=" background-color: #38d39f; color: white;" asp-route-Id="@contract.Id" class="btn btn-custom btn-unarchive">
+                                <i class="fas fa-box-open"></i> UnArchive
+                            </a>
 
                 </td>
 
