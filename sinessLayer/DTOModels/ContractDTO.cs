@@ -51,10 +51,11 @@ namespace BusinessLayer.DTOModels
 		public decimal LateFee { get; set; } // Late payment fee
 
 		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
+        public bool IsArcheives { get; set; } = false;
 
-		
 
-		[Required, MaxLength(200)]
+
+        [Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property
 
 		public bool IsFurnished { get; set; } = false; // Is the property furnished?

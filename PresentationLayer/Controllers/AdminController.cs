@@ -109,6 +109,52 @@ namespace PresentationLayer.Controllers
         }
 
 
+            // Archive a contract by ID
+            public async Task<IActionResult> ArchivedContracts(Guid id)
+            {
+                try
+                {
+                    // Archive the contract by calling the service
+                    await _contractService.ArchiveContract(id);
+
+                    // Redirect to the archived contracts list after successful archiving
+                    return RedirectToAction("ArchivedContractsList");
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    // If the contract is not found, return a 404 Not Found result
+                    return NotFound(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    // Catch any other exceptions and return a Bad Request
+                    return BadRequest($"An error occurred: {ex.Message}");
+                }
+            }
+
+            // Retrieve the list of archived contracts
+            public async Task<IActionResult> ArchivedContractsList()
+            {
+                try
+                {
+                    // Retrieve archived contracts from the service
+                    var archivedContracts = await _contractService.GetArchivedContractsAsync();
+
+                    // Return the view with the archived contracts
+                    return View(archivedContracts);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception if necessary
+                    // Return a bad request result with the exception message
+                    return BadRequest($"An error occurred: {ex.Message}");
+                }
+            }
+
+
+
+
+
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
 

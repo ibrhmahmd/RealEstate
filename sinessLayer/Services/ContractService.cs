@@ -30,8 +30,8 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<ContractDTO>> GetAllContractsAsync(int pageNumber, int pageSize)
         {
             var contractsPaged = await _unitOfWork.ContractsRepository.GetAllPagedAsync(pageNumber, pageSize);
-
-            var ContractDTOs = contractsPaged.Items.Select(contract => new ContractDTO
+       
+            var ContractDTOs = contractsPaged.Items.Where(c => c.IsArcheives == false).ToList().Select(contract => new ContractDTO
             {
                 Id = contract.Id,
                 ContractType = contract.ContractType,
@@ -49,6 +49,24 @@ namespace BusinessLayer.Services
                 PageSize = contractsPaged.PageSize,
                 TotalRecords = contractsPaged.TotalRecords
             };
+        }
+  
+        public async Task ArchiveContract(Guid id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} was not found.");
+            }
+
+            contract.IsArcheives = true; // Mark contract as archived
+            await _unitOfWork.SaveAsync(); // Save changes using UnitOfWork
+        }
+
+        public async Task<List<Contract>> GetArchivedContractsAsync()
+        {
+            return await _unitOfWork.ContractsRepository.GetArchivedContractsAsync();
         }
 
 
@@ -245,6 +263,8 @@ namespace BusinessLayer.Services
                     throw new InvalidOperationException($"Unsupported property status: {property.Status.Value}");
             }
         }
+ 
+
 
         private void ProcessLeaseContract(ContractDTO contractModel, decimal price)
         {

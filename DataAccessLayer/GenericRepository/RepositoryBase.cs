@@ -42,7 +42,7 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
-
+  
 
 
         // Get all Items in Paged list
@@ -52,6 +52,7 @@ namespace DataAccessLayer.GenericRepository
             {
                 var query = Context.Set<T>().AsNoTracking()
                                     .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                                    
                                     .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
@@ -62,6 +63,7 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+
 
 
 
@@ -332,5 +334,32 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
             }
         }
+
+        public async Task Archive(Guid contractId)
+        {
+            // Find the contract by ID
+            var contract = await Context.Contracts.FindAsync(contractId);
+            if (contract == null)
+            {
+                throw new Exception("Contract not found.");
+            }
+
+            // Set the IsArchived property to true
+            contract.IsArcheives = true;
+
+            // Update the contract in the database
+            Context.Contracts.Update(contract);
+            await Context.SaveChangesAsync();
+        }
+
+
+        public async Task<List<T>> GetArchivedContractsAsync()
+        {
+            // Ensure that the type T has an IsArchived property using reflection
+            var query = Context.Set<T>().Where(e => EF.Property<bool>(e, "IsArcheives") == true);
+            return await query.ToListAsync();
+
+        }
+     
     }
 }
