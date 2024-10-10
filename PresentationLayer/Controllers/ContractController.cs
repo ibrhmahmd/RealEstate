@@ -4,6 +4,7 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Evaluation;
 using Microsoft.Extensions.Logging;
 using PresentationLayer.helper;
 using System.Security.Claims;
@@ -18,17 +19,20 @@ namespace PresentationLayer.Controllers
         private readonly PropertyService _propertyService;
         private readonly UserManager<User> _userManager;
         private readonly ILogger<ContractController> _logger;
+        private readonly PaymentService _paymentService;
 
         public ContractController(
             ContractService contractService,
             UserManager<User> userManager,
             PropertyService propertyService,
+            PaymentService paymentService,
             ILogger<ContractController> logger,
             UserService userService)
         {
             _contractService = contractService;
             _userManager = userManager;
             _propertyService = propertyService;
+            _paymentService = paymentService;
             _logger = logger;
             _userService = userService;
         }
@@ -51,8 +55,6 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
-
-
 
         public async Task<IActionResult> Create(Guid? propertyId)
         {
@@ -78,7 +80,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
-
+       
 
 
 
@@ -86,16 +88,10 @@ namespace PresentationLayer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ContractDTO contractDto)
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
             if (contractDto == null)
             {
                 return BadRequest("Contract data is required.");
             }
-
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdClaim))
             {
@@ -123,8 +119,17 @@ namespace PresentationLayer.Controllers
                     }
 
                     contractDto.Document = fileName;
-                    var createdContract = await _contractService.CreateContractAsync(contractDto);
-                    return RedirectToAction(nameof(Details), new { id = createdContract.Id });
+                    var payments =  await ProcessPayments(contractDto);
+                    await _contractService.CreateContractAsync(contractDto);
+
+                    foreach (PaymentDTO paymentDto in payments)
+                    {
+                        await _paymentService.CreatePaymentAsync(paymentDto);
+                    }
+                    return RedirectToAction(nameof(ProcessPayments),new { ContractDTO = contractDto} );
+
+
+                    //return RedirectToAction(nameof(Details), new { id = createdContract.Id });
                 }
                 catch (Exception ex)
                 {
@@ -133,10 +138,25 @@ namespace PresentationLayer.Controllers
                     return View(contractDto);
                 }
             }
-
             // If we get here, something went wrong
             return View(contractDto);
         }
+
+
+        public async Task<List<PaymentDTO>> ProcessPayments(ContractDTO contractDto)
+        {
+                var payments = await _paymentService.CreatePaymentsFromContractAsync(contractDto);
+                return payments;
+            
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "Error processing payments for contract {ContractId}.", contractDto.Id);
+            //    ModelState.AddModelError("", "An error occurred while processing payments. Please try again later.");
+                
+            //}
+        }
+
+        
 
 
 

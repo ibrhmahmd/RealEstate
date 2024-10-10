@@ -7,7 +7,7 @@ using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging; // Added for ILogger
+using Microsoft.Extensions.Logging; 
 
 namespace BusinessLayer.Services
 {
@@ -16,15 +16,16 @@ namespace BusinessLayer.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PropertyService _propertyService;
-        private readonly ILogger<ContractService> _logger; // Added for ILogger
+        private readonly ILogger<ContractService> _logger; 
 
         public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService, ILogger<ContractService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _propertyService = propertyService;
-            _logger = logger; // Added for ILogger
+            _logger = logger; 
         }
+
 
         // Get all Contracts
         public async Task<PagedResult<ContractDTO>> GetAllContractsAsync(int pageNumber, int pageSize)
@@ -51,6 +52,8 @@ namespace BusinessLayer.Services
             };
         }
   
+
+
         public async Task ArchiveContract(Guid id)
         {
             var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
@@ -60,9 +63,15 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Contract with ID {id} was not found.");
             }
 
-            contract.IsArcheives = true; // Mark contract as archived
-            await _unitOfWork.SaveAsync(); // Save changes using UnitOfWork
+            contract.IsArcheives = true; 
+            await _unitOfWork.SaveAsync(); 
         }
+
+
+
+
+
+
         public async Task UnArchiveContract(Guid id)
         {
             var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
@@ -85,12 +94,16 @@ namespace BusinessLayer.Services
 
 
 
+
         // Get all contracts including soft deleted
         public async Task<IQueryable<ContractDTO>> GetAllContractsIncludingDeletedAsync()
         {
             var contracts = await _unitOfWork.ContractsRepository.GetAllIncludingDeletedAsync();
             return _mapper.Map<IQueryable<ContractDTO>>(contracts);
         }
+
+
+
 
 
         // Get contract by ID
@@ -112,7 +125,7 @@ namespace BusinessLayer.Services
             // contract AutoMapper to map ContractDTO to Contract entity
             var contract = _mapper.Map<Contract>(contractDto);
 
-
+            await _propertyService.PropertyOccupiedAsync(contractDto.PropertyId);
             await _unitOfWork.ContractsRepository.InsertAsync(contract);
             await _unitOfWork.SaveAsync();
 
@@ -237,8 +250,6 @@ namespace BusinessLayer.Services
         }
 
 
-
-
         private void ValidatePropertyPrice(decimal price)
         {
             if (price <= 0 || price > 1_000_000_000) // Adjust the upper limit as needed
@@ -285,13 +296,16 @@ namespace BusinessLayer.Services
             contractModel.RecurringPaymentFrequency = "Monthly";
             contractModel.RecurringPaymentAmount = Math.Round(price / 12, 2);
             contractModel.InitialPayment = Math.Round(price / 6, 2);
+            contractModel.TotalAmount = Math.Round(price, 2);
         }
+
 
         private void ProcessOwnershipContract(ContractDTO contractModel, decimal price)
         {
             contractModel.RecurringPaymentFrequency = "Quarterly";
             contractModel.RecurringPaymentAmount = Math.Round(price / 4, 2);
             contractModel.InitialPayment = Math.Round(price * 0.75m, 2);
+            contractModel.TotalAmount = Math.Round(price, 2);
         }
     }
 }

@@ -170,7 +170,6 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             try
             {
                 var user = await _userService.GetUserByIdAsync(id.Value);
@@ -202,48 +201,21 @@ namespace PresentationLayer.Controllers
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
             if (!Guid.TryParse(userIdString, out Guid userId))
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            // Query contracts with user-specific filtering
-            var contractsQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId) // Filter contracts by the given userId
-                .Include(c => c.Agent)               // Include agent details
-                .AsQueryable();
+            var (contracts, totalItems) = await _userService.GetUserContractsAsync(userId, pageNumber, pageSize);
 
-            // Get total item count for pagination
-            var totalItems = await contractsQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var contracts = await contractsQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the contracts to ContractDTO
-            var contractDTOs = contracts.Select(c => new ContractDTO
-            {
-                Id = c.Id,
-                ContractType = c.ContractType,
-                AgentId = c.AgentId,
-                EndDate = c.EndDate,
-                TotalAmount = c.TotalAmount,
-                PropertyLocation = c.PropertyLocation,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
             var pagedListViewModel = new PagedListViewModel<ContractDTO>
             {
-                Items = contractDTOs,
+                Items = contracts,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalRecords = totalItems,
             };
 
-            // Return the view with the paginated list of contracts
             return View(pagedListViewModel);
         }
 
@@ -252,103 +224,42 @@ namespace PresentationLayer.Controllers
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
             if (!Guid.TryParse(userIdString, out Guid userId))
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            // Query properties with user-specific filtering
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-                .Join(_context.Properties,               // Join Contracts with Properties
-                      contract => contract.PropertyId,  // Match on PropertyId
-                      property => property.Id,          // The Id in the Properties table
-                      (contract, property) => property) // Select the property
-                .AsQueryable();
+            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(userId, pageNumber, pageSize);
 
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                PropertyPictureUrl = p.PropertyPictureUrl,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
-                Items = propertyDTOs,
+                Items = properties,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalRecords = totalItems,
             };
 
-            // Return the view with the paginated list of properties
             return View(pagedListViewModel);
         }
+
+
+        
         public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)
         {
-            if(!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login" , "Account");
+                return RedirectToAction("Login", "Account");
             }
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
             if (!Guid.TryParse(userIdString, out Guid userId))
             {
                 return BadRequest("Invalid user ID.");
             }
-         
 
-            // Query properties with user-specific filtering
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-                .Join(_context.Properties,               // Join Contracts with Properties
-                      contract => contract.PropertyId,  // Match on PropertyId
-                      property => property.Id,          // The Id in the Properties table
-                      (contract, property) => property) // Select the property
-                  .Where(p => p.Status == PropertStatus.Ownership) 
-                .AsQueryable();
+            // Call the new method in UserService
+            var (propertyDTOs, totalItems) = await _userService.GetOwnedPropertiesAsync(userId, pageNumber, pageSize);
 
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                PropertyPictureUrl = p.PropertyPictureUrl,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = propertyDTOs,
@@ -357,9 +268,9 @@ namespace PresentationLayer.Controllers
                 TotalRecords = totalItems,
             };
 
-            // Return the view with the paginated list of properties
             return View(pagedListViewModel);
         }
+
         public async Task<IActionResult> ListPropertiesLease(int pageNumber = 1, int pageSize = 5)
         {
             if (!User.Identity.IsAuthenticated)
@@ -368,45 +279,14 @@ namespace PresentationLayer.Controllers
             }
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
             if (!Guid.TryParse(userIdString, out Guid userId))
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            // Query properties with user-specific filtering
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-                .Join(_context.Properties,               // Join Contracts with Properties
-                      contract => contract.PropertyId,  // Match on PropertyId
-                      property => property.Id,          // The Id in the Properties table
-                      (contract, property) => property) // Select the property
-                  .Where(p => p.Status == PropertStatus.Lease)
-                .AsQueryable();
+            // Call the new method in UserService
+            var (propertyDTOs, totalItems) = await _userService.GetLeasedPropertiesAsync(userId, pageNumber, pageSize);
 
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                PropertyPictureUrl = p.PropertyPictureUrl,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = propertyDTOs,
@@ -415,7 +295,6 @@ namespace PresentationLayer.Controllers
                 TotalRecords = totalItems,
             };
 
-            // Return the view with the paginated list of properties
             return View(pagedListViewModel);
         }
 

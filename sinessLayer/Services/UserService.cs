@@ -376,20 +376,131 @@ namespace BusinessLayer.Services
             }
         }
 
-        public async Task<List<Property>> GetUserPropertiesAsync(Guid userId)
+
+        public async Task<(List<PropertyDTO> properties, int totalItems)> GetUserPropertiesAsync(Guid userId, int pageNumber, int pageSize)
         {
-            // Use a join between Contracts and Properties
-            var properties = await _context.Contracts
+            var propertiesQuery = _context.Contracts
                 .Where(c => c.OccupantId == userId)
                 .Join(_context.Properties,
                       contract => contract.PropertyId,
                       property => property.Id,
                       (contract, property) => property)
+                .AsQueryable();
+
+            // Get total item count for pagination
+            var totalItems = await propertiesQuery.CountAsync();
+
+            // Apply pagination using Skip and Take
+            var properties = await propertiesQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return properties;
+            // Map the properties to PropertyDTO
+            var propertyDTOs = properties.Select(p => new PropertyDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                PropertyPictureUrl = p.PropertyPictureUrl,
+                Location = p.Location,
+                Description = p.Description,
+                Area = p.Area,
+                Price = p.Price,
+                Type = p.Type,
+            }).ToList();
+
+            return (propertyDTOs, totalItems);
         }
 
+        public async Task<(List<ContractDTO> Contracts, int TotalItems)> GetUserContractsAsync(Guid userId, int pageNumber, int pageSize)
+        {
+            var contractsQuery = _context.Contracts
+                .Where(c => c.OccupantId == userId)
+                .Include(c => c.Agent)
+                .AsQueryable();
 
+            var totalItems = await contractsQuery.CountAsync();
+
+            var contracts = await contractsQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var contractDTOs = contracts.Select(c => new ContractDTO
+            {
+                Id = c.Id,
+                ContractType = c.ContractType,
+                AgentId = c.AgentId,
+                EndDate = c.EndDate,
+                TotalAmount = c.TotalAmount,
+                PropertyLocation = c.PropertyLocation,
+            }).ToList();
+
+            return (contractDTOs, totalItems);
+        }
+
+        public async Task<(List<PropertyDTO> properties, int totalItems)> GetOwnedPropertiesAsync(Guid userId, int pageNumber, int pageSize)
+        {
+            var propertiesQuery = _context.Contracts
+                .Where(c => c.OccupantId == userId)
+                .Join(_context.Properties,
+                      contract => contract.PropertyId,
+                      property => property.Id,
+                      (contract, property) => property)
+                .Where(p => p.Status == PropertStatus.Ownership)
+                .AsQueryable();
+
+            var totalItems = await propertiesQuery.CountAsync();
+
+            var properties = await propertiesQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (properties.Select(p => new PropertyDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                PropertyPictureUrl = p.PropertyPictureUrl,
+                Location = p.Location,
+                Description = p.Description,
+                Area = p.Area,
+                Price = p.Price,
+                Type = p.Type,
+            }).ToList(), totalItems);
+        }
+
+        public async Task<(List<PropertyDTO> properties, int totalItems)> GetLeasedPropertiesAsync(Guid userId, int pageNumber, int pageSize)
+        {
+            var propertiesQuery = _context.Contracts
+                .Where(c => c.OccupantId == userId)
+                .Join(_context.Properties,
+                      contract => contract.PropertyId,
+                      property => property.Id,
+                      (contract, property) => property)
+                .Where(p => p.Status == PropertStatus.Lease)
+                .AsQueryable();
+
+            var totalItems = await propertiesQuery.CountAsync();
+
+            var properties = await propertiesQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (properties.Select(p => new PropertyDTO
+            {
+                Id = p.Id,
+                Name = p.Name,
+                PropertyPictureUrl = p.PropertyPictureUrl,
+                Location = p.Location,
+                Description = p.Description,
+                Area = p.Area,
+                Price = p.Price,
+                Type = p.Type,
+            }).ToList(), totalItems);
+        }
+
+        
     }
 }
