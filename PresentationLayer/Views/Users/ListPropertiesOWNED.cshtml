@@ -1,0 +1,145 @@
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
+@{
+    ViewData["Title"] = "Property List";
+    ViewData["ActionName"] = "Property";
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+}
+
+@section content {
+
+    <div class="flex min-h-screen">
+        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+            <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
+            </a>
+            <a asp-controller="users" asp-action="ListContracts" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
+            </a>
+            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
+            </a>
+        </aside>
+
+        <div class="container">
+            <h2 class="header-title" style="color:darkgreen;">Owned Properties</h2>
+            <br />
+            @if (Model.Items.Any())
+            {
+                <div class="header-container">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+                </div>
+            }
+            <div class="container table-container">
+                @if (!Model.Items.Any())
+                {
+                    <div class="alert alert-success" role="alert">
+                        No properties found for this user.
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-hover table-bordered" id="PropertyTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Project</th>
+                                <th>Area</th>
+                                <th>Price</th>
+                                <th>Type</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="Table">
+                            @foreach (var property in Model.Items)
+                            {
+                                <tr onclick="location.href='@Url.Action("ShowProperty", "Users", new { Id = property.Id })'" style="cursor: pointer;">
+                                    <td>@property.Name</td>
+                                    <td>@property.Location</td>
+                                    <td>@property.Description</td>
+                                    <td>@property.Area</td>
+                                    <td>@property.Price</td>
+                                    <td>@property.Type</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a asp-action="Services" asp-controller="Home" class="ml-auto custom-green text-white rounded px-4 py-2">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+
+                    </div>
+
+                    <ul class="pagination justify-content-center">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                            </li>
+                        }
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#PropertyTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
+}

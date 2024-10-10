@@ -86,6 +86,11 @@ namespace PresentationLayer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ContractDTO contractDto)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (contractDto == null)
             {
                 return BadRequest("Contract data is required.");
