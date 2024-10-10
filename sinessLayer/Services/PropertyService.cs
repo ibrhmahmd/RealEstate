@@ -32,6 +32,7 @@ namespace BusinessLayer.Services
             {
                 Id = property.Id,
                 Name = property.Name,
+                PropertyPictureUrl=property.PropertyPictureUrl,
                 Location = property.Location,
                 Description = property.Description,
                 Area = property.Area,

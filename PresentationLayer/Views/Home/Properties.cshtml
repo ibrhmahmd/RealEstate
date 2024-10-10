@@ -82,7 +82,8 @@
                             {
                                 <div class="col-xl-3 col-lg-4 col-md-6 property-card" data-aos="fade-up" data-aos-delay="100" data-location="@property.Location" data-type="@property.Type" data-status="@property.Status">
                                     <div class="card">
-                                        <img src="~/assets/img/properties/property-1.jpg" alt="Property Image" class="img-fluid" />
+                                        <img src="@Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl)" class="img-fluid" alt="@property.Name" />
+
                                         <div class="card-body">
                                             <span class="sale-rent">@property.Type | @property.Status</span>
                                             <h3>

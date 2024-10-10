@@ -44,15 +44,16 @@
         <br />
         <!-- Sidebar -->
         <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
+            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
             </a>
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
+            <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" title="Update Profile" alt="User" />
             </a>
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
+            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
+
             <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
             </a>

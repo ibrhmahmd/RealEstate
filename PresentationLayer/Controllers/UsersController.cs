@@ -198,7 +198,7 @@ namespace PresentationLayer.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> ListContracts()
+        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 5)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -208,9 +208,19 @@ namespace PresentationLayer.Controllers
                 return BadRequest("Invalid user ID.");
             }
 
-            var contracts = await _context.Contracts
-                .Where(c => c.OccupantId == userId) // Assuming 'UserId' is the property that links to the user
-                .Include(c => c.Agent) // Include agent details
+            // Query contracts with user-specific filtering
+            var contractsQuery = _context.Contracts
+                .Where(c => c.OccupantId == userId) // Filter contracts by the given userId
+                .Include(c => c.Agent)               // Include agent details
+                .AsQueryable();
+
+            // Get total item count for pagination
+            var totalItems = await contractsQuery.CountAsync();
+
+            // Apply pagination using Skip and Take
+            var contracts = await contractsQuery
+                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
+                .Take(pageSize)                    // Take only the current page size
                 .ToListAsync();
 
             // Map the contracts to ContractDTO
@@ -224,10 +234,21 @@ namespace PresentationLayer.Controllers
                 PropertyLocation = c.PropertyLocation,
             }).ToList();
 
-            return View(contractDTOs);
+            // Create a PagedListViewModel to pass data and pagination metadata to the view
+            var pagedListViewModel = new PagedListViewModel<ContractDTO>
+            {
+                Items = contractDTOs,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalItems,
+            };
+
+            // Return the view with the paginated list of contracts
+            return View(pagedListViewModel);
         }
-    
-        public async Task<IActionResult> ListProperties()
+
+
+        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -237,21 +258,30 @@ namespace PresentationLayer.Controllers
                 return BadRequest("Invalid user ID.");
             }
 
+            // Query properties with user-specific filtering
+            var propertiesQuery = _context.Contracts
+                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
+                .Join(_context.Properties,               // Join Contracts with Properties
+                      contract => contract.PropertyId,  // Match on PropertyId
+                      property => property.Id,          // The Id in the Properties table
+                      (contract, property) => property) // Select the property
+                .AsQueryable();
 
-            var properties = await _context.Contracts
-            .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-            .Join(_context.Properties,               // Join Contracts with Properties
-                  contract => contract.PropertyId,  // Match on PropertyId
-                  property => property.Id,          // The Id in the Properties table
-                  (contract, property) => property) // Select the property
-            .ToListAsync();
+            // Get total item count for pagination
+            var totalItems = await propertiesQuery.CountAsync();
 
+            // Apply pagination using Skip and Take
+            var properties = await propertiesQuery
+                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
+                .Take(pageSize)                    // Take only the current page size
+                .ToListAsync();
 
             // Map the properties to PropertyDTO
             var propertyDTOs = properties.Select(p => new PropertyDTO
             {
                 Id = p.Id,
                 Name = p.Name,
+                PropertyPictureUrl = p.PropertyPictureUrl,
                 Location = p.Location,
                 Description = p.Description,
                 Area = p.Area,
@@ -259,8 +289,19 @@ namespace PresentationLayer.Controllers
                 Type = p.Type,
             }).ToList();
 
-            return View(propertyDTOs);
+            // Create a PagedListViewModel to pass data and pagination metadata to the view
+            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = propertyDTOs,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalItems,
+            };
+
+            // Return the view with the paginated list of properties
+            return View(pagedListViewModel);
         }
+
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
