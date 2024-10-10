@@ -1,4 +1,4 @@
-﻿@model List<BusinessLayer.DTOModels.ContractDTO>
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.ContractDTO>
 @{
     ViewData["Title"] = "Contract List";
     ViewData["ActionName"] = "Contracts";
@@ -13,37 +13,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
 
-
-    <style>
-        .sidebar {
-            width: 80px;
-            height: 80vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-
-        .sidebar-icon {
-            width: 50px;
-            height: 50px;
-        }
-
-        .custom-green {
-            background-color: rgb(46,202,106);
-        }
-    </style>
+ 
 }
 
 @section content {
-    <br />
-    <br />
 
     <div class="flex min-h-screen">
-        <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+        <aside style="margin-left:10px; margin-top:160px; height:541px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
             <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
             </a>
-       
+
             <a asp-controller="users" asp-action="ListContracts" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
@@ -53,62 +33,98 @@
             </a>
         </aside>
 
-
-    <div class="container">
-        <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
-
-
-        <div class="container table-container">
-            @if (Model == null || !Model.Any())
+        <div class="container">
+            <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
+            <br />
+            @if (Model.Items.Any())
             {
-                <div class="alert alert-success" role="alert">
-                    No Contracts found for this user.
+                <div class="header-container">
+                    <input type="text" id="searchInput" style="   border: 2px solid darkgreen" class="search-bar" placeholder="Search Contracts..." />
                 </div>
-          
             }
-            else
-            {
-                <table class="table table-hover table-bordered" id="PropertyTable">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Agent</th>
-                            <th>End Date</th>
-                            <th>Total Amount</th>
-                            <th>Location</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody id="contractTable">
-                        @foreach (var contract in Model)
-                        {
+            <div class="container table-container">
+                @if (!Model.Items.Any())
+                {
+                    <div class="alert alert-success" role="alert">
+                        No Contracts found for this user.
+                    </div>
+                }
+                else
+                {
+                    <table class="table table-hover table-bordered" id="ContractTable">
+                        <thead>
                             <tr>
-                                <td>@contract.ContractType</td>
-                                <td>@contract.AgentId</td>
-                                <td>@contract.EndDate</td> <!-- Shorten date format -->
-                                <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
-                                <td>@contract.PropertyLocation</td>
-                                <td>
-                                    <a asp-action="ContractDetails" asp-controller="users" asp-route-Id="@contract.Id" class="btn btn-custom btn-details">
-                                        <i class="fas fa-info-circle"></i> Details
-                                    </a>
-                                </td>
+                                <th>Type</th>
+                                <th>Agent</th>
+                                <th>End Date</th>
+                                <th>Total Amount</th>
+                                <th>Location</th>
+                                
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+                        </thead>
+                        <tbody id="contractTable">
+                            @foreach (var contract in Model.Items)
+                            {
+                                <tr onclick="location.href='@Url.Action("ContractDetails", "Users", new { Id = contract.Id })'" style="cursor: pointer;">
+                                    <td>@contract.ContractType</td>
+                                    <td>@contract.AgentId</td>
+                                    <td>@contract.EndDate</td> <!-- Shorten date format -->
+                                    <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
+                                    <td>@contract.PropertyLocation</td>
+                             
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
-            <!-- Pagination and Back Button Container -->
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                        <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
-                        <i class="fas fa-rotate-back"></i> Back
-                    </a>
-                </div>
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center">
+
+
+                        <div>
+                            <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                                <i class="fas fa-rotate-back"></i> Back
+                            </a>
+                        </div>
+                       
+                        
+                        
+                        <ul class="pagination justify-content-center">
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            }
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                </li>
+                            }
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
             </div>
         </div>
-    </div>
     </div>
 }
 
@@ -120,6 +136,14 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-   
-    
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#ContractTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
 }
