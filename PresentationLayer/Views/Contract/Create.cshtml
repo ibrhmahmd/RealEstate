@@ -40,41 +40,25 @@
                 @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
             </div>
 
-            <!-- Contract Type: Display only -->
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ContractType, new { @class = "form-label" })
-                <div class="form-control">@Model.ContractType</div>
-            </div>
-
             <!-- Initial Payment: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.InitialPayment, new { @class = "form-label" })
-                <div class="form-control">@(Model.InitialPayment?.ToString("C") ?? "N/A")</div>
+                <div class="form-control">@(Model.InitialPayment?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")</div>
             </div>
 
             <!-- Recurring Payment Amount: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.RecurringPaymentAmount, new { @class = "form-label" })
-                <div class="form-control">@string.Format("{0:C}", Model.RecurringPaymentAmount)</div>
+                <div class="form-control">@string.Format(new System.Globalization.CultureInfo("en-EG"), "{0:C}", Model.RecurringPaymentAmount)</div>
             </div>
 
-            <!-- Recurring Payment Frequency: Display only -->
-            <div class="form-group mb-3">
-                @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
-                <div class="form-control">@Model.RecurringPaymentFrequency</div>
-            </div>
 
             <!-- Late Fee: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.LateFee, new { @class = "form-label" })
-                <div class="form-control">@Model.LateFee.ToString("C")</div>
+                <div class="form-control">@Model.LateFee.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
             </div>
-
-            <!-- PDF Upload field -->
-            <div class="form-group mb-3">
-                <label for="pdfFile" class="form-label">Upload Contract PDF</label>
-                <input type="file" id="ContractDocument" name="ContractDocument" class="form-control" accept=".pdf" required />
-            </div>
+       
 
             <!-- Hidden field to store the uploaded file path -->
             @Html.HiddenFor(model => model.ContractDocument)
@@ -87,6 +71,11 @@
                 @Html.HiddenFor(model => model.PropertyLocation)
                 <div class="form-control">@Model.PropertyLocation</div>
             </div>
+            <!-- Contract Type: Display only -->
+            <div class="form-group mb-3">
+                @Html.LabelFor(model => model.ContractType, new { @class = "form-label" })
+                <div class="form-control">@Model.ContractType</div>
+            </div>
 
             <!-- Add more property-related fields here as needed -->
             <div class="form-group mb-3">
@@ -94,12 +83,24 @@
                 @Html.HiddenFor(model => model.Rooms)
                 <div class="form-control">@Model.Rooms</div>
             </div>
+            <div class="form-group mb-3">
+                <label for="pdfFile" class="form-label">Upload Contract PDF</label>
+                <input type="file" id="ContractDocument" name="ContractDocument" class="form-control" accept=".pdf" required />
+            </div>
+            <!-- Recurring Payment Frequency: Display only -->
+            <div class="form-group mb-3">
+                @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
+                <div class="form-control">@Model.RecurringPaymentFrequency</div>
+            </div>
         </div>
+
 
         <div class="col-12 text-center mt-4">
             <button type="submit" class="btn btn-primary">Create Contract</button>
             <button type="button" id="downloadPdfBtn" class="btn btn-secondary" disabled>Download PDF</button>
         </div>
+        <!-- PDF Upload field -->
+    
     }
 </div>
 
