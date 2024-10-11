@@ -59,9 +59,6 @@
                 <div class="form-control">@Model.LateFee.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
             </div>
        
-
-            <!-- Hidden field to store the uploaded file path -->
-            @Html.HiddenFor(model => model.ContractDocument)
         </div>
 
         <div class="col-md-6">
@@ -83,14 +80,16 @@
                 @Html.HiddenFor(model => model.Rooms)
                 <div class="form-control">@Model.Rooms</div>
             </div>
-            <div class="form-group mb-3">
-                <label for="pdfFile" class="form-label">Upload Contract PDF</label>
-                <input type="file" id="ContractDocument" name="ContractDocument" class="form-control" accept=".pdf" required />
-            </div>
             <!-- Recurring Payment Frequency: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
                 <div class="form-control">@Model.RecurringPaymentFrequency</div>
+            </div>
+            <!-- Hidden field to store the uploaded file path -->
+            @Html.HiddenFor(model => model.ContractDocument)
+            <div class="form-group mb-3">
+                <label for="pdfFile" class="form-label">Upload Contract PDF</label>
+                <input type="file" id="ContractDocument" name="ContractDocument" class="form-control" accept=".pdf" required />
             </div>
         </div>
 
