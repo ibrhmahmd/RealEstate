@@ -8,6 +8,46 @@
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/custom-styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .pagination-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pagination {
+            border-radius: 25px; /* Rounded corners */
+            background-color: #ffffff; /* White background for contrast */
+
+            padding: 10px 15px; /* Padding for the pagination */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        .pagination .page-link {
+            color: rgb(46,202,106);
+            background-color: #ffffff;
+            border: 1px solid rgb(46,202,106);
+            border-radius: 7px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: rgb(46,202,106);
+            color: white;
+        }
+
+        .pagination .page-link:hover {
+            background-color: rgb(46,202,106);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
 }
 
 @section content {
@@ -118,23 +158,44 @@
 
             <!-- Pagination Controls -->
             <div class="pagination-container text-center mt-4">
-                @if (Model.TotalPages > 1)
-                {
-                    <ul class="pagination">
-                        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Properties", new { pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize })">Previous</a>
+
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Properties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
                         </li>
-                        @for (int i = 1; i <= Model.TotalPages; i++)
-                        {
-                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" href="@Url.Action("Properties", new { pageNumber = i, pageSize = Model.PageSize })">@i</a>
-                            </li>
-                        }
-                        <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
-                            <a class="page-link" href="@Url.Action("Properties", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })">Next</a>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
                         </li>
-                    </ul>
-                }
+                    }
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link" asp-action="Properties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Properties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+
+
+           
             </div>
         </div>
     </div>
