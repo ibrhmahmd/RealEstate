@@ -46,7 +46,7 @@
                 @if (!Model.Items.Any())
                 {
                     <div class="alert alert-success" role="alert">
-                        No properties found for this user.
+                        No leased properties found.
                     </div>
                 }
                 else
@@ -92,7 +92,7 @@
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                <a class="page-link" asp-action="ListPropertiesLease" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
                             </li>
                         }
                         else
@@ -104,13 +104,13 @@
                         @for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                <a class="page-link" asp-action="ListPropertiesLease" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
                             </li>
                         }
                         @if (Model.PageNumber < Model.TotalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                <a class="page-link" asp-action="ListPropertiesLease" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
                         else

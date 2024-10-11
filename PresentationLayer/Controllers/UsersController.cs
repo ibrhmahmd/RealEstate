@@ -303,121 +303,43 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)
         {
-            if(!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Login" , "Account");
+                return RedirectToAction("Login", "Account");
             }
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
-            if (!Guid.TryParse(userIdString, out Guid userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-         
-
-            // Query properties with user-specific filtering
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-                .Join(_context.Properties,               // Join Contracts with Properties
-                      contract => contract.PropertyId,  // Match on PropertyId
-                      property => property.Id,          // The Id in the Properties table
-                      (contract, property) => property) // Select the property
-                  .Where(p => p.Status == PropertStatus.Ownership) 
-                .AsQueryable();
-
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                PropertyPictureUrl = p.PropertyPictureUrl,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
-                Items = propertyDTOs,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalRecords = totalItems,
+                Items = pagedProperties.Items.Where(o => o.Status == PropertStatus.Ownership).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
             };
 
-            // Return the view with the paginated list of properties
             return View(pagedListViewModel);
         }
+
         public async Task<IActionResult> ListPropertiesLease(int pageNumber = 1, int pageSize = 5)
         {
             if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Login", "Account");
             }
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
-            if (!Guid.TryParse(userIdString, out Guid userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-
-            // Query properties with user-specific filtering
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
-                .Join(_context.Properties,               // Join Contracts with Properties
-                      contract => contract.PropertyId,  // Match on PropertyId
-                      property => property.Id,          // The Id in the Properties table
-                      (contract, property) => property) // Select the property
-                  .Where(p => p.Status == PropertStatus.Lease)
-                .AsQueryable();
-
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
-
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize) // Skip the previous pages
-                .Take(pageSize)                    // Take only the current page size
-                .ToListAsync();
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                PropertyPictureUrl = p.PropertyPictureUrl,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
-
-            // Create a PagedListViewModel to pass data and pagination metadata to the view
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
-                Items = propertyDTOs,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalRecords = totalItems,
+                Items = pagedProperties.Items.Where(p => p.Status == PropertStatus.Lease).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
             };
 
-            // Return the view with the paginated list of properties
             return View(pagedListViewModel);
         }
+
+
 
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
