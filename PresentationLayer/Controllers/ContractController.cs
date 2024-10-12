@@ -56,6 +56,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
+
         public async Task<IActionResult> Create(Guid? propertyId)
         {
             if (propertyId == null)
@@ -80,7 +81,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
-       
+
 
 
 
@@ -100,7 +101,7 @@ namespace PresentationLayer.Controllers
             }
 
             contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
-
+            contractDto.Id = Guid.NewGuid();
             if (ModelState.IsValid)
             {
                 try
@@ -119,14 +120,10 @@ namespace PresentationLayer.Controllers
                     }
 
                     contractDto.Document = fileName;
-                    var payments =  await ProcessPayments(contractDto);
                     await _contractService.CreateContractAsync(contractDto);
+                    var payments = await ProcessPayments(contractDto);
 
-                    foreach (PaymentDTO paymentDto in payments)
-                    {
-                        await _paymentService.CreatePaymentAsync(paymentDto);
-                    }
-                    return RedirectToAction(nameof(ProcessPayments),new { ContractDTO = contractDto} );
+                    return View("ReviewContractPayments", payments);
 
 
                     //return RedirectToAction(nameof(Details), new { id = createdContract.Id });
@@ -145,18 +142,19 @@ namespace PresentationLayer.Controllers
 
         public async Task<List<PaymentDTO>> ProcessPayments(ContractDTO contractDto)
         {
+            try
+            {
                 var payments = await _paymentService.CreatePaymentsFromContractAsync(contractDto);
                 return payments;
-            
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "Error processing payments for contract {ContractId}.", contractDto.Id);
-            //    ModelState.AddModelError("", "An error occurred while processing payments. Please try again later.");
-                
-            //}
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing payments for contract {ContractId}.", contractDto.Id);
+                throw new Exception("An error occurred while processing payments: " + ex.Message, ex);
+            }
         }
 
-        
+
 
 
 
@@ -241,33 +239,8 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        //[HttpPost, ActionName("EndContract")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> EndContractConfirmed(Guid id)
-        //{
-        //    try
-        //    {
-        //        await _contractService.EndContractAsync(id);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch (KeyNotFoundException)
-        //    {
-        //        _logger.LogWarning("Contract with ID {Id} not found when attempting to end it.", id);
-        //        return NotFound();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error ending contract.");
-        //        ModelState.AddModelError("", $"Error ending contract: {ex.Message}");
-        //        return View();
-        //    }
-        //}
+        
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    var contracts = await _contractService.GetAllContractsAsync();
-        //    return View(contracts);
-        //}
     }
 
 }

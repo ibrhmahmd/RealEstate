@@ -63,7 +63,8 @@ namespace PresentationLayer.Controllers
                     var authProperties = new AuthenticationProperties
                     {
                         IsPersistent = rememberMe,
-                        ExpiresUtc = rememberMe ? DateTimeOffset.UtcNow.AddDays(30) : null
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
+                        AllowRefresh = rememberMe,
                     };
 
                     // Sign in the user with the new claims
@@ -166,16 +167,6 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
 
-            // Manually map the User entity to UserDTO (if not using AutoMapper)
-            //var userDto = new UserDTO
-            //{
-            //    Id = user.Id,
-            //    UserName = user.UserName,
-            //    Email = user.Email,
-            //    UserPictureUrl = user.UserPictureUrl,
-            //    // Map other properties as needed
-            //};
-
             return View(user); // Pass the DTO to the view
         }
 
@@ -236,5 +227,6 @@ namespace PresentationLayer.Controllers
             };
             return View("~/Views/Account/profile.cshtml", userviewmodel);
         }
+
     }
 }

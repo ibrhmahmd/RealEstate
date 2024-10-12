@@ -32,7 +32,7 @@ namespace BusinessLayer.Services
         {
             var contractsPaged = await _unitOfWork.ContractsRepository.GetAllPagedAsync(pageNumber, pageSize);
        
-            var ContractDTOs = contractsPaged.Items.Where(c => c.IsArcheives == false).ToList().Select(contract => new ContractDTO
+            var ContractDTOs = contractsPaged.Items.Where(c => c.IsArcheives == false && c.IsTerminated == false && c.IsAccepted == false  ).ToList().Select(contract => new ContractDTO
             {
                 Id = contract.Id,
                 ContractType = contract.ContractType,
@@ -51,7 +51,26 @@ namespace BusinessLayer.Services
                 TotalRecords = contractsPaged.TotalRecords
             };
         }
-  
+
+        public async Task<PagedResult<ContractDTO>> GetArchivedContractsAsync(int pageNumber, int pageSize)
+        {
+            var archivedcontract = _mapper.Map<PagedResult<ContractDTO>>(await _unitOfWork.ContractsRepository.GetArchivedContractsAsync(pageNumber, pageSize));
+
+            return archivedcontract;
+        }
+
+
+        public async Task<PagedResult<ContractDTO>> AcceptedContractsAsync(int pageNumber, int pageSize)
+        {
+            var Acceptedcontract = _mapper.Map<PagedResult<ContractDTO>>(await _unitOfWork.ContractsRepository.GetAcceptedContractsAsync(pageNumber, pageSize));
+            return Acceptedcontract;
+        }
+
+        public async Task<PagedResult<ContractDTO>> TerminatedContractsAsync(int pageNumber, int pageSize)
+        {
+            var Terminatedcontract = _mapper.Map<PagedResult<ContractDTO>>(await _unitOfWork.ContractsRepository.GetTerminatedContractsAsync(pageNumber, pageSize));
+            return Terminatedcontract;
+        }
 
 
         public async Task ArchiveContract(Guid id)
@@ -84,16 +103,9 @@ namespace BusinessLayer.Services
             contract.IsArcheives = false; // Mark contract as archived
             await _unitOfWork.SaveAsync(); // Save changes using UnitOfWork
         }
-        public async Task<List<Contract>> GetArchivedContractsAsync()
-        {
-            var archivecontract = await _unitOfWork.ContractsRepository.GetArchivedContractsAsync();
-            var filter = archivecontract.Where(c=>c.IsArcheives==true).ToList();
-            return filter;
-
-        }
 
 
-
+        
 
         // Get all contracts including soft deleted
         public async Task<IQueryable<ContractDTO>> GetAllContractsIncludingDeletedAsync()
@@ -101,7 +113,6 @@ namespace BusinessLayer.Services
             var contracts = await _unitOfWork.ContractsRepository.GetAllIncludingDeletedAsync();
             return _mapper.Map<IQueryable<ContractDTO>>(contracts);
         }
-
 
 
 
@@ -158,6 +169,17 @@ namespace BusinessLayer.Services
         }
 
 
+        public async Task AcceptContract(Guid Id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(Id);
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {Id} not found.");
+            }
+
+            await _unitOfWork.ContractsRepository.Accept(Id);
+            await _unitOfWork.SaveAsync();
+        }
 
 
         // Soft delete a contract
@@ -175,15 +197,10 @@ namespace BusinessLayer.Services
 
         public async Task TerminateAsync(Guid id)
         {
-            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
-            if (contract == null)
-            {
-                throw new KeyNotFoundException($"Contract with ID {id} not found.");
-            }
-
             await _unitOfWork.ContractsRepository.Terminate(id);
             await _unitOfWork.SaveAsync();
         }
+
 
 
         // Hard delete a contract
@@ -258,6 +275,7 @@ namespace BusinessLayer.Services
             }
         }
 
+
         private ContractDTO CreateBaseContractModel(Property property)
         {
             return new ContractDTO
@@ -270,6 +288,7 @@ namespace BusinessLayer.Services
                 TotalAmount = property.Price
             };
         }
+
 
         private void ProcessContractByStatus(ContractDTO contractModel, Property property)
         {
@@ -290,7 +309,6 @@ namespace BusinessLayer.Services
         }
  
 
-
         private void ProcessLeaseContract(ContractDTO contractModel, decimal price)
         {
             contractModel.RecurringPaymentFrequency = "Monthly";
@@ -307,5 +325,11 @@ namespace BusinessLayer.Services
             contractModel.InitialPayment = Math.Round(price * 0.75m, 2);
             contractModel.TotalAmount = Math.Round(price, 2);
         }
+
+
+
+
+
+
     }
 }

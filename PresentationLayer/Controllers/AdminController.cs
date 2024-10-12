@@ -13,7 +13,7 @@ using System.Drawing.Printing;
 using DataAccessLayer.Entities;
 namespace PresentationLayer.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly PropertyService _propertyService;
@@ -27,7 +27,7 @@ namespace PresentationLayer.Controllers
 
         public AdminController(PropertyService propertyService, UserService userService,
             ContractService contractService, PaymentService paymentService,
-            DeveloperCompanyService developerCompanyService,ProjectService projectService,
+            DeveloperCompanyService developerCompanyService, ProjectService projectService,
             MyDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _propertyService = propertyService;
@@ -42,7 +42,7 @@ namespace PresentationLayer.Controllers
 
 
         // Property CRUD Operations
-        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 10)
         {
             if (User.IsInRole("Admin"))
             {
@@ -57,7 +57,7 @@ namespace PresentationLayer.Controllers
 
                 return View(pagedListViewModel);
             }
-           
+
             return Unauthorized();
         }
 
@@ -65,7 +65,7 @@ namespace PresentationLayer.Controllers
 
 
         // User Listing
-        public async Task<IActionResult> ListUsers(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListUsers(int pageNumber = 1, int pageSize = 10)
         {
             if (User.IsInRole("Admin"))
             {
@@ -82,14 +82,13 @@ namespace PresentationLayer.Controllers
                 };
                 return View(viewModel);
             }
-            
+
             return Unauthorized();
         }
 
 
-        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 10)
         {
-
             if (User.IsInRole("Admin"))
             {
                 var Pagedcontracts = await _contractService.GetAllContractsAsync(pageNumber, pageSize);
@@ -102,75 +101,105 @@ namespace PresentationLayer.Controllers
                     PageSize = Pagedcontracts.PageSize,
                     TotalRecords = Pagedcontracts.TotalRecords
                 };
-                return View(viewModel);
+                return View("~/Views/Admin/Contracts/ListContract.cshtml", viewModel);
             }
             return Unauthorized();
         }
 
 
-            // Archive a contract by ID
-            public async Task<IActionResult> ArchivedContracts(Guid id)
-            {
-                try
-                {
-                    // Archive the contract by calling the service
-                    await _contractService.ArchiveContract(id);
-
-                    // Redirect to the archived contracts list after successful archiving
-                    return RedirectToAction("ArchivedContractsList");
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    // If the contract is not found, return a 404 Not Found result
-                    return NotFound(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    // Catch any other exceptions and return a Bad Request
-                    return BadRequest($"An error occurred: {ex.Message}");
-                }
-            }
-
-            // Retrieve the list of archived contracts
-            public async Task<IActionResult> ArchivedContractsList()
-            {
-                try
-                {
-                    // Retrieve archived contracts from the service
-                    var archivedContracts = await _contractService.GetArchivedContractsAsync();
-
-                    // Return the view with the archived contracts
-                    return View(archivedContracts);
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception if necessary
-                    // Return a bad request result with the exception message
-                    return BadRequest($"An error occurred: {ex.Message}");
-                }
-            }
-        public async Task<IActionResult> UnArchivedContracts(Guid id)
+        // Archive a contract by ID
+        public async Task<IActionResult> ArchivedContracts(Guid id)
         {
             try
             {
-                // Archive the contract by calling the service
-                await _contractService.UnArchiveContract(id);
+                await _contractService.ArchiveContract(id);
 
-                // Redirect to the archived contracts list after successful archiving
-                return RedirectToAction("ListContracts");
+                return RedirectToAction("ArchivedContractsList");
             }
             catch (KeyNotFoundException ex)
             {
-                // If the contract is not found, return a 404 Not Found result
                 return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                // Catch any other exceptions and return a Bad Request
                 return BadRequest($"An error occurred: {ex.Message}");
             }
         }
-        
+
+        public async Task<IActionResult> ArchivedContractsList(int pageNumber = 1, int pageSize = 5)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var Pagedcontracts = await _contractService.GetArchivedContractsAsync(pageNumber, pageSize);
+
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<ContractDTO>
+                {
+                    Items = Pagedcontracts.Items,
+                    PageNumber = Pagedcontracts.CurrentPage,
+                    PageSize = Pagedcontracts.PageSize,
+                    TotalRecords = Pagedcontracts.TotalRecords
+                };
+                return View("~/Views/Admin/Contracts/GenericContractList.cshtml", viewModel);
+            }
+            return Unauthorized();
+        }
+
+        public async Task<IActionResult> AcceptedContractsAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var Pagedcontracts = await _contractService.AcceptedContractsAsync(pageNumber, pageSize);
+
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<ContractDTO>
+                {
+                    Items = Pagedcontracts.Items,
+                    PageNumber = Pagedcontracts.CurrentPage,
+                    PageSize = Pagedcontracts.PageSize,
+                    TotalRecords = Pagedcontracts.TotalRecords
+                };
+                return View("~/Views/Admin/Contracts/GenericContractList.cshtml", viewModel);
+            }
+            return Unauthorized();
+        }
+
+        public async Task<IActionResult> TerminatedContractsAsync(int pageNumber = 1, int pageSize = 5)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var Pagedcontracts = await _contractService.TerminatedContractsAsync(pageNumber, pageSize);
+
+                var viewModel = new PagedListViewModel<ContractDTO>
+                {
+                    Items = Pagedcontracts.Items,
+                    PageNumber = Pagedcontracts.CurrentPage,
+                    PageSize = Pagedcontracts.PageSize,
+                    TotalRecords = Pagedcontracts.TotalRecords
+                };
+                return View("~/Views/Admin/Contracts/GenericContractList.cshtml", viewModel);
+            }
+            return Unauthorized();
+        }
+
+        public async Task<IActionResult> UnArchivedContracts(Guid id)
+        {
+            try
+            {
+                await _contractService.UnArchiveContract(id);
+
+                return RedirectToAction("ListContracts");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"An error occurred: {ex.Message}");
+            }
+        }
+
 
 
 
@@ -326,27 +355,26 @@ namespace PresentationLayer.Controllers
         {
             if (User.IsInRole("Admin"))
             {
+                var Pagedpayments = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
 
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<PaymentDTO>
+                {
+                    Items = Pagedpayments.Items,
+                    PageNumber = Pagedpayments.CurrentPage,
+                    PageSize = Pagedpayments.PageSize,
+                    TotalRecords = Pagedpayments.TotalRecords
+                };
+                return View(viewModel);
 
             }
-            var Pagedpayments = await _paymentService.GetAllPaymentsAsync(pageNumber, pageSize);
-
-            // Pass the paginated result to the view model
-            var viewModel = new PagedListViewModel<PaymentDTO>
-            {
-                Items = Pagedpayments.Items,
-                PageNumber = Pagedpayments.CurrentPage,
-                PageSize = Pagedpayments.PageSize,
-                TotalRecords = Pagedpayments.TotalRecords
-            };
-            return View(viewModel);
             return Unauthorized();
 
 
 
         }
 
-        
+
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
             var pay = await _paymentService.GetPaymenttByIdAsync(id);
@@ -356,19 +384,13 @@ namespace PresentationLayer.Controllers
             }
             return View(pay);
         }
+
+
         public async Task<IActionResult> Terminate(Guid id)
         {
             try
             {
-                var contract = await _context.Contracts.FindAsync(id);
-
-                if (contract == null)
-                {
-                    throw new KeyNotFoundException("Contract not found.");
-                }
-
-                contract.IsTerminated = true;
-                await _context.SaveChangesAsync();
+                await _contractService.TerminateAsync(id);
 
                 TempData["SuccessMessage"] = "Contract terminated successfully.";
             }
@@ -384,6 +406,26 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListContracts");
         }
 
+
+        public async Task<IActionResult> Accept(Guid id)
+        {
+            try
+            {
+                await _contractService.AcceptContract(id);
+
+                TempData["SuccessMessage"] = "Contract Accepted successfully.";
+            }
+            catch (KeyNotFoundException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while Accepting the contract.";
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("ListContracts");
+        }
 
         //Developer
         public async Task<IActionResult> DeveloperList(int pageNumber = 1, int pageSize = 5)
@@ -402,7 +444,7 @@ namespace PresentationLayer.Controllers
                 };
                 return View(viewModel);
             }
-          
+
             return Unauthorized();
         }
         public async Task<IActionResult> DeveloperDetails(Guid id)
@@ -451,7 +493,7 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpPost]
-       public async Task<IActionResult> EditDeveloper(DeveloperCompanyDTO developer)
+        public async Task<IActionResult> EditDeveloper(DeveloperCompanyDTO developer)
         {
             if (ModelState.IsValid)
             {
@@ -508,7 +550,7 @@ namespace PresentationLayer.Controllers
             //ViewBag.depts = await _developerCompanyService.GetAllDeveloperCompaniesAsync();
             if (ModelState.IsValid)
             {
-              await _projectService.CreateProjectAsync(projectdto);
+                await _projectService.CreateProjectAsync(projectdto);
                 return RedirectToAction("ProjectList");
             }
             return View(projectdto);

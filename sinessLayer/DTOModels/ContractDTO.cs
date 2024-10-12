@@ -25,9 +25,10 @@ namespace BusinessLayer.DTOModels
 
 		// Additional Contract Information
 		[Required]
-		public DateTime StartDate { get; set; }
+		public DateTime StartDate { get; set; } = DateTime.Now;
 
-		public DateTime? EndDate { get; set; }
+
+		public DateTime? EndDate { get; set; } = DateTime.Now.AddMonths(6);
 
         [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.
@@ -52,13 +53,16 @@ namespace BusinessLayer.DTOModels
 
 		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
         public bool IsArcheives { get; set; } = false;
+        public bool IsFurnished { get; set; } = false; // Is the property furnished?
+
+        public bool IsAccepted { get; set; } = false;
+        public DateTime AcceptedOn { get; set; }
 
 
 
         [Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property
 
-		public bool IsFurnished { get; set; } = false; // Is the property furnished?
 
 		[Range(0, 20)]
 		public int Rooms { get; set; } // Number of rooms in the property

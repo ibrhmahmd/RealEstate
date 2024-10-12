@@ -32,13 +32,6 @@ namespace PresentationLayer.Controllers
         }
 
 
-        //// GET: Users
-        //public async Task<IActionResult> Index()
-        //{
-        //    var users = await _userService.GetAllUsersAsync();
-        //    return View(users);
-        //}
-
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -250,22 +243,15 @@ namespace PresentationLayer.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!Guid.TryParse(userIdString, out Guid userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
 
-            // Call the new method in UserService
-            var (propertyDTOs, totalItems) = await _userService.GetOwnedPropertiesAsync(userId, pageNumber, pageSize);
-
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
-                Items = propertyDTOs,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalRecords = totalItems,
+                Items = pagedProperties.Items.Where(o => o.Status == PropertStatus.Ownership).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
             };
 
             return View(pagedListViewModel);
@@ -277,26 +263,21 @@ namespace PresentationLayer.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (!Guid.TryParse(userIdString, out Guid userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
 
-            // Call the new method in UserService
-            var (propertyDTOs, totalItems) = await _userService.GetLeasedPropertiesAsync(userId, pageNumber, pageSize);
-
+            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
-                Items = propertyDTOs,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                TotalRecords = totalItems,
+                Items = pagedProperties.Items.Where(p => p.Status == PropertStatus.Lease).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
             };
 
             return View(pagedListViewModel);
         }
+
+
 
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)

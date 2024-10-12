@@ -73,6 +73,9 @@ namespace DataAccessLayer.Entities
 
         public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
 
+        public bool IsAccepted { get; set; } = false;
+        public DateTime AcceptedOn { get; set; }
+
 
         public string? Document { get; set; } // Path to the contract document (optional)
 

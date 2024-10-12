@@ -1,5 +1,6 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
 using System.Diagnostics;
@@ -49,7 +50,7 @@ namespace PresentationLayer.Controllers
 
             return View("Properties", viewModel);
         }
-
+      
 
 
         public IActionResult Agents()
