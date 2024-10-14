@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class PaymentService
+    public class PaymentService : IPaymentService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -207,7 +207,7 @@ namespace BusinessLayer.Services
                         PaymentDate = nextPaymentDate,
                         Amount = contractDto.RecurringPaymentAmount.Value,
                         Status = PaymentStatus.Pending,
-                        PaymentMethod = "Recurring Payment", 
+                        PaymentMethod = "Recurring Payment",
                         ReferenceNumber = Guid.NewGuid().ToString(),
                         LateFee = contractDto.RecurringPaymentAmount * 12 / 100,
                     });

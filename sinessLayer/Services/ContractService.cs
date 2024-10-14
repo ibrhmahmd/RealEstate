@@ -11,19 +11,19 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessLayer.Services
 {
-    public class ContractService
+    public class ContractService : IContractService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PropertyService _propertyService;
-        private readonly ILogger<ContractService> _logger; 
+        private readonly ILogger<ContractService> _logger;
 
         public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService, ILogger<ContractService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _propertyService = propertyService;
-            _logger = logger; 
+            _logger = logger;
         }
 
 
@@ -31,8 +31,8 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<ContractDTO>> GetAllContractsAsync(int pageNumber, int pageSize)
         {
             var contractsPaged = await _unitOfWork.ContractsRepository.GetAllPagedAsync(pageNumber, pageSize);
-       
-            var ContractDTOs = contractsPaged.Items.Where(c => c.IsArcheives == false && c.IsTerminated == false && c.IsAccepted == false  ).ToList().Select(contract => new ContractDTO
+
+            var ContractDTOs = contractsPaged.Items.Where(c => c.IsArcheives == false && c.IsTerminated == false && c.IsAccepted == false).ToList().Select(contract => new ContractDTO
             {
                 Id = contract.Id,
                 ContractType = contract.ContractType,
@@ -83,8 +83,8 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Contract with ID {id} was not found.");
             }
 
-            contract.IsArcheives = true; 
-            await _unitOfWork.SaveAsync(); 
+            contract.IsArcheives = true;
+            await _unitOfWork.SaveAsync();
         }
 
 
@@ -106,7 +106,7 @@ namespace BusinessLayer.Services
         }
 
 
-        
+
 
         // Get all contracts including soft deleted
         public async Task<IQueryable<ContractDTO>> GetAllContractsIncludingDeletedAsync()
@@ -303,7 +303,7 @@ namespace BusinessLayer.Services
                     throw new InvalidOperationException($"Unsupported property status: {property.Status.Value}");
             }
         }
- 
+
 
         private void ProcessLeaseContract(ContractDTO contractModel, decimal price)
         {

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class DeveloperCompanyService
+    public class DeveloperCompanyService : IDeveloperCompanyService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

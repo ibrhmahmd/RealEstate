@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class ProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace BusinessLayer.Services
         // Get all Projects
         public async Task<IQueryable<ProjectDTO>> GetAllProjectsAsync()
         {
-            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1,5);
+            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1, 5);
             return _mapper.Map<IQueryable<ProjectDTO>>(projects);
         }
 
@@ -40,7 +40,7 @@ namespace BusinessLayer.Services
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
                 Status = project.Status,
-                DeveloperCompanyId=project.DeveloperCompanyId,
+                DeveloperCompanyId = project.DeveloperCompanyId,
             }).ToList();
 
 

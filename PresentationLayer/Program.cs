@@ -40,12 +40,12 @@ namespace PresentationLayer
 
             // Register the UnitOfWork and services
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped< UserService>();
             builder.Services.AddScoped<PropertyService>();
             builder.Services.AddScoped<ContractService>();
-            builder.Services.AddScoped<PaymentService>();
-            builder.Services.AddScoped<DeveloperCompanyService>();
-            builder.Services.AddScoped<ProjectService>();
+            builder.Services.AddScoped< PaymentService>();
+            builder.Services.AddScoped< DeveloperCompanyService>();
+            builder.Services.AddScoped< ProjectService>();
             builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 

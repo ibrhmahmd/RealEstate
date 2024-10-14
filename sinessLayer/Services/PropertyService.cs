@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class PropertyService
+    public class PropertyService : IPropertyService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -28,12 +28,12 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<PropertyDTO>> GetAllPropertiesAsync(int pageNumber, int pageSize)
         {
             var propertiesPaged = await _unitOfWork.PropertiesRepository.GetAllPagedAsync(pageNumber, pageSize);
-            
-            var propertyDTOs = propertiesPaged.Items.Select(property =>  new PropertyDTO
+
+            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
-                PropertyPictureUrl=property.PropertyPictureUrl,
+                PropertyPictureUrl = property.PropertyPictureUrl,
                 Location = property.Location,
                 Description = property.Description,
                 Area = property.Area,
@@ -192,7 +192,7 @@ namespace BusinessLayer.Services
             if (selectedProperty != null)
             {
                 selectedProperty.IsAvailable = false;
-                selectedProperty.IsOccupied= true;
+                selectedProperty.IsOccupied = true;
                 selectedProperty.UpdatedOn = DateTime.Now;
 
                 await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
@@ -211,7 +211,7 @@ namespace BusinessLayer.Services
             return existingProperty != null;
         }
 
-        
+
 
 
     }
