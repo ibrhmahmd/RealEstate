@@ -11,12 +11,15 @@
     <link rel="stylesheet" href="assets/css/custom-styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
+
+  
  
 }
 
 @section content {
+
 
     <div class="flex min-h-screen">
         <aside style="margin-left:10px; margin-top:160px; height:541px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
@@ -32,17 +35,18 @@
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
             </a>
         </aside>
-
-        <div class="container">
-            <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
+        <div class="flex-1 p-6 ml-20">
+         <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
             <br />
             @if (Model.Items.Any())
             {
                 <div class="header-container">
                     <input type="text" id="searchInput" style="   border: 2px solid darkgreen" class="search-bar" placeholder="Search Contracts..." />
                 </div>
-            }
-            <div class="container table-container">
+            } 
+            <section class="bg-white rounded shadow-md p-6">
+         
+            <div >
                 @if (!Model.Items.Any())
                 {
                     <div class="alert alert-success" role="alert">
@@ -163,10 +167,13 @@
                                 }
                             </ul>
                         </div>
+                        
 
                     </div>
+                    
                 }
             </div>
+            </section>
         </div>
     </div>
 }
