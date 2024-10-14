@@ -278,25 +278,31 @@ namespace PresentationLayer.Controllers
         }
 
 
-
-
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
 
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
+            }
+
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
             }
 
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
-                return RedirectToAction("profile", "account");
+                return RedirectToAction("ListProperties");
             }
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+
+
 
     }
 }

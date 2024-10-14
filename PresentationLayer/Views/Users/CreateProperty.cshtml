@@ -46,8 +46,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label asp-for="Location" class="form-label">Location</label>
-                            <input asp-for="Location" class="form-control" id="location" required>
+                            <label asp-for="AddressId" class="form-label">Location</label>
+                            <select asp-for="AddressId" class="form-select" required>
+                                <option value="">Select a location</option>
+                                @foreach (var location in Model.Locations)
+                                {
+                                    <option value="@location.Id">@location.City, @location.State</option>
+                                }
+                            </select>
                         </div>
 
                         <div class="mb-3">

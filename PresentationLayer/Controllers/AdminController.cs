@@ -60,7 +60,16 @@ namespace PresentationLayer.Controllers
 
             return Unauthorized();
         }
+        public async Task<IActionResult> ContractDetails(Guid id)
+        {
 
+            var contract = await _contractService.GetContractByIdAsync(id);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return View(contract);
+        }
 
 
 
@@ -204,15 +213,19 @@ namespace PresentationLayer.Controllers
 
 
 
-
-
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
-            // If a picture is uploaded, store its path
+
             if (propertyDto.PropertyPicture != null)
             {
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
+            }
+
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
             }
 
             if (ModelState.IsValid)
@@ -220,12 +233,10 @@ namespace PresentationLayer.Controllers
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
-
-            // Reload locations list in case of invalid model state
             propertyDto.Locations = await _context.Addresses.ToListAsync();
-
-            return View(propertyDto);  // Return the same model with reloaded locations
+            return View(propertyDto);
         }
+
 
 
 
@@ -239,6 +250,10 @@ namespace PresentationLayer.Controllers
                 {
                     return NotFound();
                 }
+
+                // Load all locations for the dropdown
+                property.Locations = await _context.Addresses.ToListAsync();
+
                 return View(property);
             }
             return Unauthorized();
@@ -249,15 +264,29 @@ namespace PresentationLayer.Controllers
         {
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
+            else
+            {
+                // If no new picture is uploaded, keep the existing URL
+                var existingProperty = await _propertyService.GetPropertyByIdAsync(propertyDto.Id);
+                propertyDto.PropertyPictureUrl = existingProperty.PropertyPictureUrl;
+            }
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
+            }
+
             if (ModelState.IsValid)
             {
                 await _propertyService.UpdatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+
+            // Load all locations again if model state is not valid
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
 
@@ -321,6 +350,7 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
+
         public async Task<IActionResult> VerifyUser(Guid id)
         {
             try
@@ -346,16 +376,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        public async Task<IActionResult> ContractDetails(Guid id)
-        {
 
-            var contract = await _contractService.GetContractByIdAsync(id);
-            if (contract == null)
-            {
-                return NotFound();
-            }
-            return View(contract);
-        }
         public async Task<IActionResult> ListPayments(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
