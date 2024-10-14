@@ -15,7 +15,7 @@ namespace DataAccessLayer.Entities
         public string? Name { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string? PropertyPictureUrl { get; set; }
 
@@ -32,6 +32,9 @@ namespace DataAccessLayer.Entities
         public virtual Address? Address { get; set; }
         public List<Address> Locations { get; set; } = new List<Address>();
         public Guid? ProjectId { get; set; }
+        public virtual Project? Project { get; set; }
+        public List<Project> Projects { get; set; } = new List<Project>();
+        public string? PropertyProject { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 

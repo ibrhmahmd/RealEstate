@@ -40,6 +40,14 @@ public class MyDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
             .HasForeignKey(c => c.AgentId)
             .OnDelete(DeleteBehavior.Restrict);
 
+
+        modelBuilder.Entity<Property>()
+      .HasOne(p => p.Project)
+      .WithMany(pr => pr.properties)
+      .HasForeignKey(p => p.ProjectId)
+      .OnDelete(DeleteBehavior.Cascade);
+
+        base.OnModelCreating(modelBuilder);
         Guid systemUserId = Guid.NewGuid();  // Replace with actual system user ID
 
         modelBuilder.Entity<Address>().HasData(

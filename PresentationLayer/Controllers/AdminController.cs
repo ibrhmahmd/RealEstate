@@ -227,12 +227,18 @@ namespace PresentationLayer.Controllers
                 var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
                 propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
             }
-
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+            }
+           
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+            propertyDto.Projects= await _context.Projects.ToListAsync();
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
@@ -253,7 +259,7 @@ namespace PresentationLayer.Controllers
 
                 // Load all locations for the dropdown
                 property.Locations = await _context.Addresses.ToListAsync();
-
+                property.Projects = await _context.Projects.ToListAsync();
                 return View(property);
             }
             return Unauthorized();
@@ -278,6 +284,12 @@ namespace PresentationLayer.Controllers
                 var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
                 propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
             }
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -285,7 +297,7 @@ namespace PresentationLayer.Controllers
                 return RedirectToAction("ListProperties");
             }
 
-            // Load all locations again if model state is not valid
+            propertyDto.Projects = await _context.Projects.ToListAsync();
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }

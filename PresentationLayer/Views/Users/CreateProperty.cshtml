@@ -55,6 +55,18 @@
                                 }
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label asp-for="ProjectId" class="form-label">Project Name</label>
+                            <select asp-for="ProjectId" class="form-select" required>
+                                <option value="">Select Project</option>
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <option value="@project.Id">@project.ProjectName</option>
+                                }
+                            </select>
+
+
+                        </div>
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label">Description</label>

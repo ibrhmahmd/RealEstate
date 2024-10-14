@@ -292,15 +292,22 @@ namespace PresentationLayer.Controllers
                 var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
                 propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
             }
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+            }
 
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+            propertyDto.Projects = await _context.Projects.ToListAsync();
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+
 
 
 
