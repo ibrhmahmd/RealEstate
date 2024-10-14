@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Properties\Contracts\" />
+    <Folder Include="wwwroot\Properties\payment\" />
     <Folder Include="wwwroot\Properties\UserPicture\" />
     <Folder Include="wwwroot\Properties\userpicture\" />
     <Folder Include="wwwroot\Properties\PropertyPicture\" />

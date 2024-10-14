@@ -208,10 +208,9 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
-
+            // If a picture is uploaded, store its path
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
@@ -221,7 +220,11 @@ namespace PresentationLayer.Controllers
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
-            return View(propertyDto);
+
+            // Reload locations list in case of invalid model state
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
+
+            return View(propertyDto);  // Return the same model with reloaded locations
         }
 
 
@@ -371,8 +374,6 @@ namespace PresentationLayer.Controllers
 
             }
             return Unauthorized();
-
-
 
         }
 

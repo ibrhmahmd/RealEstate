@@ -245,7 +245,7 @@ namespace PresentationLayer.Controllers
             }
 
 
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = pagedProperties.Items.Where(o => o.Status == PropertStatus.Ownership).ToList(),
@@ -265,7 +265,7 @@ namespace PresentationLayer.Controllers
             }
 
 
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = pagedProperties.Items.Where(p => p.Status == PropertStatus.Lease).ToList(),

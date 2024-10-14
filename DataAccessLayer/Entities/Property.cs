@@ -28,6 +28,9 @@ namespace DataAccessLayer.Entities
 
         [MaxLength(50)]
         public string Location { get; set; }
+        public Guid? AddressId { get; set; } // Foreign key to Address
+        public virtual Address? Address { get; set; }
+        public List<Address> Locations { get; set; } = new List<Address>();
         public Guid? ProjectId { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial

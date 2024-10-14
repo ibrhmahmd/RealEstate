@@ -166,12 +166,6 @@ namespace BusinessLayer.Services
 
 
 
-
-
-
-
-
-
         public async Task<List<PaymentDTO>> CreatePaymentsFromContractAsync(ContractDTO contractDto)
         {
             List<PaymentDTO> payments = new List<PaymentDTO>();

@@ -72,6 +72,7 @@ namespace PresentationLayer
 
                     // Call the method to seed the admin user
                     await accountController.SeedAdminUser();
+         
                 }
                 catch (Exception ex)
                 {

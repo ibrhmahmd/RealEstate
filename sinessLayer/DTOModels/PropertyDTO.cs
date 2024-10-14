@@ -41,6 +41,9 @@ namespace BusinessLayer.DTOModels
 
         [MaxLength(50)]
         public string? Location { get; set; }
+        public Guid? AddressId { get; set; } // Foreign key to Address
+        public virtual Address? Address { get; set; }
+        public List<Address> Locations { get; set; } = new List<Address>();
 
         [Required]
         public bool IsAvailable { get; set; }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241014080817_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,9 +47,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid?>("PropertyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("State")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -60,311 +60,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropertyId");
-
                     b.ToTable("Addresses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("18e3b025-bc43-405d-be24-4403d8bc1074"),
-                            City = "Cairo",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Cairo",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("178eaf79-8003-41dd-8f05-60dbed5e2137"),
-                            City = "Alexandria",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Alexandria",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("506c3277-1c01-4507-a322-a17bc4a72aa2"),
-                            City = "Giza",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Giza",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("f65fc50d-6708-40e9-a862-603157ef7d99"),
-                            City = "Benha",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Qalyubia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("cb31e02a-9154-4408-be0e-01f0998aea8a"),
-                            City = "Mansoura",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Dakahlia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("8b7e1638-2854-45ee-befb-907148d01781"),
-                            City = "Damietta",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Damietta",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("216da716-0ee9-40d3-a369-d7a1b6634ba5"),
-                            City = "Port Said",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Port Said",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("e3a84b31-4092-4038-8cfb-3c81f243df54"),
-                            City = "Ismailia",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Ismailia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("0e267fca-f373-46ff-abe8-36507666e544"),
-                            City = "Zagazig",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Sharqia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("6133a034-5b25-4a01-97ad-b5f104b00a1b"),
-                            City = "Kafr El Sheikh",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Kafr El Sheikh",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("76769b5a-3b27-4407-a37f-ee956090cd04"),
-                            City = "Tanta",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Gharbia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("89185273-a1d8-4ae3-a727-c12e24251a55"),
-                            City = "Shibin El Kom",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Monufia",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("7c584014-9450-452b-a9cc-6936cf8947b0"),
-                            City = "Beni Suef",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Beni Suef",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("d35ac829-a9f8-4393-8f39-5f0ddcf4ba84"),
-                            City = "Fayoum",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Fayoum",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("6ebec159-eecb-427f-8bf1-18056fcf6f16"),
-                            City = "Asyut",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Asyut",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("64e15532-bac3-416e-8248-a491a6f1c019"),
-                            City = "Sohag",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Sohag",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("8a1d11f0-48ff-4d2c-ac26-08b52c1e561b"),
-                            City = "Qena",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Qena",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("60eeb3cb-b723-473c-886b-6689202e32b2"),
-                            City = "Luxor",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Luxor",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("9ee5fc86-39a1-4345-a5d7-3276389bea0a"),
-                            City = "Aswan",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Aswan",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("aa0d0083-0062-457a-b186-2566342444f5"),
-                            City = "Hurghada",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Red Sea",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("0016c8f8-0805-42b1-be9a-746a51b6bb69"),
-                            City = "Sharm El Sheikh",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "South Sinai",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("b585faf9-fc7a-46c2-bc3f-a49d58da3fbb"),
-                            City = "Arish",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "North Sinai",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("64b179a5-c3e4-4140-8b43-8e8d5e331aec"),
-                            City = "Marsa Matruh",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Matrouh",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("1ac77b8d-722d-45f7-9a48-128203e1c74f"),
-                            City = "Kharga",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "New Valley",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            Id = new Guid("517ede93-18bf-48bd-9ffa-20cd4f45d327"),
-                            City = "Suez",
-                            CreatedBy = new Guid("bdb908a0-8f1b-4245-ab86-9d3e4c6ef891"),
-                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            State = "Suez",
-                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
-                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
@@ -958,13 +654,6 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Address", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.Property", null)
-                        .WithMany("Locations")
-                        .HasForeignKey("PropertyId");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.User", "Agent")
@@ -1105,8 +794,6 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
                 {
                     b.Navigation("Contracts");
-
-                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.User", b =>

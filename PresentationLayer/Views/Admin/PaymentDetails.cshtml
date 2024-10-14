@@ -1,0 +1,105 @@
+﻿@model BusinessLayer.DTOModels.PaymentDTO
+
+@{
+    ViewData["Title"] = "Payment Details";
+    ViewData["ActionName"] = "Payment";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@section Styles {
+    <!-- Add your CSS styles here -->
+    <link rel="stylesheet" href="~/assets/css/property-details.css">
+    <style>
+        .portfolio-details-slider img {
+            width: 100%; /* Makes the images responsive */
+            height: 400px; /* Set a fixed height for all images */
+            object-fit: cover; /* Ensures images cover the area without distortion */
+        }
+
+        .card {
+            height: auto; /* Allow the card to grow automatically based on content */
+            padding: 20px; /* Add more padding inside the card */
+        }
+    </style>
+}
+
+@section Content {
+
+    <br />
+
+    <!-- Page Title -->
+    <div class="container">
+
+
+        <div class="header-container">
+            <h1 class="header-title" style="color:darkgreen">Property Details</h1>
+
+        </div> <div class="container" data-aos="fade-up">
+            <div class="row">
+                <div class="col-lg-9" data-aos="fade-up">
+                    <div class="portfolio-details-slider swiper init-swiper">
+                        <script type="application/json" class="swiper-config">
+                            {
+                                "loop": true,
+                                "speed": 600,
+                                "autoplay": {
+                                    "delay": 5000
+                                },
+                                "slidesPerView": "auto",
+                                "navigation": {
+                                    "nextEl": ".swiper-button-next",
+                                    "prevEl": ".swiper-button-prev"
+                                },
+                                "pagination": {
+                                    "el": ".swiper-pagination",
+                                    "type": "bullets",
+                                    "clickable": true
+                                }
+                            }
+                        </script>
+                        <div class="swiper-wrapper align-items-center">
+                            <div class="swiper-slide">
+                                <embed src="@Url.Content("~/properties/payment/"  + "#toolbar=0")" width="800px" height="740px" type="application/pdf" />
+                            </div>
+
+                        </div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-pagination"></div>
+                    </div>
+                    <br />
+
+                </div>
+                <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethod</li>
+                                <li class="list-group-item"><strong>Reference Number:</strong> @Model.ReferenceNumber</li>
+                                <li class="list-group-item"><strong>Late Fee:</strong> @Model.LateFee</li>
+                                <li class="list-group-item"><strong>Status:</strong> @Model.Status</li>
+                                <li class="list-group-item"><strong>Amount :</strong> @Model.Amount</li>
+                                <li class="list-group-item"><strong>Payment Date:</strong> @Model.PaymentDate</li>
+                                <li class="list-group-item"><strong>Property Name:</strong> </li>
+            
+                            </ul>
+
+                        </div>
+                    </div>
+                    <br />
+                    <a asp-action="Listpayments" style="margin-left:100px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <!-- Add your JS scripts here -->
+    <script src="~/assets/js/property-details.js"></script>
+
+}
