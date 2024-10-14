@@ -4,6 +4,7 @@ using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,8 +28,8 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<PropertyDTO>> GetAllPropertiesAsync(int pageNumber, int pageSize)
         {
             var propertiesPaged = await _unitOfWork.PropertiesRepository.GetAllPagedAsync(pageNumber, pageSize);
-
-            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            
+            var propertyDTOs = propertiesPaged.Items.Select(property =>  new PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -40,9 +41,6 @@ namespace BusinessLayer.Services
                 Price = property.Price,
                 Type = property.Type,
             }).ToList();
-
-
-
 
             return new PagedResult<PropertyDTO>
             {
@@ -56,11 +54,30 @@ namespace BusinessLayer.Services
 
 
 
-        public async Task<List<PropertyDTO>> GetAvailablePropertiesAsync()
+        public async Task<PagedResult<PropertyDTO>> GetAvailblePropertiesAsync(int pageNumber, int pageSize)
         {
-            var properties = await _context.Properties
-                .Where(p => p.IsAvailable == true && p.IsOccupied == false && p.IsDeleted ==false).ToListAsync();
-            return _mapper.Map<List<PropertyDTO>>(properties);
+            var propertiesPaged = await _unitOfWork.PropertiesRepository.GetAllPropertiesForUserPagedAsync(pageNumber, pageSize);
+
+            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            {
+                Id = property.Id,
+                Name = property.Name,
+                PropertyPictureUrl = property.PropertyPictureUrl,
+                Location = property.Location,
+                Description = property.Description,
+                Area = property.Area,
+                Status = property.Status,
+                Price = property.Price,
+                Type = property.Type,
+            }).ToList();
+
+            return new PagedResult<PropertyDTO>
+            {
+                Items = propertyDTOs,
+                CurrentPage = propertiesPaged.CurrentPage,
+                PageSize = propertiesPaged.PageSize,
+                TotalRecords = propertiesPaged.TotalRecords
+            };
         }
 
 
@@ -170,16 +187,14 @@ namespace BusinessLayer.Services
 
         public async Task PropertyOccupiedAsync(Guid id)
         {
-            // Retrieve the selected property using the provided ID
             var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
 
-            // Check if the property exists
             if (selectedProperty != null)
             {
-                // Set the property as unavailable
                 selectedProperty.IsAvailable = false;
+                selectedProperty.IsOccupied= true;
+                selectedProperty.UpdatedOn = DateTime.Now;
 
-                // Update the property in the repository
                 await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
 
                 // Save changes to the database

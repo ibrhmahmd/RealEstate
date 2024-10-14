@@ -125,8 +125,6 @@ namespace PresentationLayer.Controllers
 
                     return View("ReviewContractPayments", payments);
 
-
-                    //return RedirectToAction(nameof(Details), new { id = createdContract.Id });
                 }
                 catch (Exception ex)
                 {
@@ -138,6 +136,7 @@ namespace PresentationLayer.Controllers
             // If we get here, something went wrong
             return View(contractDto);
         }
+
 
 
         public async Task<List<PaymentDTO>> ProcessPayments(ContractDTO contractDto)
@@ -164,7 +163,6 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);

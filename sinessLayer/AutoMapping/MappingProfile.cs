@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.DTOModels;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 
 namespace BusinessLayer.MappingProfiles
 {
@@ -30,6 +31,9 @@ namespace BusinessLayer.MappingProfiles
 
             CreateMap<DeveloperCompanyDTO, DeveloperCompany>()
             .ReverseMap();
+
+
+            CreateMap(typeof(PagedResult<>), typeof(PagedResult<>));
 
 
         }

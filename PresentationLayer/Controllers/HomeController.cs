@@ -37,7 +37,7 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> Properties(int pageNumber = 1, int pageSize = 8)
         {
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
 
             // Pass the paginated result to the view model
             var viewModel = new PagedListViewModel<PropertyDTO>

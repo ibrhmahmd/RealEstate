@@ -54,6 +54,7 @@ namespace BusinessLayer.Services
 
         public async Task<PagedResult<ContractDTO>> GetArchivedContractsAsync(int pageNumber, int pageSize)
         {
+
             var archivedcontract = _mapper.Map<PagedResult<ContractDTO>>(await _unitOfWork.ContractsRepository.GetArchivedContractsAsync(pageNumber, pageSize));
 
             return archivedcontract;
@@ -135,13 +136,8 @@ namespace BusinessLayer.Services
         {
             // contract AutoMapper to map ContractDTO to Contract entity
             var contract = _mapper.Map<Contract>(contractDto);
-
-            await _propertyService.PropertyOccupiedAsync(contractDto.PropertyId);
             await _unitOfWork.ContractsRepository.InsertAsync(contract);
             await _unitOfWork.SaveAsync();
-
-
-            await _propertyService.PropertyOccupiedAsync(contract.PropertyId);
 
             // Return the mapped ContractDTO (this might return a contract with an ID if you need it)
             return _mapper.Map<ContractDTO>(contract);
@@ -176,7 +172,7 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"Contract with ID {Id} not found.");
             }
-
+            await _propertyService.PropertyOccupiedAsync(contract.PropertyId);
             await _unitOfWork.ContractsRepository.Accept(Id);
             await _unitOfWork.SaveAsync();
         }

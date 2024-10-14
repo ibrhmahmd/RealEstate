@@ -101,7 +101,7 @@ namespace PresentationLayer.Controllers
                     PageSize = Pagedcontracts.PageSize,
                     TotalRecords = Pagedcontracts.TotalRecords
                 };
-                return View("~/Views/Admin/Contracts/ListContract.cshtml", viewModel);
+                return View("~/Views/Admin/Contracts/ListContracts.cshtml", viewModel);
             }
             return Unauthorized();
         }
@@ -140,12 +140,14 @@ namespace PresentationLayer.Controllers
                     PageSize = Pagedcontracts.PageSize,
                     TotalRecords = Pagedcontracts.TotalRecords
                 };
-                return View("~/Views/Admin/Contracts/GenericContractList.cshtml", viewModel);
+                return View("~/Views/Admin/Contracts/ArchivedContractsList.cshtml", viewModel);
             }
             return Unauthorized();
         }
 
-        public async Task<IActionResult> AcceptedContractsAsync(int pageNumber = 1, int pageSize = 5)
+
+
+        public async Task<IActionResult> AcceptedContractsList(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
             {
@@ -164,7 +166,7 @@ namespace PresentationLayer.Controllers
             return Unauthorized();
         }
 
-        public async Task<IActionResult> TerminatedContractsAsync(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> TerminatedContractsList(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
             {

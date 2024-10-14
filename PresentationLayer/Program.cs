@@ -46,6 +46,8 @@ namespace PresentationLayer
             builder.Services.AddScoped<PaymentService>();
             builder.Services.AddScoped<DeveloperCompanyService>();
             builder.Services.AddScoped<ProjectService>();
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
             // Add AutoMapper and mapping profile
             builder.Services.AddAutoMapper(typeof(MappingProfile));

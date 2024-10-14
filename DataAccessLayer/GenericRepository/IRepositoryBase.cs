@@ -9,6 +9,7 @@ namespace DataAccessLayer.GenericRepository
         Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize);
         Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize);
         Task<IQueryable<T>> GetAllIncludingDeletedAsync();
+        Task<PagedResult<T>> GetAllPropertiesForUserPagedAsync(int pageNumber, int pageSize);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
         Task<T> GetByIdAsync(Guid Id);
         Task<IQueryable<T>> GetByNameAsync(string name);

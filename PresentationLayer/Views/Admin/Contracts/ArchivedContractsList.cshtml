@@ -41,9 +41,9 @@
                 <td>@(contract.IsArcheives ? "Archived" : "Active")</td>
 
                 <td>
-                            <a asp-action="UnArchivedContracts" asp-controller="Admin" style=" background-color: #38d39f; color: white;" asp-route-Id="@contract.Id" class="btn btn-custom btn-unarchive">
-                                <i class="fas fa-box-open"></i> UnArchive
-                            </a>
+                    <a asp-action="UnArchivedContracts" asp-controller="Admin" style=" background-color: #38d39f; color: white;" asp-route-Id="@contract.Id" class="btn btn-custom btn-unarchive">
+                        <i class="fas fa-box-open"></i> UnArchive
+                    </a>
 
                 </td>
 

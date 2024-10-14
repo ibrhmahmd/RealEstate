@@ -54,7 +54,7 @@ namespace DataAccessLayer.GenericRepository
                 var query = Context.Set<T>().AsNoTracking()
                                     .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
 
-                                    .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
+                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn")); // Ensure ordering to avoid paging inconsistencies
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
@@ -65,6 +65,25 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+        // Get all Items in Paged list
+        public async Task<PagedResult<T>> GetAllPropertiesForUserPagedAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false &&
+                                                EF.Property<bool>(e, "IsAvailable") == true &&
+                                                EF.Property<bool>(e, "IsOccupied") == false)
+
+                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn")); 
+
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
 
 
         // Get entities by name
@@ -331,7 +350,8 @@ namespace DataAccessLayer.GenericRepository
         public async Task<PagedResult<T>> GetArchivedContractsAsync(int pageNumber, int pageSize)
         {
             // Ensure that the type T has an IsArchived property using reflection
-            var query = Context.Set<T>().Where(e => EF.Property<bool>(e, "IsArcheives") == true);
+            var query = Context.Set<T>().Where(e => EF.Property<bool>(e, "IsArcheives") == true)
+                                         .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
 
             return await query.ToPagedResultAsync(pageNumber, pageSize);
         }
@@ -342,7 +362,8 @@ namespace DataAccessLayer.GenericRepository
             var query = Context.Set<T>()
                 .Where(e => EF.Property<bool>(e, "IsArcheives") == false &&
                             EF.Property<bool>(e, "IsAccepted") == true &&
-                            EF.Property<bool>(e, "IsTerminated") == false);
+                            EF.Property<bool>(e, "IsTerminated") == false)
+                .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
             return await query.ToPagedResultAsync(pageNumber, pageSize);
         }
 
@@ -351,7 +372,8 @@ namespace DataAccessLayer.GenericRepository
         {
             // Ensure that the type T has an IsArchived property using reflection
             var query = Context.Set<T>()
-                .Where(e => EF.Property<bool>(e, "IsTerminated") == true);
+                .Where(e => EF.Property<bool>(e, "IsTerminated") == true)
+                .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
             return await query.ToPagedResultAsync(pageNumber, pageSize);
         }
 
@@ -378,15 +400,20 @@ namespace DataAccessLayer.GenericRepository
         {
             // Find the contract by ID
             var contract = await Context.Contracts.FindAsync(contractId);
+
             if (contract == null)
             {
                 throw new Exception("Contract not found.");
             }
+            else
+            {
+                contract.IsAccepted = true;
+                contract.AcceptedOn = DateTime.Now;
+                Context.Contracts.Update(contract);
 
-            contract.IsAccepted = true;
-            contract.AcceptedOn = DateTime.Now;
-            Context.Contracts.Update(contract);
-            await Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
+            }
+
         }
 
         public async Task<bool> Terminate(Guid contractId)
