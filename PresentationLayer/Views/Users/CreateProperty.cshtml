@@ -63,22 +63,20 @@
                                 {
                                     <option value="@project.Id">@project.ProjectName</option>
                                 }
+                            
                             </select>
-
-
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" id="propertyDescription" required></textarea>
-                        </div>
+
+
+             
                         <div class="mb-3">
                             <label asp-for="Area" class="form-label">Area (sqft)</label>
-                            <input asp-for="Area" class="form-control" id="propertyArea" type="number" min="200" max="10000" required>
+                            <input asp-for="Area" class="form-control" id="propertyArea" type="number" min="100" max="10000" required>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="Price" class="form-label">Price ($)</label>
-                            <input asp-for="Price" class="form-control" id="propertyPrice" type="number" min="10000" max="1000000" required>
+                            <label asp-for="Price" class="form-label">Price (EGP)</label>
+                            <input asp-for="Price" class="form-control" id="propertyPrice" type="number" min="10000" required>
                         </div>
                         <div class="mb-3">
                             <label asp-for="Rooms" class="form-label">Number of Rooms</label>
