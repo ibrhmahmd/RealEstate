@@ -360,7 +360,6 @@ namespace PresentationLayer.Controllers
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
-
                 var UserDto = new UserDTO
                 {
                     Id = user.Id,
@@ -645,7 +644,6 @@ namespace PresentationLayer.Controllers
             await _projectService.SoftDeleteProjectAsync(id);
             return RedirectToAction("ProjectList");
         }
-
 
         public async Task<IActionResult> DownloadFile()
         {
