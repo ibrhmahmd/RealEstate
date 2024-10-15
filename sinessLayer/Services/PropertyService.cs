@@ -38,7 +38,10 @@ namespace BusinessLayer.Services
                 Description = property.Description,
                 Area = property.Area,
                 Status = property.Status,
+                PropertyProject=property.PropertyProject,
                 Price = property.Price,
+                AddressId = property.AddressId,
+                Locations = property.Locations,
                 Type = property.Type,
             }).ToList();
 
@@ -66,8 +69,11 @@ namespace BusinessLayer.Services
                 Location = property.Location,
                 Description = property.Description,
                 Area = property.Area,
+                PropertyProject = property.PropertyProject,
                 Status = property.Status,
                 Price = property.Price,
+                AddressId = property.AddressId,
+                Locations = property.Locations,
                 Type = property.Type,
             }).ToList();
 

@@ -245,7 +245,7 @@ namespace PresentationLayer.Controllers
             }
 
 
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = pagedProperties.Items.Where(o => o.Status == PropertStatus.Ownership).ToList(),
@@ -265,7 +265,7 @@ namespace PresentationLayer.Controllers
             }
 
 
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
                 Items = pagedProperties.Items.Where(p => p.Status == PropertStatus.Lease).ToList(),
@@ -278,25 +278,38 @@ namespace PresentationLayer.Controllers
         }
 
 
-
-
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
 
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
+            }
+
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
+            }
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
             }
 
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
-                return RedirectToAction("profile", "account");
+                return RedirectToAction("ListProperties");
             }
+            propertyDto.Projects = await _context.Projects.ToListAsync();
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+
+
+
 
     }
 }

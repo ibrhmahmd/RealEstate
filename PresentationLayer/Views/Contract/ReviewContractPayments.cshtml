@@ -2,15 +2,14 @@
 
 @{
     ViewData["Title"] = "Review Contract Payments";
-    Layout = "~/Views/Shared/AdminLayout.cshtml";
+    ViewData["ActionName"] = "Contract";
+    Layout = "~/Views/Shared/userLayout.cshtml";
 }
 
 <br />
-<br />
-<br />
-<br />
-<br />
-<h2>Review Contract Payments</h2>
+
+<div class="container">
+    <h2 class="header-title">Review Contract Payments</h2>
 <div class="container table-container">
 
     <table class="table table-hover table-bordered" id="PaymentTable">
@@ -28,7 +27,7 @@
             <tbody id="paymentTable">
                 @foreach (var payment in Model)
                 {
-                    <tr>
+                        <tr onclick="location.href='@Url.Action("paymentdetails", "Admin", new { Id = payment.Id })'" style="cursor: pointer;">
                         <td>@payment.PaymentDate</td>
                         <td>@payment.Amount</td>
                         <td>@payment.PaymentMethod</td>
@@ -39,7 +38,13 @@
             </tbody>
         </table>
     </table>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <a asp-action="Details" asp-controller="Contract" asp-route-id="@Model.FirstOrDefault()?.ContractId" class="ml-auto custom-green text-white rounded px-4 py-2">Start Contract</a>
+    
+    </div>
+</div>
+</div>
 </div>
 
-<a asp-action="Details" asp-controller="Contract" asp-route-id="@Model.FirstOrDefault()?.ContractId" class="btn btn-primary">Start Contract</a>
 

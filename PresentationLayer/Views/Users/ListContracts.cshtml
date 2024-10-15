@@ -11,12 +11,15 @@
     <link rel="stylesheet" href="assets/css/custom-styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
+
+  
  
 }
 
 @section content {
+
 
     <div class="flex min-h-screen">
         <aside style="margin-left:10px; margin-top:160px; height:541px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
@@ -32,17 +35,18 @@
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
             </a>
         </aside>
-
-        <div class="container">
-            <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
+        <div class="flex-1 p-6 ml-20">
+         <h2 class="header-title" style="color:darkgreen;">User Contracts</h2>
             <br />
             @if (Model.Items.Any())
             {
                 <div class="header-container">
                     <input type="text" id="searchInput" style="   border: 2px solid darkgreen" class="search-bar" placeholder="Search Contracts..." />
                 </div>
-            }
-            <div class="container table-container">
+            } 
+            <section class="bg-white rounded shadow-md p-6">
+         
+            <div >
                 @if (!Model.Items.Any())
                 {
                     <div class="alert alert-success" role="alert">
@@ -86,44 +90,90 @@
                                 <i class="fas fa-rotate-back"></i> Back
                             </a>
                         </div>
-                       
+
+
+                        @{
+                            int maxVisiblePages = 2; // Max number of visible page links around the current page
+                            int startPage = Math.Max(1, Model.PageNumber - 1); // Start page logic
+                            int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // End page logic
+                        }
+
+                            <div>
+                            <ul class="pagination justify-content-center">
+                                @if (Model.PageNumber > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="ListContracts"
+                                           asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                           asp-route-pageSize="@Model.PageSize">Previous</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                }
+
+                                @if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="ListContracts"
+                                           asp-route-pageNumber="1"
+                                           asp-route-pageSize="@Model.PageSize">1</a>
+                                    </li>
+
+                                  
+                                }
+
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                        <a class="page-link" asp-action="ListContracts"
+                                           asp-route-pageNumber="@i"
+                                           asp-route-pageSize="@Model.PageSize">@i</a>
+                                    </li>
+                                }
+
+                                @if (endPage < Model.TotalPages)
+                                {
+                                    @if (endPage < Model.TotalPages - 1) // Ellipsis for gap after endPage
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="ListContracts"
+                                           asp-route-pageNumber="@Model.TotalPages"
+                                           asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                    </li>
+                                }
+
+                                @if (Model.PageNumber < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="ListContracts"
+                                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                           asp-route-pageSize="@Model.PageSize">Next</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
                         
-                        
-                        <ul class="pagination justify-content-center">
-                            @if (Model.PageNumber > 1)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item disabled">
-                                    <span class="page-link">Previous</span>
-                                </li>
-                            }
-                            @for (int i = 1; i <= Model.TotalPages; i++)
-                            {
-                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
-                                </li>
-                            }
-                            @if (Model.PageNumber < Model.TotalPages)
-                            {
-                                <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item disabled">
-                                    <span class="page-link">Next</span>
-                                </li>
-                            }
-                        </ul>
+
                     </div>
+                    
                 }
             </div>
+            </section>
         </div>
     </div>
 }

@@ -404,6 +404,7 @@ namespace BusinessLayer.Services
                 PropertyPictureUrl = p.PropertyPictureUrl,
                 Location = p.Location,
                 Description = p.Description,
+                PropertyProject = p.PropertyProject,
                 Area = p.Area,
                 Price = p.Price,
                 Type = p.Type,

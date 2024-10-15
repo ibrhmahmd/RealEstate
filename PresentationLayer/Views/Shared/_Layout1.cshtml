@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - YourAppName</title>
     <link rel="stylesheet" href="~/assets/css/style.css"> <!-- Include your CSS here -->
+    <style>
+
+    </style>
     @* Additional Head Content (if any) *@
     @RenderSection("Styles", required: false) <!-- Allow individual views to add more styles if needed -->
+    
 </head>
 <body>
     <div class="wave-container">
@@ -17,6 +21,7 @@
             </div>
 
             <!-- Main Content Section -->
+
             <div class="login-content">
                 @RenderBody() <!-- This is where the view content will be injected -->
             </div>

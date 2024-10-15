@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using PresentationLayer.Models;
 using System.Drawing.Printing;
 using DataAccessLayer.Entities;
+using System.Security.Claims;
 namespace PresentationLayer.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -24,11 +25,18 @@ namespace PresentationLayer.Controllers
         private readonly ProjectService _projectService;
         private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger<ContractController> _logger;
 
-        public AdminController(PropertyService propertyService, UserService userService,
-            ContractService contractService, PaymentService paymentService,
-            DeveloperCompanyService developerCompanyService, ProjectService projectService,
-            MyDbContext context, IWebHostEnvironment webHostEnvironment)
+        public AdminController(
+            PropertyService propertyService,
+            UserService userService,
+            ContractService contractService,
+            PaymentService paymentService,
+            DeveloperCompanyService developerCompanyService,
+            ProjectService projectService,
+            MyDbContext context,
+            IWebHostEnvironment webHostEnvironment,
+            ILogger<ContractController> logger)
         {
             _propertyService = propertyService;
             _userService = userService;
@@ -38,6 +46,7 @@ namespace PresentationLayer.Controllers
             _developerCompanyService = developerCompanyService;
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
         }
 
 
@@ -60,7 +69,16 @@ namespace PresentationLayer.Controllers
 
             return Unauthorized();
         }
+        public async Task<IActionResult> ContractDetails(Guid id)
+        {
 
+            var contract = await _contractService.GetContractByIdAsync(id);
+            if (contract == null)
+            {
+                return NotFound();
+            }
+            return View(contract);
+        }
 
 
 
@@ -204,25 +222,43 @@ namespace PresentationLayer.Controllers
 
 
 
-
-
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
 
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
 
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
+            }
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+            }
+
             if (ModelState.IsValid)
             {
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                    return Unauthorized();
+                }
+                propertyDto.CreatedBy = Guid.Parse(userIdClaim);
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+            propertyDto.Projects = await _context.Projects.ToListAsync();
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+
 
 
 
@@ -236,6 +272,10 @@ namespace PresentationLayer.Controllers
                 {
                     return NotFound();
                 }
+
+                // Load all locations for the dropdown
+                property.Locations = await _context.Addresses.ToListAsync();
+                property.Projects = await _context.Projects.ToListAsync();
                 return View(property);
             }
             return Unauthorized();
@@ -246,15 +286,35 @@ namespace PresentationLayer.Controllers
         {
             if (propertyDto.PropertyPicture != null)
             {
-
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
+            else
+            {
+                // If no new picture is uploaded, keep the existing URL
+                var existingProperty = await _propertyService.GetPropertyByIdAsync(propertyDto.Id);
+                propertyDto.PropertyPictureUrl = existingProperty.PropertyPictureUrl;
+            }
+            if (propertyDto.AddressId.HasValue)
+            {
+                var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
+                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
+            }
+            if (propertyDto.ProjectId.HasValue)
+            {
+                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+            }
+
+
             if (ModelState.IsValid)
             {
                 await _propertyService.UpdatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+
+            propertyDto.Projects = await _context.Projects.ToListAsync();
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
 
@@ -318,6 +378,7 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
+
         public async Task<IActionResult> VerifyUser(Guid id)
         {
             try
@@ -343,16 +404,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        public async Task<IActionResult> ContractDetails(Guid id)
-        {
 
-            var contract = await _contractService.GetContractByIdAsync(id);
-            if (contract == null)
-            {
-                return NotFound();
-            }
-            return View(contract);
-        }
         public async Task<IActionResult> ListPayments(int pageNumber = 1, int pageSize = 5)
         {
             if (User.IsInRole("Admin"))
@@ -371,8 +423,6 @@ namespace PresentationLayer.Controllers
 
             }
             return Unauthorized();
-
-
 
         }
 
@@ -508,35 +558,29 @@ namespace PresentationLayer.Controllers
 
 
 
-
         //Project
         public async Task<IActionResult> ProjectList(int pageNumber = 1, int pageSize = 5)
         {
-            ViewBag.depts = _context.DeveloperCompanies
-.Where(d => d.IsDeleted == false)
-.ToList();
+            ViewBag.depts = _context.DeveloperCompanies.Where(d => d.IsDeleted == false).ToList();
             if (User.IsInRole("Admin"))
             {
+                var PagedProject = await _projectService.GetAllProjectsAsync(pageNumber, pageSize);
 
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<ProjectDTO>
+                {
+                    Items = PagedProject.Items,
+                    PageNumber = PagedProject.CurrentPage,
+                    PageSize = PagedProject.PageSize,
+                    TotalRecords = PagedProject.TotalRecords
+                };
+                return View(viewModel);
             }
-            var PagedProject = await _projectService.GetAllProjectsAsync(pageNumber, pageSize);
-
-            // Pass the paginated result to the view model
-            var viewModel = new PagedListViewModel<ProjectDTO>
-            {
-                Items = PagedProject.Items,
-                PageNumber = PagedProject.CurrentPage,
-                PageSize = PagedProject.PageSize,
-                TotalRecords = PagedProject.TotalRecords
-            };
-            return View(viewModel);
             return Unauthorized();
         }
         public async Task<IActionResult> ProjectDetails(Guid id)
         {
-            ViewBag.depts = _context.DeveloperCompanies
-.Where(d => d.IsDeleted == false)
-.ToList();
+            ViewBag.depts = _context.DeveloperCompanies.Where(d => d.IsDeleted == false).ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             if (project == null)
             {
@@ -546,9 +590,7 @@ namespace PresentationLayer.Controllers
         }
         public async Task<IActionResult> CreateProject(ProjectDTO projectdto)
         {
-            ViewBag.depts = _context.DeveloperCompanies
-       .Where(d => d.IsDeleted == false)
-       .ToList();
+            ViewBag.depts = _context.DeveloperCompanies.Where(d => d.IsDeleted == false).ToList();
             //ViewBag.depts = await _developerCompanyService.GetAllDeveloperCompaniesAsync();
             if (ModelState.IsValid)
             {
@@ -557,11 +599,14 @@ namespace PresentationLayer.Controllers
             }
             return View(projectdto);
         }
+
+
+
+
+
         public async Task<IActionResult> EditProject(Guid id)
         {
-            ViewBag.depts = _context.DeveloperCompanies
-.Where(d => d.IsDeleted == false)
-.ToList();
+            ViewBag.depts = _context.DeveloperCompanies.Where(d => d.IsDeleted == false).ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             if (project == null)
             {
@@ -569,6 +614,10 @@ namespace PresentationLayer.Controllers
             }
             return View(project);
         }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> EditProject(ProjectDTO project)
         {
@@ -584,12 +633,12 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            ViewBag.depts = _context.DeveloperCompanies
-.Where(d => d.IsDeleted == false)
-.ToList();
+            ViewBag.depts = _context.DeveloperCompanies.Where(d => d.IsDeleted == false).ToList();
             var project = await _projectService.GetProjectByIdAsync(id);
             return View(project);
         }
+
+
         [HttpPost, ActionName("DeleteProject")]
         public async Task<IActionResult> ConfirmDeleteProject(Guid id)
         {

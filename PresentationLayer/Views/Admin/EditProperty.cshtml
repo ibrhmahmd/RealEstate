@@ -47,16 +47,29 @@
                             <label asp-for="PropertyPicture" class="form-label">Property Picture</label>
                             <input asp-for="PropertyPicture" type="file" class="form-control" />
                         </div>
-
                         <div class="mb-3">
-                            <label asp-for="Location" class="form-label">Location</label>
-                            <input asp-for="Location" class="form-control" id="location" required>
+                            <label asp-for="AddressId" class="form-label">Location</label>
+                            <select asp-for="AddressId" class="form-select" required>
+                                <option value="">Select a location</option>
+                                @foreach (var location in Model.Locations)
+                                {
+                                    <option value="@location.Id">@location.City, @location.State</option>
+                                }
+                            </select>
                         </div>
-
                         <div class="mb-3">
-                            <label asp-for="Description" class="form-label">Description</label>
-                            <textarea asp-for="Description" class="form-control" id="propertyDescription" required></textarea>
+                            <label asp-for="ProjectId" class="form-label">Project Name</label>
+                            <select asp-for="ProjectId" class="form-select" required>
+                                <option value="">Select Project</option>
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <option value="@project.Id">@project.ProjectName</option>
+                                }
+                            </select>
+
+
                         </div>
+             
                         <div class="mb-3">
                             <label asp-for="Area" class="form-label">Area (sqft)</label>
                             <input asp-for="Area" class="form-control" id="propertyArea" type="number" min="200" max="10000" required>

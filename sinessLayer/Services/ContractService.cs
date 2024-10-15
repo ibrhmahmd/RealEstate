@@ -258,7 +258,6 @@ namespace BusinessLayer.Services
                 _logger.LogError($"Property status is not defined for property ID {propertyId}.");
                 throw new InvalidOperationException("Property status is not defined.");
             }
-
             return contractModel;
         }
 

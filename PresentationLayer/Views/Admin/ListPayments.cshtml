@@ -17,7 +17,6 @@
 
             <table class="table table-hover table-bordered" id="PaymentTable">
 
-            <table class="table table-hover table-bordered" id="paymentTable">
 
                 <thead>
                     <tr>
@@ -25,22 +24,18 @@
                         <th>Amount</th>
                         <th>Payment Method</th>
                         <th>Contract</th>
-                        <th>Actions</th>
+                   
                     </tr>
                 </thead>
                 <tbody id="paymentTable">
                     @foreach (var payment in Model.Items)
                     {
-                        <tr>
+                            <tr onclick="location.href='@Url.Action("paymentdetails", "Admin", new { Id = payment.Id })'" style="cursor: pointer;">
                             <td>@payment.PaymentDate</td>
                             <td>@payment.Amount</td>
                             <td>@payment.PaymentMethod</td>
                             <td>@payment.ContractId</td>
-                            <td>
-                                <a asp-action="PaymentDetails" asp-controller="Admin" asp-route-Id="@payment.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i>Details
-                                </a>
-                            </td>
+                     
                         </tr>
                     }
                 </tbody>
@@ -57,12 +52,21 @@
                 </div>
 
                 <!-- Pagination on the right -->
+                @{
+                    int maxVisiblePages = 2; // Max number of visible page links
+                    int startPage = Math.Max(1, Model.PageNumber - 1); // Adjust start page
+                    int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // Adjust end page
+                }
+
                 <div>
                     <ul class="pagination justify-content-center">
+
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListPayments" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                <a class="page-link" asp-action="ListPayments"
+                                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                   asp-route-pageSize="@Model.PageSize">Previous</a>
                             </li>
                         }
                         else
@@ -71,16 +75,44 @@
                                 <span class="page-link">Previous</span>
                             </li>
                         }
-                        @for (int i = 1; i <= Model.TotalPages; i++)
+
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListPayments"
+                                   asp-route-pageNumber="1"
+                                   asp-route-pageSize="@Model.PageSize">1</a>
+                            </li>
+                      
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListPayments" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                <a class="page-link" asp-action="ListPayments"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-pageSize="@Model.PageSize">@i</a>
                             </li>
                         }
+
+                        @if (endPage < Model.TotalPages)
+                        {
+                            <li class="page-item disabled">
+                                <span>...</span>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListPayments"
+                                   asp-route-pageNumber="@Model.TotalPages"
+                                   asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                            </li>
+                        }
+
                         @if (Model.PageNumber < Model.TotalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListPayments" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                <a class="page-link" asp-action="ListPayments"
+                                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                   asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
                         else
@@ -90,8 +122,8 @@
                             </li>
                         }
                     </ul>
-
                 </div>
+
             </div>
       
 

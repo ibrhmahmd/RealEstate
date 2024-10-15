@@ -44,6 +44,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("State")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -57,7 +60,311 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PropertyId");
+
                     b.ToTable("Addresses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("d741d14b-c19a-4ba6-9f8e-bd15c3aeb595"),
+                            City = "Cairo",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Cairo",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("4a4266ff-6561-4509-9659-41248ebd4684"),
+                            City = "Alexandria",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Alexandria",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("a413d87d-a84b-4537-b4ef-a945ad77e902"),
+                            City = "Giza",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Giza",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("9744c8c0-9384-4224-8b4b-29d2761d5cd7"),
+                            City = "Benha",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Qalyubia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("aea7d2e0-0c0e-4a2a-866b-35873ba9e736"),
+                            City = "Mansoura",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Dakahlia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("3995d304-6f14-4bc8-aa27-deb220097998"),
+                            City = "Damietta",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Damietta",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("e4808bd2-e0ce-4972-8848-e69fa7618d25"),
+                            City = "Port Said",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Port Said",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("c65382f6-410d-4a3b-a77f-614a214d6872"),
+                            City = "Ismailia",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Ismailia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("747ef39d-d8b4-4dcf-a0a7-21c63fcf8bec"),
+                            City = "Zagazig",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Sharqia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("156a7d8e-a52d-423e-a2f1-dd43fbb4c112"),
+                            City = "Kafr El Sheikh",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Kafr El Sheikh",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("2d4ba94e-25e2-4f5a-a214-534e972c1921"),
+                            City = "Tanta",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Gharbia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("dd739034-9f45-4b85-9982-3fc761d051c7"),
+                            City = "Shibin El Kom",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Monufia",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("f88c7b4e-9f7d-4091-9732-6f73cf5ef43c"),
+                            City = "Beni Suef",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Beni Suef",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("cfb3f009-47c3-4a41-9241-01e6e48e8e62"),
+                            City = "Fayoum",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Fayoum",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("13d1f239-1ac0-4c02-ba80-457e0e099e00"),
+                            City = "Asyut",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Asyut",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("3b9e2589-7827-4fd8-91e5-bdc6bf1fbb1b"),
+                            City = "Sohag",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Sohag",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("4f7f74e5-02f9-422c-9e72-ec7ae9e9171e"),
+                            City = "Qena",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Qena",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("bf365485-13f9-4f3a-a138-83c19ca3ccc5"),
+                            City = "Luxor",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Luxor",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("81483128-ca3a-4f51-9da7-c5f52ec2eea1"),
+                            City = "Aswan",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Aswan",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("ea40de84-d1e3-4a7c-8a37-a4868a40352f"),
+                            City = "Hurghada",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Red Sea",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("0a6da93a-4ad3-4a21-b5fa-be75910fdd79"),
+                            City = "Sharm El Sheikh",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "South Sinai",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("561b12ef-8ae8-4d0e-8c66-027d69f08847"),
+                            City = "Arish",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "North Sinai",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("293972ee-f104-4125-abde-cd86bfcd0677"),
+                            City = "Marsa Matruh",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Matrouh",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("0b2bec22-74cb-42a3-991d-21e8c4785438"),
+                            City = "Kharga",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "New Valley",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = new Guid("42162484-7a8a-4ac2-924f-d95b22d0ca59"),
+                            City = "Suez",
+                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            State = "Suez",
+                            UpdatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            UpdatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
@@ -325,6 +632,9 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<Guid?>("PropertyId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -342,6 +652,8 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("DeveloperCompanyId");
 
+                    b.HasIndex("PropertyId");
+
                     b.ToTable("Projects");
                 });
 
@@ -349,6 +661,9 @@ namespace DataAccessLayer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Area")
@@ -364,7 +679,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -384,7 +698,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -403,6 +716,9 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PropertyPictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PropertyProject")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Rooms")
@@ -425,6 +741,8 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("ProjectId");
 
@@ -512,7 +830,7 @@ namespace DataAccessLayer.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -646,6 +964,13 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.Address", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Property", null)
+                        .WithMany("Locations")
+                        .HasForeignKey("PropertyId");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.Contract", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.User", "Agent")
@@ -696,17 +1021,30 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Entities.DeveloperCompany", null)
                         .WithMany("Projects")
                         .HasForeignKey("DeveloperCompanyId");
+
+                    b.HasOne("DataAccessLayer.Entities.Property", null)
+                        .WithMany("Projects")
+                        .HasForeignKey("PropertyId");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.Project", null)
+                    b.HasOne("DataAccessLayer.Entities.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("DataAccessLayer.Entities.Project", "Project")
                         .WithMany("properties")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DataAccessLayer.Entities.User", "User")
                         .WithMany("Properties")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Project");
 
                     b.Navigation("User");
                 });
@@ -780,6 +1118,10 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DataAccessLayer.Entities.Property", b =>
                 {
                     b.Navigation("Contracts");
+
+                    b.Navigation("Locations");
+
+                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.User", b =>

@@ -64,7 +64,7 @@
                         }
                     </tbody>
                 </table>
-                </form>
+            </form>
 
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Back Button on the left -->
@@ -75,12 +75,21 @@
                     </div>
 
                 <!-- Pagination Controls -->
+                @{
+                    int maxVisiblePages = 2; // Number of visible pages around the current one
+                    int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
+                    int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
+                }
+
                 <div>
                     <ul class="pagination justify-content-center">
+                        <!-- Previous Button -->
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                   asp-route-pageSize="@Model.PageSize">Previous</a>
                             </li>
                         }
                         else
@@ -89,16 +98,51 @@
                                 <span class="page-link">Previous</span>
                             </li>
                         }
-                        @for (int i = 1; i <= Model.TotalPages; i++)
+
+                        <!-- First Page with Ellipsis -->
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
+                            </li>
+
+                   
+                        }
+
+                        <!-- Page Numbers Around Current Page -->
+                        @for (int i = startPage; i <= endPage; i++)
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-pageSize="@Model.PageSize">@i</a>
                             </li>
                         }
+
+                        <!-- Last Page with Ellipsis -->
+                        @if (endPage < Model.TotalPages)
+                        {
+                            @if (endPage < Model.TotalPages - 1)
+                            {
+                                <li class="page-item disabled">
+                                    <span>...</span>
+                                </li>
+                            }
+
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@Model.TotalPages"
+                                   asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                            </li>
+                        }
+
+                        <!-- Next Button -->
                         @if (Model.PageNumber < Model.TotalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                   asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
                         else
@@ -108,22 +152,11 @@
                             </li>
                         }
                     </ul>
-                    </div>
                 </div>
-                    
 
-
-                <!-- Back Button -->
-
-                 </div>
-                 </div>
-                    <!-- Back Button -->
-              
-
-           
+                </div>
         </div>
-    </div>
-
+  </div>
     <br />
     <div class="services section">
         <div class="container">

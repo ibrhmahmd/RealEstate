@@ -120,6 +120,8 @@ namespace PresentationLayer.Controllers
                     }
 
                     contractDto.Document = fileName;
+                    contractDto.CreatedOn = DateTime.Now;
+                    contractDto.CreatedBy = Guid.Parse(userIdClaim);
                     await _contractService.CreateContractAsync(contractDto);
                     var payments = await ProcessPayments(contractDto);
 
@@ -194,6 +196,14 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
+                    var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                    if (string.IsNullOrEmpty(userIdClaim))
+                    {
+                        _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                        return Unauthorized();
+                    }
+                    contractDto.UpdatedBy = Guid.Parse(userIdClaim);
+                    contractDto.UpdatedOn = DateTime.UtcNow;
                     await _contractService.UpdateContractAsync(contractDto);
                     return RedirectToAction(nameof(Details), new { id = contractDto.Id });
                 }
@@ -222,6 +232,14 @@ namespace PresentationLayer.Controllers
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                    return Unauthorized();
+                }
+                contract.UpdatedBy = Guid.Parse(userIdClaim);
+                contract.UpdatedOn = DateTime.UtcNow;
                 var user = await _userManager.GetUserAsync(User);
                 if (contract.OccupantId != user?.Id)
                 {
@@ -236,9 +254,6 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
-
-        
-
     }
 
 }
