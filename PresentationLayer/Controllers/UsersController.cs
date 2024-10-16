@@ -280,33 +280,53 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
         {
+            // Fixed "Other" project ID.
+            var otherProjectId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
+            // If "Other" is selected, use the fixed ID.
+            if (propertyDto.ProjectId == otherProjectId)
+            {
+                propertyDto.PropertyProject = "Other";  // Set display value as "Other".
+            }
+
+            // Handle property image upload.
             if (propertyDto.PropertyPicture != null)
             {
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
 
+            // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
             {
                 var selectedAddress = await _context.Addresses.FindAsync(propertyDto.AddressId.Value);
-                propertyDto.Location = selectedAddress != null ? $"{selectedAddress.City}, {selectedAddress.State}" : "Location not specified";
-            }
-            if (propertyDto.ProjectId.HasValue)
-            {
-                var selectedproject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
-                propertyDto.PropertyProject = selectedproject != null ? $"{selectedproject.ProjectName}" : "project not specified";
+                propertyDto.Location = selectedAddress != null
+                    ? $"{selectedAddress.City}, {selectedAddress.State}"
+                    : "Location not specified";
             }
 
+            // Map ProjectId to ProjectName if available.
+            if (propertyDto.ProjectId.HasValue && propertyDto.ProjectId != otherProjectId)
+            {
+                var selectedProject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedProject != null
+                    ? selectedProject.ProjectName
+                    : "Project not specified";
+            }
+
+            // Validate and save the property.
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
                 return RedirectToAction("ListProperties");
             }
+
+            // Reload lists for the form in case of validation failure.
             propertyDto.Projects = await _context.Projects.ToListAsync();
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+
 
 
 
