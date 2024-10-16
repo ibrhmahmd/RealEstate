@@ -59,8 +59,8 @@
                         <thead>
                             <tr>
                                 <th>Type</th>
-                                <th>Agent</th>
-                                <th>End Date</th>
+@*                                 <th>Agent</th>
+ *@                                <th>End Date</th>
                                 <th>Total Amount</th>
                                 <th>Location</th>
                                 
@@ -71,8 +71,8 @@
                             {
                                 <tr onclick="location.href='@Url.Action("ContractDetails", "Users", new { Id = contract.Id })'" style="cursor: pointer;">
                                     <td>@contract.ContractType</td>
-                                    <td>@contract.AgentId</td>
-                                    <td>@contract.EndDate</td> <!-- Shorten date format -->
+@*                                     <td>@contract.AgentId</td>
+ *@                                    <td>@contract.EndDate</td> <!-- Shorten date format -->
                                     <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
                                     <td>@contract.PropertyLocation</td>
                              

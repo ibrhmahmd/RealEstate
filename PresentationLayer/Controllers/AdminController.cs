@@ -366,7 +366,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
-            {
+            { 
                 return NotFound();
             }
             try

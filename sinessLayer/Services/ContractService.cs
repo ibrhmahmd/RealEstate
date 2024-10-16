@@ -90,8 +90,6 @@ namespace BusinessLayer.Services
 
 
 
-
-
         public async Task UnArchiveContract(Guid id)
         {
             var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
@@ -269,8 +267,7 @@ namespace BusinessLayer.Services
                 throw new ArgumentOutOfRangeException(nameof(price), "Property price must be positive and within a reasonable range.");
             }
         }
-
-
+ 
         private ContractDTO CreateBaseContractModel(Property property)
         {
             return new ContractDTO
