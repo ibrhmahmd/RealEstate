@@ -21,6 +21,7 @@
     <None Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+	  
     <None Include="wwwroot\assets\css\style.css" />
     <None Include="wwwroot\assets\img\avatar.svg" />
     <None Include="wwwroot\assets\img\bg.svg" />
@@ -43,7 +44,6 @@
   <ItemGroup>
     <Folder Include="wwwroot\Properties\Contracts\" />
     <Folder Include="wwwroot\Properties\payment\" />
-    <Folder Include="wwwroot\Properties\UserPicture\" />
     <Folder Include="wwwroot\Properties\userpicture\" />
     <Folder Include="wwwroot\Properties\PropertyPicture\" />
   </ItemGroup>
