@@ -58,8 +58,6 @@ namespace BusinessLayer.Services
         {
              var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
 
-
-            // Map the fetched properties to PropertyDTO
             var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
             {
                 Id = property.Id,

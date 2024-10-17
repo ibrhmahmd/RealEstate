@@ -56,30 +56,13 @@
                         }
                     </script>
                     <div class="swiper-wrapper align-items-center">
-                        <!-- Display either default images or dynamic images when available -->
-                        @if (Model.ImageLinks != null && Model.ImageLinks.Count > 0)
-                        {
-                            foreach (var imageLink in Model.ImageLinks)
-                            {
-                                <div class="swiper-slide">
-                                    <img src="@imageLink" alt="Property Image">
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <!-- Default Images -->
+                       
                             <div class="swiper-slide">
-                                <img src="~/assets/img/property-slide/property-slide-1.jpg" alt="">
+                                <img src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="img-fluid" alt="Model.Name" onerror="this.onerror=null; this.src='~/assets/img/default.jpg';" />
                             </div>
-                            <div class="swiper-slide">
-                                <img src="~/assets/img/property-slide/property-slide-2.jpg" alt="">
-                            </div>
-                            <div class="swiper-slide">
-                                <img src="~/assets/img/property-slide/property-slide-3.jpg" alt="">
-                            </div>
-                        }
+                        
                     </div>
+
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
                     <div class="swiper-pagination"></div>
