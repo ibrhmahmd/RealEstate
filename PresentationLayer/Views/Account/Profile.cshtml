@@ -73,13 +73,13 @@
                     <p class="text-gray-500">@DateTime.Now.ToString("ddd, dd MMMM yyyy")</p>
                 </div>
                 <div class="flex items-center">
-                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-10 h-10 rounded-full" alt="/assets/img/upload.png" />
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-10 h-10 rounded-full" alt="/assets/img/upload.png" onerror="this.onerror=null; this.src='@Url.Content("~/properties/userpicture/avatar.svg")';" />
                 </div>
             </header>
             <!-- Profile Section -->
             <section class="bg-white rounded shadow-md p-6">
                 <div class="flex items-center mb-6">
-                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-16 h-16 rounded-full mr-4" alt="/assets/img/upload.png" />
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-16 h-16 rounded-full mr-4" onerror="this.onerror=null; this.src='@Url.Content("~/properties/userpicture/avatar.svg")';" alt="/assets/img/upload.png" />
                     <div>
                         <h2 class="text-xl font-semibold">@Model.Name</h2>
                         <p class="text-gray-500">@Model.Email</p>

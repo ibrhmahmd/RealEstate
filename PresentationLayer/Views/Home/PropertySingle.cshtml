@@ -60,9 +60,10 @@
                             <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpg" : Model.PropertyPictureUrl))"
                                  class="img-fluid"
                                  alt="@Model.Name"
-                                 onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" /> <!-- Ensure correct path for default image -->
+                                 onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
                         </div>
                     </div>
+
 
 
                     <div class="swiper-button-prev"></div>

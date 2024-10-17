@@ -240,6 +240,7 @@ namespace PresentationLayer.Controllers
                 propertyDto.PropertyPictureUrl = fileName;
             }
 
+
             // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
             {
@@ -301,6 +302,7 @@ namespace PresentationLayer.Controllers
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
+       
             else
             {
                 // If no new picture is uploaded, keep the existing URL
