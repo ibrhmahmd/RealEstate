@@ -21,13 +21,13 @@ namespace DataAccessLayer.GenericRepository
             Context = context;
         }
 
-
         // Get all Items in Paged list
-
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
             return await Context.Set<T>().CountAsync(predicate);
         }
+
+
 
 
 
@@ -44,6 +44,30 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
+        public async Task<PagedResult<T>> GetFilteredAndPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>> filter = null)
+        {
+            try
+            {
+                IQueryable<T> query = Context.Set<T>().AsNoTracking();
+
+                // Apply the filter if present
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                query = query.Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                             .OrderBy(e => EF.Property<DateTime?>(e, "CreatedOn") ?? DateTime.MinValue);
+
+                var pagedResult = await query.ToPagedResultAsync(pageNumber, pageSize);
+
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving filtered and paged records.", ex);
+            }
+        }
 
 
         // Get all Items in Paged list
@@ -53,7 +77,6 @@ namespace DataAccessLayer.GenericRepository
             {
                 var query = Context.Set<T>().AsNoTracking()
                                     .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
-
                                     .OrderBy(e => EF.Property<int>(e, "CreatedOn")); // Ensure ordering to avoid paging inconsistencies
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
@@ -75,7 +98,7 @@ namespace DataAccessLayer.GenericRepository
                                                 EF.Property<bool>(e, "IsAvailable") == true &&
                                                 EF.Property<bool>(e, "IsOccupied") == false)
 
-                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn")); 
+                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
@@ -341,6 +364,28 @@ namespace DataAccessLayer.GenericRepository
             catch (Exception ex)
             {
                 throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
+            }
+        }
+
+        public async Task<bool> IsUserVerified(Guid Id)
+        {
+            try
+            {
+                var entity = await GetByIdAsync(Id);
+                if (entity != null)
+                {
+                    var Entity = entity as dynamic;
+                    if (Entity.IsVerified == true) return true;
+                    else return false;
+                }
+                else
+                {
+                    throw new Exception("Entity not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while checking Verifecation of the user with ID {Id}.", ex);
             }
         }
 

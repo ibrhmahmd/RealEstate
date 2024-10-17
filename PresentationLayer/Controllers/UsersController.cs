@@ -177,7 +177,22 @@ namespace PresentationLayer.Controllers
             }
         }
 
-   
+
+        // POST: Users/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                await _userService.HardDeleteUserAsync(id);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
         private Guid? GetUserIdFromClaims()
         {
@@ -185,18 +200,18 @@ namespace PresentationLayer.Controllers
             return Guid.TryParse(userIdString, out Guid userId) ? userId : (Guid?)null;
         }
 
-        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListContracts(Guid Id, int pageNumber = 1, int pageSize = 5)
         {
-            var userId = GetUserIdFromClaims();
-            if (userId == null)
+            if (Id == null)
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            var (contracts, totalItems) = await _userService.GetUserContractsAsync(userId.Value, pageNumber, pageSize);
+            var (contracts, totalItems) = await _userService.GetUserContractsAsync(Id, pageNumber, pageSize);
 
             var pagedListViewModel = new PagedListViewModel<ContractDTO>
             {
+                UserId = Id,
                 Items = contracts,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -206,28 +221,23 @@ namespace PresentationLayer.Controllers
             return View(pagedListViewModel);
         }
 
-        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListProperties(Guid Id, int pageNumber = 1, int pageSize = 5)
         {
-            var userId = GetUserIdFromClaims();
-            if (userId == null)
+            if (Id == null)
             {
                 return BadRequest("Invalid user ID.");
             }
-
-            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(userId.Value, pageNumber, pageSize);
-
+            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(Id, pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
+                UserId = Id,
                 Items = properties,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalRecords = totalItems,
             };
-
             return View(pagedListViewModel);
         }
-
-
 
 
         public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)

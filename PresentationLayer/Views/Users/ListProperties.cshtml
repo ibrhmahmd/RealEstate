@@ -17,19 +17,22 @@
 
 @section content {
     <div class="flex min-h-screen">
-        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
-            <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center
+
+            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
             </a>
-            <a asp-controller="users" asp-action="ListContracts"  class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
             <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
             </a>
         </aside>
+
+
         <div class="flex-1 p-6 ml-20">
-    
+
             <h2 class="header-title" style="color:darkgreen;">User Properties</h2>
             <br />
             @if (Model.Items.Any())
@@ -38,44 +41,44 @@
                     <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
                 </div>
             }
-          <section class="bg-white rounded shadow-md p-6">
-            <div >
-                @if (!Model.Items.Any())
-                {
-                    <div class="alert alert-success" role="alert">
-                        No properties found for this user.
-                    </div>
-                }
-                else
-                {
-                    <table class="table table-hover table-bordered" id="PropertyTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Location</th>
-                                <th>Project</th>
-                                <th>Area</th>
-                                <th>Price</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody id="Table">
-                            @foreach (var property in Model.Items)
-                            {
-                                <tr onclick="location.href='@Url.Action("ShowProperty", "Users", new { Id = property.Id })'" style="cursor: pointer;">
-                                    <td>@property.Name</td>
-                                    <td>@property.Location</td>
-                                    <td>@property.PropertyProject</td>
-                                    <td>@property.Area</td>
-                                    <td>@property.Price</td>
-                                    <td>@property.Type</td>
+            <section class="bg-white rounded shadow-md p-6">
+                <div>
+                    @if (!Model.Items.Any())
+                    {
+                        <div class="alert alert-success" role="alert">
+                            No properties found for this user.
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-bordered" id="PropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Project</th>
+                                    <th>Area</th>
+                                    <th>Price</th>
+                                    <th>Type</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-              
-                <div class="d-flex justify-content-between align-items-center">
+                            </thead>
+                            <tbody id="Table">
+                                @foreach (var property in Model.Items)
+                                {
+                                    <tr onclick="location.href='@Url.Action("ShowProperty", "Users", new { Id = property.Id })'" style="cursor: pointer;">
+                                        <td>@property.Name</td>
+                                        <td>@property.Location</td>
+                                        <td>@property.PropertyProject</td>
+                                        <td>@property.Area</td>
+                                        <td>@property.Price</td>
+                                        <td>@property.Type</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-center">
                         @if (User.IsInRole("User"))
                         {
                             <div>
@@ -88,55 +91,55 @@
 
 
 
-                    @{
-                        int maxVisiblePages = 2; // Number of pages to show around the current page
-                        int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
-                        int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
-                    }
-
-                    <ul class="pagination justify-content-center">
-                        <!-- Previous Button -->
-                        <li class="page-item @(Model.PageNumber > 1 ? "" : "disabled")">
-                            <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize" aria-label="Previous page">Previous</a>
-                        </li>
-
-                        <!-- First Page with Ellipsis -->
-                        @if (startPage > 1)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
-                            </li>
+                        @{
+                            int maxVisiblePages = 2; // Number of pages to show around the current page
+                            int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
+                            int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
                         }
 
-                        <!-- Pages Around Current Page -->
-                        @for (int i = startPage; i <= endPage; i++)
-                        {
-                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item @(Model.PageNumber > 1 ? "" : "disabled")">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize" aria-label="Previous page">Previous</a>
                             </li>
-                        }
 
-                        <!-- Last Page with Ellipsis -->
-                        @if (endPage < Model.TotalPages)
-                        {
-                            @if (endPage < Model.TotalPages - 1)
+                            <!-- First Page with Ellipsis -->
+                            @if (startPage > 1)
                             {
-                                <li class="page-item disabled">
-                                    <span>...</span>
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
                                 </li>
                             }
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@Model.TotalPages" asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
-                            </li>
-                        }
 
-                        <!-- Next Button -->
-                        <li class="page-item @(Model.PageNumber < Model.TotalPages ? "" : "disabled")">
-                            <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize" aria-label="Next page">Next</a>
-                        </li>
-                    </ul>
+                            <!-- Pages Around Current Page -->
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                </li>
+                            }
+
+                            <!-- Last Page with Ellipsis -->
+                            @if (endPage < Model.TotalPages)
+                            {
+                                @if (endPage < Model.TotalPages - 1)
+                                {
+                                    <li class="page-item disabled">
+                                        <span>...</span>
+                                    </li>
+                                }
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@Model.TotalPages" asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                </li>
+                            }
+
+                            <!-- Next Button -->
+                            <li class="page-item @(Model.PageNumber < Model.TotalPages ? "" : "disabled")">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize" aria-label="Next page">Next</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
             </section>
         </div>
     </div>
