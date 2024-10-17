@@ -55,42 +55,66 @@
     </div>
 
     <div class="container">
-        <div class="row gy-4">
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="service-item position-relative">
-                    <div class="icon">
-                        <i class="bi bi-house"></i>
-                    </div>
-                    <a href="@Url.Action("Properties", "Home")" class="stretched-link">
-                        <h3>Property Listings</h3>
-                    </a>
-                    <p>Browse a wide range of properties tailored to your needs.</p>
+    <div class="row gy-4">
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+                <div class="icon">
+                    <i class="bi bi-house"></i>
                 </div>
+                @* Redirect to Properties with status "Lease" *@
+                <a href="@Url.Action("ListPropertiesLease", "users")" class="stretched-link">
+                    <h3>Rent</h3>
+                </a>
+                <p>Browse a wide range of properties tailored to your needs.</p>
             </div>
+        </div>
 
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="service-item position-relative">
-                    <div class="icon">
-                        <i class="bi bi-person-check"></i>
-                    </div>
-                    <a href="@Url.Action("ServiceDetails", "Services", new { id = 2 })" class="stretched-link">
-                        <h3>Consultation Services</h3>
-                    </a>
-                    <p>Expert advice to help you make informed decisions in the Egyptian market.</p>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+                <div class="icon">
+                    <i class="bi bi-person-check"></i>
                 </div>
+                @* Redirect to Properties with status "Ownership" *@
+                <a href="@Url.Action("ListPropertiesOWNED", "users")" class="stretched-link">
+                    <h3>Owen</h3>
+                </a>
+                <p>Expert advice to help you make informed decisions in the Egyptian market.</p>
             </div>
+        </div>
 
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="service-item position-relative">
-                    <div class="icon">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <a href="@Url.Action("ServiceDetails", "Services", new { id = 3 })" class="stretched-link">
-                        <h3>Home Staging</h3>
-                    </a>
-                    <p>Transform your home to attract more buyers in Egypt.</p>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+                <div class="icon">
+                    <i class="bi bi-check-circle"></i>
                 </div>
+                @* Check user role and redirect accordingly *@
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="@Url.Action("ListContracts", "Users")" class="stretched-link">
+                        <h3>Manage contracts</h3>
+                    </a>
+                }
+                else
+                {
+                        <a href="#" class="stretched-link" onclick="showAlert(); return false;">
+                            <h3>Manage contracts</h3>
+                        </a>
+                }
+                <p>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        @:Wait for admin role to manage contracts.
+                    }
+                    else
+                    {
+                        @:Manage your contracts effectively.
+                    }
+                </p>
             </div>
+        </div>
+    </div>
+</div>
+
 
         </div>
     </div>
@@ -287,3 +311,9 @@
     </div>
 
 </section><!-- /Testimonials Section -->
+<script>
+    function showAlert() {
+        alert("You need admin privileges to manage contracts.");
+    }
+</script>
+
