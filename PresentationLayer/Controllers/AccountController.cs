@@ -81,7 +81,7 @@ namespace PresentationLayer.Controllers
                     // Redirect based on the role of the user
                     if (roles.Contains("Admin"))
                     {
-                        return Admin();
+                        return RedirectToAction("Admin", "Account");
                     }
 
                     return RedirectToAction("Index", "Home");
