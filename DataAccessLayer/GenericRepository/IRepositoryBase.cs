@@ -8,6 +8,7 @@ namespace DataAccessLayer.GenericRepository
     {
         Task<PagedResult<T>> GetAllPagedAsync(int pageNumber, int pageSize);
         Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize);
+        Task<PagedResult<T>> GetFilteredAndPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>> filter = null);
         Task<IQueryable<T>> GetAllIncludingDeletedAsync();
         Task<PagedResult<T>> GetAllPropertiesForUserPagedAsync(int pageNumber, int pageSize);
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
@@ -27,7 +28,9 @@ namespace DataAccessLayer.GenericRepository
         Task<PagedResult<T>> GetAcceptedContractsAsync(int pageNumber, int pageSize);
         Task<PagedResult<T>> GetTerminatedContractsAsync(int pageNumber, int pageSize);
         Task VerifyUser(Guid Id);
-        Task SaveChangesAsync();
+        Task<bool> IsUserVerified(Guid Id);
         Task Accept(Guid Id);
+        Task SaveChangesAsync();
+
     }
 }

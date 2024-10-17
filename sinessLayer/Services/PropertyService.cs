@@ -191,9 +191,9 @@ namespace BusinessLayer.Services
 
 
 
-        public async Task PropertyOccupiedAsync(Guid id)
+        public async Task PropertyOccupiedAsync(Guid Contractid, Guid UserId)
         {
-            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
 
             if (selectedProperty != null)
             {
@@ -208,6 +208,22 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task PropertyNotOccupiedAsync(Guid Contractid, Guid UserId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = true;
+                selectedProperty.IsOccupied = false;
+                selectedProperty.UpdatedOn = DateTime.Now;
+
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
 
 
         // Helper method to check if a property already exists by some unique identifier

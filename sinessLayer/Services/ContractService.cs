@@ -170,7 +170,7 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"Contract with ID {Id} not found.");
             }
-            await _propertyService.PropertyOccupiedAsync(contract.PropertyId);
+            await _propertyService.PropertyOccupiedAsync(contract.PropertyId, contract.OccupantId);
             await _unitOfWork.ContractsRepository.Accept(Id);
             await _unitOfWork.SaveAsync();
         }

@@ -150,7 +150,7 @@ namespace PresentationLayer.Controllers
 
             var result = await _userService.RegisterUserAsync(email, password, role);
 
-            if (result)
+            if (result) 
             {
                 return Ok("Admin user seeded successfully.");
             }

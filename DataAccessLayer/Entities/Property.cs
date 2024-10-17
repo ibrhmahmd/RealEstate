@@ -22,6 +22,7 @@ namespace DataAccessLayer.Entities
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
 
+
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
    
@@ -51,7 +52,6 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public bool IsOccupied { get; set; }
-
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
 
