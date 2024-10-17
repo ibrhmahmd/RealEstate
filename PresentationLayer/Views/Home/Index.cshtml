@@ -12,7 +12,7 @@
         {
             var imageUrl = Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl);
             <div class="carousel-item @(property == Model.Items.First() ? "active" : "")">
-                <img style="width:2000px;" src="@imageUrl" class="img-fluid" alt="@property.Name" />
+                <img style="width:2000px;" src="@imageUrl" class="img-fluid" alt="@property.Name" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
                 <div class="carousel-container">
                     <div>
                         <p>@property.Location</p>

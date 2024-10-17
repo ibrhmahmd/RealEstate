@@ -56,12 +56,14 @@
                         }
                     </script>
                     <div class="swiper-wrapper align-items-center">
-                       
-                            <div class="swiper-slide">
-                                <img src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="img-fluid" alt="Model.Name" onerror="this.onerror=null; this.src='~/assets/img/default.jpg';" />
-                            </div>
-                        
+                        <div class="swiper-slide">
+                            <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpg" : Model.PropertyPictureUrl))"
+                                 class="img-fluid"
+                                 alt="@Model.Name"
+                                 onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" /> <!-- Ensure correct path for default image -->
+                        </div>
                     </div>
+
 
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
