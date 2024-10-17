@@ -54,6 +54,34 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
+        {
+             var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
+
+            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            {
+                Id = property.Id,
+                Name = property.Name,
+                PropertyPictureUrl = property.PropertyPictureUrl,
+                Location = property.Location,
+                Description = property.Description,
+                Area = property.Area,
+                Status = property.Status,
+                PropertyProject = property.PropertyProject,
+                Price = property.Price,
+                AddressId = property.AddressId,
+                Locations = property.Locations,
+                Type = property.Type,
+            }).ToList();
+
+            return new PagedResult<PropertyDTO>
+            {
+                Items = propertyDTOs, // Return the mapped DTOs
+                TotalRecords = await _context.Properties.CountAsync() // Count total records in the database
+            };
+        }
+
+
 
 
 

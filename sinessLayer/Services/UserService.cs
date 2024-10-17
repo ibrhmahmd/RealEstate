@@ -6,6 +6,7 @@ using DataAccessLayer.GenericRepository;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -421,6 +422,7 @@ namespace BusinessLayer.Services
 
         public async Task<(List<ContractDTO> Contracts, int TotalItems)> GetUserContractsAsync(Guid userId, int pageNumber, int pageSize)
         {
+
             Expression<Func<Contract, bool>> filter = contract => contract.OccupantId == userId && contract.IsAccepted == true;
 
             var pagedContracts = await _unitOfWork.ContractsRepository
