@@ -19,7 +19,7 @@
 
         .sidebar {
             width: 80px;
-            height: 80vh;
+            height: 62vh;
             position: fixed;
             left: 0;
             top: 0;
@@ -47,16 +47,11 @@
             <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
             </a>
-            <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" title="Update Profile" alt="User" />
-            </a>
             <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
 
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
-            </a>
+
         </aside>
 
         <!-- Main Content Area -->
@@ -106,7 +101,13 @@
                     </div>
                     <div>
                         <label class="block text-gray-600 mb-1">Role</label>
-                        <div class="w-full border rounded p-2 bg-gray-100">@Model.Role</div>
+                        <div class="w-full border rounded p-2 bg-gray-100">
+                            <select asp-for="Role"  required style="border: none; width: 635px; background-color: transparent; outline: none; font-size: 16px; ;">
+                                <option value="User">User</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
