@@ -42,17 +42,21 @@
             <!-- Initial Payment: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.InitialPayment, new { @class = "form-label" })
-                <div class="form-control">@(Model.InitialPayment?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")</div>
+                <div class="form-control">
+                    @(Model.InitialPayment?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")
+                </div>
                 @Html.HiddenFor(model => model.InitialPayment)
-
             </div>
 
             <!-- Recurring Payment Amount: Display only -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.RecurringPaymentAmount, new { @class = "form-label" })
-                <div class="form-control">@string.Format("{0:C}", Model.RecurringPaymentAmount)</div>
-                @Html.HiddenFor(model => model.RecurringPaymentAmount) 
+                <div class="form-control">
+                    @(Model.RecurringPaymentAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")
+                </div>
+                @Html.HiddenFor(model => model.RecurringPaymentAmount)
             </div>
+
 
 
             <!-- Late Fee: Display only -->
@@ -60,7 +64,10 @@
                 @Html.LabelFor(model => model.LateFee, new { @class = "form-label" })
                 <div class="form-control">@Model.LateFee.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
             </div>
-       
+            <div class="form-group mb-3">
+                @Html.LabelFor(model => model.TotalAmount, new { @class = "form-label" })
+                <div class="form-control">@Model.TotalAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
+            </div>
         </div>
 
         <div class="col-md-6">

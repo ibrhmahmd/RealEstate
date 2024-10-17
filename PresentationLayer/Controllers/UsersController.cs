@@ -104,18 +104,13 @@ namespace PresentationLayer.Controllers
 
 
 
-        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
 
-                var UserEditViewModel = new UserEditViewModel
+                var userEditViewModel = new UserEditViewModel
                 {
                     Id = user.Id,
                     Name = user.UserName,
@@ -123,38 +118,46 @@ namespace PresentationLayer.Controllers
                     UserPictureUrl = user.UserPictureUrl,
                     PhoneNumber = user.PhoneNumber
                 };
-                return View(UserEditViewModel);
+                return View(userEditViewModel);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound("User not found.");
+            }
+            catch (Exception ex)
+            {
+                // Log the error for troubleshooting
+                // _logger.LogError(ex, "Failed to retrieve user data.");
+                return StatusCode(500, "Internal server error.");
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            if (model.UserPicture != null)
-            {
-                var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
-                model.UserPictureUrl = fileName;
-            }
-            var user = new User
-            {
-                Id = model.Id,
-                UserName = model.Name,
-                Email = model.Email,
-                UserPictureUrl = model.UserPictureUrl,
-                PhoneNumber = model.PhoneNumber,
-            };
-
             if (ModelState.IsValid)
             {
+                if (model.UserPicture != null)
+                {
+                    var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
+                    model.UserPictureUrl = fileName;
+                }
+
+                var user = new User
+                {
+                    Id = model.Id,
+                    UserName = model.Name,
+                    Email = model.Email,
+                    UserPictureUrl = model.UserPictureUrl,
+                    PhoneNumber = model.PhoneNumber,
+                };
+
                 await _userService.UpdateUserAsync(user);
-                return RedirectToAction("profile", "account");
+                return RedirectToAction("Profile", "Account");
             }
             return View(model);
         }
+
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
@@ -174,6 +177,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
+
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -187,22 +191,27 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 5)
+
+        private Guid? GetUserIdFromClaims()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return Guid.TryParse(userIdString, out Guid userId) ? userId : (Guid?)null;
+        }
 
-            if (!Guid.TryParse(userIdString, out Guid userId))
+        public async Task<IActionResult> ListContracts(Guid Id, int pageNumber = 1, int pageSize = 5)
+        {
+            if (Id == null)
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            var (contracts, totalItems) = await _userService.GetUserContractsAsync(userId, pageNumber, pageSize);
+            var (contracts, totalItems) = await _userService.GetUserContractsAsync(Id, pageNumber, pageSize);
 
             var pagedListViewModel = new PagedListViewModel<ContractDTO>
             {
+                UserId = Id,
                 Items = contracts,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -212,31 +221,25 @@ namespace PresentationLayer.Controllers
             return View(pagedListViewModel);
         }
 
-
-        public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListProperties(Guid Id, int pageNumber = 1, int pageSize = 5)
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (!Guid.TryParse(userIdString, out Guid userId))
+            if (Id == null)
             {
                 return BadRequest("Invalid user ID.");
             }
-
-            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(userId, pageNumber, pageSize);
-
+            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(Id, pageNumber, pageSize);
             var pagedListViewModel = new PagedListViewModel<PropertyDTO>
             {
+                UserId = Id,
                 Items = properties,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalRecords = totalItems,
             };
-
             return View(pagedListViewModel);
         }
 
 
-        
         public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)
         {
             if (!User.Identity.IsAuthenticated)

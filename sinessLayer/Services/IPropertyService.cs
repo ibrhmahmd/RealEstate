@@ -11,7 +11,7 @@ namespace BusinessLayer.Services
         Task<PagedResult<PropertyDTO>> GetAvailblePropertiesAsync(int pageNumber, int pageSize);
         Task<PropertyDTO> GetPropertyByIdAsync(Guid Id);
         Task HardDeletePropertyAsync(Guid Id);
-        Task PropertyOccupiedAsync(Guid id);
+        Task PropertyOccupiedAsync(Guid Contractid, Guid UserId);
         Task RestorePropertyAsync(Guid Id);
         Task SoftDeletePropertyAsync(Guid Id);
         Task<PropertyDTO> UpdatePropertyAsync(PropertyDTO propertyDto);

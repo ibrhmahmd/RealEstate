@@ -81,7 +81,7 @@ namespace PresentationLayer.Controllers
                     // Redirect based on the role of the user
                     if (roles.Contains("Admin"))
                     {
-                        return Admin();
+                        return RedirectToAction("Admin", "Account");
                     }
 
                     return RedirectToAction("Index", "Home");
@@ -150,7 +150,7 @@ namespace PresentationLayer.Controllers
 
             var result = await _userService.RegisterUserAsync(email, password, role);
 
-            if (result)
+            if (result) 
             {
                 return Ok("Admin user seeded successfully.");
             }

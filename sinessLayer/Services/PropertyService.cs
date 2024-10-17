@@ -54,6 +54,34 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
+        {
+             var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
+
+            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            {
+                Id = property.Id,
+                Name = property.Name,
+                PropertyPictureUrl = property.PropertyPictureUrl,
+                Location = property.Location,
+                Description = property.Description,
+                Area = property.Area,
+                Status = property.Status,
+                PropertyProject = property.PropertyProject,
+                Price = property.Price,
+                AddressId = property.AddressId,
+                Locations = property.Locations,
+                Type = property.Type,
+            }).ToList();
+
+            return new PagedResult<PropertyDTO>
+            {
+                Items = propertyDTOs, // Return the mapped DTOs
+                TotalRecords = await _context.Properties.CountAsync() // Count total records in the database
+            };
+        }
+
+
 
 
 
@@ -191,9 +219,9 @@ namespace BusinessLayer.Services
 
 
 
-        public async Task PropertyOccupiedAsync(Guid id)
+        public async Task PropertyOccupiedAsync(Guid Contractid, Guid UserId)
         {
-            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(id);
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
 
             if (selectedProperty != null)
             {
@@ -208,6 +236,22 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task PropertyNotOccupiedAsync(Guid Contractid, Guid UserId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = true;
+                selectedProperty.IsOccupied = false;
+                selectedProperty.UpdatedOn = DateTime.Now;
+
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
 
 
         // Helper method to check if a property already exists by some unique identifier

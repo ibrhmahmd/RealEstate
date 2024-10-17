@@ -41,7 +41,7 @@ namespace DataAccessLayer.Entities
         [Required]
         public DateTime StartDate { get; set; }
 
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
 
         [Required, MaxLength(20)]
