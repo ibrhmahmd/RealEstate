@@ -6,6 +6,7 @@ using DataAccessLayer.GenericRepository;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -415,6 +416,7 @@ namespace BusinessLayer.Services
 
         public async Task<(List<ContractDTO> Contracts, int TotalItems)> GetUserContractsAsync(Guid userId, int pageNumber, int pageSize)
         {
+   
             var contractsQuery = _context.Contracts
                 .Where(c => c.OccupantId == userId)
                 .Include(c => c.Agent)

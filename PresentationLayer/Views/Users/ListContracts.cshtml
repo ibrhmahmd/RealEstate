@@ -19,7 +19,7 @@
 }
 
 @section content {
-
+   
 
     <div class="flex min-h-screen">
         <aside style="margin-left:10px; margin-top:160px; height:541px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
@@ -59,26 +59,29 @@
                         <thead>
                             <tr>
                                 <th>Type</th>
-                                <th>Agent</th>
                                 <th>End Date</th>
                                 <th>Total Amount</th>
                                 <th>Location</th>
                                 
                             </tr>
                         </thead>
-                        <tbody id="contractTable">
-                            @foreach (var contract in Model.Items)
-                            {
-                                <tr onclick="location.href='@Url.Action("ContractDetails", "Users", new { Id = contract.Id })'" style="cursor: pointer;">
-                                    <td>@contract.ContractType</td>
-                                    <td>@contract.AgentId</td>
-                                    <td>@contract.EndDate</td> <!-- Shorten date format -->
-                                    <td>@string.Format("{0:C}", contract.TotalAmount)</td> <!-- Formats as currency -->
-                                    <td>@contract.PropertyLocation</td>
-                             
-                                </tr>
-                            }
-                        </tbody>
+                            <tbody id="contractTable">
+                                @foreach (var contract in Model.Items)
+                                {
+                       
+                                    <tr onclick="location.href='@Url.Action("ContractDetails", "Users", new { Id = contract.Id })'"
+                                        style="cursor: pointer;">
+                                        <td>@contract.ContractType</td>
+                                        <td>@contract.EndDate.ToString("dd/MM/yyyy")</td> <!-- Shorten date format -->
+                                        <td>
+                                            @(contract.TotalAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG")) )
+                                        </td> <!-- Formats as currency -->
+                                        <td>@contract.PropertyLocation</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+
                     </table>
                     }
 

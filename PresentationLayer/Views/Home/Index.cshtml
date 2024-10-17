@@ -1,45 +1,29 @@
-﻿@{
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
+@{
     ViewBag.Title = "Home Page - EstateAgency";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <!-- Hero Section -->
 <section id="hero" class="hero section dark-background">
 
     <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
 
-        <div class="carousel-item active">
-            <img src="~/assets/img/hero-carousel/hero-carousel-1.jpg" alt="Beautiful property in Cairo">
-            <div class="carousel-container">
-                <div>
-                    <p>Cairo, Egypt</p>
-                    <h2><span>123</span> Nile Street</h2>
-                    <a href="@Url.Action("PropertyDetails", "Properties", new { id = 1 })" class="btn-get-started">rent | 15,000 EGP</a>
+        @foreach (var property in Model.Items)
+        {
+            var imageUrl = Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl);
+            <div class="carousel-item @(property == Model.Items.First() ? "active" : "")">
+                <img style="width:2000px;" src="@imageUrl" class="img-fluid" alt="@property.Name" />
+                <div class="carousel-container">
+                    <div>
+                        <p>@property.Location</p>
+                        <h2><span>789</span> @property.Location</h2>
+                        <a href="@Url.Action("Details", "Properties", new { id = property.Id })" class="btn-get-started">
+                            @property.Status | @property.Price.ToString("C", new System.Globalization.CultureInfo("en-EG"))
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="carousel-item">
-            <img src="~/assets/img/hero-carousel/hero-carousel-2.jpg" alt="Luxury apartment in Alexandria">
-            <div class="carousel-container">
-                <div>
-                    <p>Alexandria, Egypt</p>
-                    <h2><span>456</span> Mediterranean Avenue</h2>
-                    <a href="@Url.Action("PropertyDetails", "Properties", new { id = 2 })" class="btn-get-started">sale | 1,200,000 EGP</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="carousel-item">
-            <img src="~/assets/img/hero-carousel/hero-carousel-3.jpg" alt="Charming villa in Giza">
-            <div class="carousel-container">
-                <div>
-                    <p>Giza, Egypt</p>
-                    <h2><span>789</span> Pyramid View Lane</h2>
-                    <a href="@Url.Action("PropertyDetails", "Properties", new { id = 3 })" class="btn-get-started">rent | 5,500 EGP</a>
-                </div>
-            </div>
-        </div>
+        }
 
         <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
@@ -49,11 +33,17 @@
             <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
         </a>
 
-        <ol class="carousel-indicators"></ol>
+        <ol class="carousel-indicators">
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <li data-bs-target="#hero-carousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
+            }
+        </ol>
 
     </div>
 
 </section>
+
 
 <!-- Services Section -->
 <section id="services" class="services section">

@@ -28,7 +28,7 @@ namespace BusinessLayer.DTOModels
 		public DateTime StartDate { get; set; } = DateTime.Now;
 
 
-		public DateTime? EndDate { get; set; } = DateTime.Now.AddMonths(6);
+		public DateTime EndDate { get; set; } = DateTime.Now.AddMonths(6);
 
         [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.

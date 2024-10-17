@@ -84,6 +84,22 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
+        public async Task<PagedResult<T>> GetLatestPropertiesAsync(int count , int pageNumber, int pageSize)
+        {
+            // Fetch properties from the database and order by the CreatedOn property descending
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+           .Where(e => EF.Property<bool>(e, "IsAvailable") == true)
+           .OrderByDescending(e => EF.Property<DateTime>(e, "CreatedOn"));
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
 
 
         // Get entities by name

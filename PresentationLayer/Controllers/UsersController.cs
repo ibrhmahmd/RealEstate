@@ -177,22 +177,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
-        // POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            try
-            {
-                await _userService.HardDeleteUserAsync(id);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
+   
 
         private Guid? GetUserIdFromClaims()
         {
