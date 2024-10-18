@@ -1,0 +1,113 @@
+﻿@model BusinessLayer.DTOModels.ProjectDTO
+@{
+    ViewData["Title"] = "Project Details";
+    ViewData["ActionName"] = "Project";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <style>
+        .custom-dropdown {
+            width: 100%;
+            padding: 8px 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 16px;
+            color: #495057;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+            .custom-dropdown:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            .custom-dropdown option {
+                padding: 10px;
+            }
+
+        /* Optional: Customize label styling */
+        .control-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+    </style>
+}
+@section content {
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Project Details</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+
+                        <div class="mb-3">
+                            <label asp-for="ProjectName" class="control-label"></label>
+                            <input asp-for="ProjectName" class="form-control" readonly />
+                            <span asp-validation-for="ProjectName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" readonly />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="StartDate" class="control-label"></label>
+                            <input asp-for="StartDate" class="form-control" readonly />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="EndDate" class="control-label"></label>
+                            <input asp-for="EndDate" class="form-control" readonly />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Status" class="control-label"></label>
+                            <input asp-for="Status" class="form-control" readonly />
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DeveloperCompanyId" class="control-label">Developer Company</label>
+                            <select asp-for="DeveloperCompanyId" class="custom-dropdown" asp-items="@(new SelectList(ViewBag.depts, "Id", "CompanyName"))" disabled>
+                            </select>
+                        </div>
+
+
+                        <br />
+
+
+                        <a style="margin-left:275px; width:150px;" asp-action="ProjectList" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+}
+@section scripts {
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

@@ -1,5 +1,6 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.Services;
+using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
 using System.Diagnostics;
@@ -17,10 +18,19 @@ namespace PresentationLayer.Controllers
             _propertyService = propertyService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var latestProperties = await _propertyService.GetLatestPropertiesAsync(3);
+
+            var viewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = latestProperties.Items,
+                TotalRecords = latestProperties.TotalRecords
+            };
+
+            return View(viewModel);
         }
+
 
         public IActionResult About()
         {
@@ -36,7 +46,7 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> Properties(int pageNumber = 1, int pageSize = 8)
         {
-            var pagedProperties = await _propertyService.GetAllPropertiesAsync(pageNumber, pageSize);
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
 
             // Pass the paginated result to the view model
             var viewModel = new PagedListViewModel<PropertyDTO>
@@ -49,7 +59,7 @@ namespace PresentationLayer.Controllers
 
             return View("Properties", viewModel);
         }
-
+      
 
 
         public IActionResult Agents()

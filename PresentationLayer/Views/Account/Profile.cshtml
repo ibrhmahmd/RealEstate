@@ -45,19 +45,18 @@
         <br />
         <!-- Sidebar -->
         <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+
+
             <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img  src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
-            </a>
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
-            </a>
+                <img src="~/assets/img/house.png" width="27px" title="List Of Properties" alt="Property" />
+			</a>
+            <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+				<img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" title="Update Profile" alt="User" />
+			</a>
             <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
+                <img src="~/assets/img/partnership.png" width="27px" title="List Of Contracts" alt="Contract" />
             </a>
 
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
-            </a>
         </aside>
 
         <!-- Main Content Area -->
@@ -73,19 +72,25 @@
                     <p class="text-gray-500">@DateTime.Now.ToString("ddd, dd MMMM yyyy")</p>
                 </div>
                 <div class="flex items-center">
-                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-10 h-10 rounded-full" alt="/assets/img/upload.png" />
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-10 h-10 rounded-full" alt="/assets/img/upload.png" onerror="this.onerror=null; this.src='@Url.Content("~/properties/userpicture/avatar.svg")';" />
                 </div>
             </header>
             <!-- Profile Section -->
             <section class="bg-white rounded shadow-md p-6">
                 <div class="flex items-center mb-6">
-                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-16 h-16 rounded-full mr-4" alt="/assets/img/upload.png" />
+                    <img src="@Url.Content("/properties/userpicture/" + Model.UserPictureUrl)" class="w-16 h-16 rounded-full mr-4" onerror="this.onerror=null; this.src='@Url.Content("~/properties/userpicture/avatar.svg")';" alt="/assets/img/upload.png" />
                     <div>
                         <h2 class="text-xl font-semibold">@Model.Name</h2>
-                        <p class="text-gray-500">@Model.Email</p>
+                        <p class="text-gray-500">@Model.Name</p>
                     </div>
-                    <a class="ml-auto custom-green text-white rounded px-4 py-2" asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id">Update Profile</a>
-               
+                 @*    @if(User.IsInRole("User"))
+                    {   
+                        <a  asp-action="CreateProperty" asp-controller="Users" class="ml-auto custom-green text-white rounded px-4 py-2">Create Property</a>
+                    }
+                    else
+                    {
+                        
+                    } *@
 
                 </div>
 

@@ -1,0 +1,304 @@
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
+@{
+    Layout = "_Layout";
+    var uniqueLocations = Model.Items.Select(p => p.Location).Distinct().ToList();
+}
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        .pagination-container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .pagination {
+            border-radius: 25px; /* Rounded corners */
+            background-color: #ffffff; /* White background for contrast */
+
+            padding: 10px 15px; /* Padding for the pagination */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        .pagination .page-link {
+            color: rgb(46,202,106);
+            background-color: #ffffff;
+            border: 1px solid rgb(46,202,106);
+            border-radius: 7px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: rgb(46,202,106);
+            color: white;
+        }
+
+        .pagination .page-link:hover {
+            background-color: rgb(46,202,106);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+}
+
+@section content {
+    <br />
+    <div class="page-title" data-aos="fade">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1>Properties</h1>
+                        <p class="mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a href="~/index.html">Home</a></li>
+                    <li class="current">Properties</li>
+                </ol>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="header-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+            <select class="form-select mx-4" id="locationSelect" name="location">
+                <option value="">State</option>
+                @foreach (var location in uniqueLocations)
+                {
+                    <option value="@location">@location</option>
+                }
+            </select>
+
+            <select class="form-select mx-3" id="typeSelect" name="type">
+                <option value="">Type</option>
+                <option value="Apartment">Apartment</option>
+                <option value="House">House</option>
+                <option value="Commercial">Commercial</option>
+            </select>
+
+            <div class="d-flex align-items-center mx-3">
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="All" id="statusAll" checked>
+                    <label class="form-check-label" for="statusAll">All</label>
+                </div>
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="Lease" id="statusLease">
+                    <label class="form-check-label" for="statusLease">Lease</label>
+                </div>
+                <div class="form-check me-2">
+                    <input class="form-check-input" type="radio" name="status" value="Ownership" id="statusOwnership">
+                    <label class="form-check-label" for="statusOwnership">Ownership</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="status" value="Rent" id="statusRent">
+                    <label class="form-check-label" for="statusRent">Rent</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid custom-card-container" style="max-width: 1400px; margin: auto;">
+            <!-- Add custom styling here -->
+            <section id="real-estate" class="real-estate section">
+                <div class="container-fluid">
+                    <div class="row gy-4">
+                        @if (Model.Items != null && Model.Items.Any())
+                        {
+                            @foreach (var property in Model.Items)
+                            {
+                                <div class="col-xl-3 col-lg-4 col-md-6 property-card" data-aos="fade-up" data-aos-delay="100" data-location="@property.Location" data-type="@property.Type" data-status="@property.Status">
+                                    <div class="card">
+                                        <img src="@Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl)" class="img-fluid" alt="@property.Name" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
+
+                                        <div class="card-body">
+                                            <span class="sale-rent">@property.Type | @property.Status</span>
+                                            <h3>
+                                                <a href="@Url.Action("Details", "Properties", new { id = property.Id })" class="stretched-link">@property.Name</a>
+                                            </h3>
+                                            <div class="card-content d-flex flex-column justify-content-center text-center">
+                                                <div class="row property-info">
+                                                    <div class="col">Type</div>
+                                                    <div class="col">Area</div>
+                                                    <div class="col">Location</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">@property.Type</div>
+                                                    <div class="col">@property.Area</div>
+                                                    <div class="col">@property.Location</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="col text-center">
+                                <p>No properties found.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-container text-center mt-4">
+                @{
+                    int maxVisiblePages = 2; // Number of pages to show around the current page
+                    int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
+                    int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
+                }
+
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Button -->
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListPropertiesOWNED"
+                               asp-route-pageNumber="@(Model.PageNumber - 1)"
+                               asp-route-pageSize="@Model.PageSize">Previous</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    }
+
+                    <!-- First Page with Ellipsis -->
+                    @if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListPropertiesOWNED"
+                               asp-route-pageNumber="1"
+                               asp-route-pageSize="@Model.PageSize">1</a>
+                        </li>
+
+                    }
+
+                    <!-- Pages Around Current Page -->
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                            <a class="page-link" asp-action="ListPropertiesOWNED"
+                               asp-route-pageNumber="@i"
+                               asp-route-pageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+
+                    <!-- Last Page with Ellipsis -->
+                    @if (endPage < Model.TotalPages)
+                    {
+                        @if (endPage < Model.TotalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span>...</span>
+                            </li>
+                        }
+
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListPropertiesOWNED"
+                               asp-route-pageNumber="@Model.TotalPages"
+                               asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                        </li>
+                    }
+
+                    <!-- Next Button -->
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="ListPropertiesOWNED"
+                               asp-route-pageNumber="@(Model.PageNumber + 1)"
+                               asp-route-pageSize="@Model.PageSize">Next</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    }
+                </ul>
+
+            </div>
+
+
+
+        </div>
+    </div>
+        </div>
+}
+
+
+
+
+
+
+@section scripts {
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            function filterProperties() {
+                var searchValue = $('#searchInput').val().toLowerCase();
+                var locationValue = $('#locationSelect').val().toLowerCase();
+                var typeValue = $('#typeSelect').val().toLowerCase();
+                var statusValue = $('input[name="status"]:checked').val();
+
+                $('.property-card').filter(function () {
+                    var cardLocation = $(this).data('location').toLowerCase();
+                    var cardType = $(this).data('type').toLowerCase();
+                    var cardStatus = $(this).data('status');
+
+                    // Check if the card matches all criteria
+                    var isVisible =
+                        (searchValue === '' || $(this).text().toLowerCase().indexOf(searchValue) > -1) &&
+                        (locationValue === '' || cardLocation === locationValue) &&
+                        (typeValue === '' || cardType === typeValue) &&
+                        (statusValue === 'All' || cardStatus === statusValue);
+
+                    $(this).toggle(isVisible);
+                });
+            }
+
+
+            // Search function
+            $('#searchInput').on('keyup', filterProperties);
+
+            // Location filter
+            $('#locationSelect').on('change', filterProperties);
+
+            // Type filter
+            $('#typeSelect').on('change', filterProperties);
+
+            // Status filter
+            $('input[name="status"]').on('change', filterProperties);
+        });
+    </script>
+}

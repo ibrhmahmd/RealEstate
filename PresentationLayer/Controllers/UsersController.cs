@@ -7,7 +7,6 @@ using BusinessLayer.Services;
 using DataAccessLayer.Entities;
 using PresentationLayer.helper;
 using PresentationLayer.Models;
-using DataAccessLayer.Migrations;
 using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -21,6 +20,7 @@ namespace PresentationLayer.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
         private readonly PropertyService _propertyService;
         private readonly MyDbContext _context = context;
+
 
 
 
@@ -95,18 +95,13 @@ namespace PresentationLayer.Controllers
 
 
 
-        // GET: Users/Edit/5
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             try
             {
                 var user = await _userService.GetUserByIdAsync(id);
 
-                var UserEditViewModel = new UserEditViewModel
+                var userEditViewModel = new UserEditViewModel
                 {
                     Id = user.Id,
                     Name = user.UserName,
@@ -114,38 +109,46 @@ namespace PresentationLayer.Controllers
                     UserPictureUrl = user.UserPictureUrl,
                     PhoneNumber = user.PhoneNumber
                 };
-                return View(UserEditViewModel);
+                return View(userEditViewModel);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound();
+                return NotFound("User not found.");
+            }
+            catch (Exception ex)
+            {
+                // Log the error for troubleshooting
+                // _logger.LogError(ex, "Failed to retrieve user data.");
+                return StatusCode(500, "Internal server error.");
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            if (model.UserPicture != null)
-            {
-                var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
-                model.UserPictureUrl = fileName;
-            }
-            var user = new User
-            {
-                Id = model.Id,
-                UserName = model.Name,
-                Email = model.Email,
-                UserPictureUrl = model.UserPictureUrl,
-                PhoneNumber = model.PhoneNumber,
-            };
-
             if (ModelState.IsValid)
             {
+                if (model.UserPicture != null)
+                {
+                    var fileName = UploadFile.UploadImage("userpicture", model.UserPicture);
+                    model.UserPictureUrl = fileName;
+                }
+
+                var user = new User
+                {
+                    Id = model.Id,
+                    UserName = model.Name,
+                    Email = model.Email,
+                    UserPictureUrl = model.UserPictureUrl,
+                    PhoneNumber = model.PhoneNumber,
+                };
+
                 await _userService.UpdateUserAsync(user);
-                return RedirectToAction("profile", "account");
+                return RedirectToAction("Profile", "Account");
             }
             return View(model);
         }
+
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -153,7 +156,6 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             try
             {
                 var user = await _userService.GetUserByIdAsync(id.Value);
@@ -164,6 +166,7 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
+
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -178,47 +181,107 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> ListContracts()
+
+        private Guid? GetUserIdFromClaims()
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Ensure the user ID is parsed to Guid
-            if (!Guid.TryParse(userIdString, out Guid userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-
-            var contracts = await _context.Contracts
-                .Where(c => c.OccupantId == userId) // Assuming 'UserId' is the property that links to the user
-                .Include(c => c.Agent) // Include agent details
-                .ToListAsync();
-
-            // Map the contracts to ContractDTO
-            var contractDTOs = contracts.Select(c => new ContractDTO
-            {
-                Id = c.Id,
-                ContractType = c.ContractType,
-                AgentId = c.AgentId,
-                EndDate = c.EndDate,
-                TotalAmount = c.TotalAmount,
-                PropertyLocation = c.PropertyLocation,
-            }).ToList();
-
-            return View(contractDTOs);
+            return Guid.TryParse(userIdString, out Guid userId) ? userId : (Guid?)null;
         }
-    
-        public async Task<IActionResult> ListProperties()
-        {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Ensure the user ID is parsed to Guid
-            if (!Guid.TryParse(userIdString, out Guid userId))
+        public async Task<IActionResult> ListContracts(Guid Id, int pageNumber = 1, int pageSize = 5)
+        {
+            if (Id == null)
             {
                 return BadRequest("Invalid user ID.");
             }
+
+            var (contracts, totalItems) = await _userService.GetUserContractsAsync(Id, pageNumber, pageSize);
+
+            var pagedListViewModel = new PagedListViewModel<ContractDTO>
+            {
+                UserId = Id,
+                Items = contracts,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalItems,
+            };
+
+            return View(pagedListViewModel);
+        }
+
+        public async Task<IActionResult> ListProperties(Guid Id, int pageNumber = 1, int pageSize = 5)
+        {
+            if (Id == null)
+            {
+                return BadRequest("Invalid user ID.");
+            }
+            var (properties, totalItems) = await _userService.GetUserPropertiesAsync(Id, pageNumber, pageSize);
+            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+            {
+                UserId = Id,
+                Items = properties,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalItems,
+            };
+            return View(pagedListViewModel);
+        }
+
+
+        public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
+            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = pagedProperties.Items.Where(o => o.Status == PropertStatus.Ownership).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
+            };
+
+            return View(pagedListViewModel);
+        }
+
+        public async Task<IActionResult> ListPropertiesLease(int pageNumber = 1, int pageSize = 5)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+
+            var pagedProperties = await _propertyService.GetAvailblePropertiesAsync(pageNumber, pageSize);
+            var pagedListViewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = pagedProperties.Items.Where(p => p.Status == PropertStatus.Lease).ToList(),
+                PageNumber = pagedProperties.CurrentPage,
+                PageSize = pagedProperties.PageSize,
+                TotalRecords = pagedProperties.TotalRecords
+            };
+
+            return View(pagedListViewModel);
+        }
+
+
+        public async Task<IActionResult> CreateProperty(PropertyDTO propertyDto)
+        {
+            // Fixed "Other" project ID.
+            var otherProjectId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+
+            // If "Other" is selected, use the fixed ID.
+            if (propertyDto.ProjectId == otherProjectId)
+            {
+                propertyDto.PropertyProject = "Other";  // Set display value as "Other".
+            }
+
 
             var properties = await _context.Contracts
             .Where(c => c.OccupantId == userId)     // Filter contracts by the given userId
@@ -228,20 +291,31 @@ namespace PresentationLayer.Controllers
                   (contract, property) => property) // Select the property
             .ToListAsync();
 
-
-            // Map the properties to PropertyDTO
-            var propertyDTOs = properties.Select(p => new PropertyDTO
+            // Map ProjectId to ProjectName if available.
+            if (propertyDto.ProjectId.HasValue && propertyDto.ProjectId != otherProjectId)
             {
-                Id = p.Id,
-                Name = p.Name,
-                Location = p.Location,
-                Description = p.Description,
-                Area = p.Area,
-                Price = p.Price,
-                Type = p.Type,
-            }).ToList();
+                var selectedProject = await _context.Projects.FindAsync(propertyDto.ProjectId.Value);
+                propertyDto.PropertyProject = selectedProject != null
+                    ? selectedProject.ProjectName
+                    : "Project not specified";
+            }
 
-            return View(propertyDTOs);
+            // Validate and save the property.
+            if (ModelState.IsValid)
+            {
+                await _propertyService.CreatePropertyAsync(propertyDto);
+                return RedirectToAction("ListProperties");
+            }
+
+            // Reload lists for the form in case of validation failure.
+            propertyDto.Projects = await _context.Projects.ToListAsync();
+            propertyDto.Locations = await _context.Addresses.ToListAsync();
+            return View(propertyDto);
         }
+
+
+
+
+
     }
 }

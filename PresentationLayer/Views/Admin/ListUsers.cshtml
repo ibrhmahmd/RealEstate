@@ -27,7 +27,7 @@
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Verified</th>
-                            <th>Deleted</th>
+                            <th>Role</th>
                             <th>Delete</th>
                             <th>Details</th>
                         </tr>
@@ -45,11 +45,7 @@
                                         @(item.IsVerified.HasValue ? (item.IsVerified.Value ? "Verified" : "Not Verified") : "Unknown")
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
-                                        @(item.IsDeleted ? "Deleted" : "Active")
-                                    </span>
-                                </td>
+                                <td>@item.Role</td>
                                 <td>
                                     <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
                                         <i class="fas fa-trash"></i> Delete
@@ -64,6 +60,7 @@
                         }
                     </tbody>
                 </table>
+            </form>
                 <div class="d-flex justify-content-between align-items-center">
                     <!-- Back Button on the left -->
                     <div>
@@ -71,13 +68,23 @@
                             <i class="fas fa-rotate-back"></i> Back
                         </a>
                     </div>
+
                 <!-- Pagination Controls -->
+                @{
+                    int maxVisiblePages = 2; // Number of visible pages around the current one
+                    int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
+                    int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
+                }
+
                 <div>
                     <ul class="pagination justify-content-center">
+                        <!-- Previous Button -->
                         @if (Model.PageNumber > 1)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                   asp-route-pageSize="@Model.PageSize">Previous</a>
                             </li>
                         }
                         else
@@ -86,16 +93,51 @@
                                 <span class="page-link">Previous</span>
                             </li>
                         }
-                        @for (int i = 1; i <= Model.TotalPages; i++)
+
+                        <!-- First Page with Ellipsis -->
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
+                            </li>
+
+                   
+                        }
+
+                        <!-- Page Numbers Around Current Page -->
+                        @for (int i = startPage; i <= endPage; i++)
                         {
                             <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-pageSize="@Model.PageSize">@i</a>
                             </li>
                         }
+
+                        <!-- Last Page with Ellipsis -->
+                        @if (endPage < Model.TotalPages)
+                        {
+                            @if (endPage < Model.TotalPages - 1)
+                            {
+                                <li class="page-item disabled">
+                                    <span>...</span>
+                                </li>
+                            }
+
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@Model.TotalPages"
+                                   asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                            </li>
+                        }
+
+                        <!-- Next Button -->
                         @if (Model.PageNumber < Model.TotalPages)
                         {
                             <li class="page-item">
-                                <a class="page-link" asp-action="ListUsers" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
+                                <a class="page-link" asp-action="ListUsers"
+                                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                   asp-route-pageSize="@Model.PageSize">Next</a>
                             </li>
                         }
                         else
@@ -105,15 +147,11 @@
                             </li>
                         }
                     </ul>
+                </div>
 
-                 </div>
-                 </div>
-                    <!-- Back Button -->
-              
-            </form>
+                </div>
         </div>
-    </div>
-
+  </div>
     <br />
     <div class="services section">
         <div class="container">
@@ -121,30 +159,30 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-activity"></i></div>
-                        <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
-                            <h3>Users</h3>
+                        <a href="@Url.Action("ListOwners", "Admin")" class="stretched-link">
+                            <h3>Owners</h3>
                         </a>
-                        <p>List All Users.</p>
+                        <p>Manage Owners</p>
                     </div>
                 </div><!-- End Service Item -->
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-broadcast"></i></div>
-                        <a href="service-details.html" class="stretched-link">
-                            <h3>Contracts</h3>
+                        <a href="@Url.Action("ListRenters", "Admin")" class="stretched-link">
+                            <h3>Renters</h3>
                         </a>
-                        <p>View Contracts.</p>
+                        <p>Manage Renters.</p>
                     </div>
                 </div><!-- End Service Item -->
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-easel"></i></div>
-                        <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                             <h3>Properties</h3>
                         </a>
-                        <p>CRUD on Properties</p>
+                        <p>Manage Contracts</p>
                     </div>
                 </div><!-- End Service Item -->
             </div>

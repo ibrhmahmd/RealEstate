@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -20,9 +21,7 @@ namespace DataAccessLayer.GenericRepository
             Context = context;
         }
 
-
         // Get all Items in Paged list
-       
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)
         {
             return await Context.Set<T>().CountAsync(predicate);
@@ -30,7 +29,9 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-        public async Task<IQueryable<T>> GetAllAsync(int pageNumber , int pageSize )
+
+
+        public async Task<IQueryable<T>> GetAllAsync(int pageNumber, int pageSize)
         {
             try
             {
@@ -43,6 +44,30 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
+        public async Task<PagedResult<T>> GetFilteredAndPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>> filter = null)
+        {
+            try
+            {
+                IQueryable<T> query = Context.Set<T>().AsNoTracking();
+
+                // Apply the filter if present
+                if (filter != null)
+                {
+                    query = query.Where(filter);
+                }
+
+                query = query.Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                             .OrderBy(e => EF.Property<DateTime?>(e, "CreatedOn") ?? DateTime.MinValue);
+
+                var pagedResult = await query.ToPagedResultAsync(pageNumber, pageSize);
+
+                return pagedResult;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving filtered and paged records.", ex);
+            }
+        }
 
 
         // Get all Items in Paged list
@@ -51,18 +76,53 @@ namespace DataAccessLayer.GenericRepository
             try
             {
                 var query = Context.Set<T>().AsNoTracking()
-                                    .Where(e => EF.Property<bool>(e, "IsDeleted")== false)
-                                    .OrderBy(e => EF.Property<int>(e, "Id")); // Ensure ordering to avoid paging inconsistencies
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false)
+                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn")); // Ensure ordering to avoid paging inconsistencies
 
                 return await query.ToPagedResultAsync(pageNumber, pageSize);
             }
             catch (Exception ex)
-            
             {
                 throw new Exception("An error occurred while retrieving paged records.", ex);
             }
         }
 
+
+        // Get all Items in Paged list
+        public async Task<PagedResult<T>> GetAllPropertiesForUserPagedAsync(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+                                    .Where(e => EF.Property<bool>(e, "IsDeleted") == false &&
+                                                EF.Property<bool>(e, "IsAvailable") == true &&
+                                                EF.Property<bool>(e, "IsOccupied") == false)
+
+                                    .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
+
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
+        public async Task<PagedResult<T>> GetLatestPropertiesAsync(int count , int pageNumber, int pageSize)
+        {
+            // Fetch properties from the database and order by the CreatedOn property descending
+            try
+            {
+                var query = Context.Set<T>().AsNoTracking()
+           .Where(e => EF.Property<bool>(e, "IsAvailable") == true)
+           .OrderByDescending(e => EF.Property<DateTime>(e, "CreatedOn"));
+                return await query.ToPagedResultAsync(pageNumber, pageSize);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while retrieving paged records.", ex);
+            }
+        }
 
 
         // Get entities by name
@@ -147,34 +207,6 @@ namespace DataAccessLayer.GenericRepository
             }
         }
 
-        public async Task<bool> Terminate(Guid contractId)
-        {
-            try
-            {
-                // Retrieve the contract from the database using the contractId
-                var contract = await Context.Set<T>().FindAsync(contractId);
-
-                // Check if the contract exists
-                if (contract == null)
-                {
-                    return false; // Contract not found
-                }
-
-                // Use dynamic to access the IsDeleted property
-                var deletedEntity = contract as dynamic;
-                deletedEntity.IsDeleted = true; // Set IsDeleted to true
-                deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
-
-                // Save the changes to the database
-                await Context.SaveChangesAsync();
-
-                return true; // Indicate that the termination was successful
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred while terminating the contract with ID {contractId}.", ex);
-            }
-        }
 
 
         // Insert a new entity
@@ -227,6 +259,7 @@ namespace DataAccessLayer.GenericRepository
                     // Assuming the entity has an IsDeleted property
                     var deletedEntity = entity as dynamic; // Use dynamic to access the IsDeleted property
                     deletedEntity.IsDeleted = true; // Set IsDeleted to true
+                    deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
 
                     await SaveChangesAsync();
                 }
@@ -283,6 +316,7 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+
         // Method to get by unique property name
         public async Task<T> GetByUniqueAsync(string uniqueString, string propertyName)
         {
@@ -308,6 +342,8 @@ namespace DataAccessLayer.GenericRepository
         }
 
 
+
+
         public async Task VerifyUser(Guid Id)
         {
             try
@@ -316,7 +352,7 @@ namespace DataAccessLayer.GenericRepository
                 if (entity != null)
                 {
                     var deletedEntity = entity as dynamic;
-                    deletedEntity.IsVerified = true; 
+                    deletedEntity.IsVerified = true;
 
                     await SaveChangesAsync();
                 }
@@ -330,9 +366,6 @@ namespace DataAccessLayer.GenericRepository
                 throw new Exception($"An error occurred while Verifying for entity with ID {Id}.", ex);
             }
         }
-
-
-
 
         public async Task<bool> IsUserVerified(Guid Id)
         {
@@ -354,6 +387,118 @@ namespace DataAccessLayer.GenericRepository
             {
                 throw new Exception($"An error occurred while checking Verifecation of the user with ID {Id}.", ex);
             }
-        } 
+        }
+
+        public async Task Archive(Guid contractId)
+        {
+            // Find the contract by ID
+            var contract = await Context.Contracts.FindAsync(contractId);
+            if (contract == null)
+            {
+                throw new Exception("Contract not found.");
+            }
+
+            // Set the IsArchived property to true
+            contract.IsArcheives = true;
+
+            // Update the contract in the database
+            Context.Contracts.Update(contract);
+            await Context.SaveChangesAsync();
+        }
+
+
+
+        public async Task<PagedResult<T>> GetArchivedContractsAsync(int pageNumber, int pageSize)
+        {
+            // Ensure that the type T has an IsArchived property using reflection
+            var query = Context.Set<T>().Where(e => EF.Property<bool>(e, "IsArcheives") == true)
+                                         .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
+
+            return await query.ToPagedResultAsync(pageNumber, pageSize);
+        }
+
+        public async Task<PagedResult<T>> GetAcceptedContractsAsync(int pageNumber, int pageSize)
+        {
+            // Ensure that the type T has an IsArchived property using reflection
+            var query = Context.Set<T>()
+                .Where(e => EF.Property<bool>(e, "IsArcheives") == false &&
+                            EF.Property<bool>(e, "IsAccepted") == true &&
+                            EF.Property<bool>(e, "IsTerminated") == false)
+                .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
+            return await query.ToPagedResultAsync(pageNumber, pageSize);
+        }
+
+
+        public async Task<PagedResult<T>> GetTerminatedContractsAsync(int pageNumber, int pageSize)
+        {
+            // Ensure that the type T has an IsArchived property using reflection
+            var query = Context.Set<T>()
+                .Where(e => EF.Property<bool>(e, "IsTerminated") == true)
+                .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
+            return await query.ToPagedResultAsync(pageNumber, pageSize);
+        }
+
+
+
+        public async Task UnArchive(Guid contractId)
+        {
+            var contract = await Context.Contracts.FindAsync(contractId);
+            if (contract == null)
+            {
+                throw new Exception("Contract not found.");
+            }
+
+            // Set the IsArchived property to true
+            contract.IsArcheives = true;
+
+            // Update the contract in the database
+            Context.Contracts.Update(contract);
+            await Context.SaveChangesAsync();
+        }
+
+
+        public async Task Accept(Guid contractId)
+        {
+            // Find the contract by ID
+            var contract = await Context.Contracts.FindAsync(contractId);
+
+            if (contract == null)
+            {
+                throw new Exception("Contract not found.");
+            }
+            else
+            {
+                contract.IsAccepted = true;
+                contract.AcceptedOn = DateTime.Now;
+                Context.Contracts.Update(contract);
+
+                await Context.SaveChangesAsync();
+            }
+
+        }
+
+        public async Task<bool> Terminate(Guid contractId)
+        {
+            try
+            {
+                var contract = await Context.Set<T>().FindAsync(contractId);
+
+                if (contract == null)
+                {
+                    return false; // Contract not found
+                }
+
+                var deletedEntity = contract as dynamic;
+                deletedEntity.IsTerminated = true;
+
+                await Context.SaveChangesAsync();
+
+                return true; // Indicate that the termination was successful
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while terminating the contract with ID {contractId}.", ex);
+            }
+        }
     }
 }

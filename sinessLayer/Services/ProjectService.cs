@@ -2,6 +2,7 @@
 using BusinessLayer.DTOModels;
 using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
+using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services
 {
-    public class ProjectService
+    public class ProjectService : IProjectService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -23,8 +24,35 @@ namespace BusinessLayer.Services
         // Get all Projects
         public async Task<IQueryable<ProjectDTO>> GetAllProjectsAsync()
         {
-            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1,5);
+            var projects = await _unitOfWork.ProjectsRepository.GetAllAsync(1, 5);
             return _mapper.Map<IQueryable<ProjectDTO>>(projects);
+        }
+
+        public async Task<PagedResult<ProjectDTO>> GetAllProjectsAsync(int pageNumber, int pageSize)
+        {
+            var projectsPaged = await _unitOfWork.ProjectsRepository.GetAllPagedAsync(pageNumber, pageSize);
+
+            var ProjectDTOs = projectsPaged.Items.Select(project => new ProjectDTO
+            {
+                Id = project.Id,
+                ProjectName = project.ProjectName,
+                Description = project.Description,
+                StartDate = project.StartDate,
+                EndDate = project.EndDate,
+                Status = project.Status,
+                DeveloperCompanyId = project.DeveloperCompanyId,
+            }).ToList();
+
+
+
+
+            return new PagedResult<ProjectDTO>
+            {
+                Items = ProjectDTOs,
+                CurrentPage = projectsPaged.CurrentPage,
+                PageSize = projectsPaged.PageSize,
+                TotalRecords = projectsPaged.TotalRecords
+            };
         }
 
         // Get Project by ID
@@ -50,14 +78,20 @@ namespace BusinessLayer.Services
         // Update a project
         public async Task<ProjectDTO> UpdateProjectAsync(ProjectDTO projectDto)
         {
+            // Retrieve the existing project from the database
             var existingProject = await _unitOfWork.ProjectsRepository.GetByIdAsync(projectDto.Id);
             if (existingProject == null)
             {
                 throw new KeyNotFoundException($"Project with ID {projectDto.Id} not found.");
             }
-            var newproject =_mapper.Map<Project>(projectDto);
-            await _unitOfWork.ProjectsRepository.UpdateAsync(newproject);
+
+            // Map the changes from projectDto to the existing project instance
+            _mapper.Map(projectDto, existingProject);
+
+            // No need to call UpdateAsync here since the entity is already tracked
             await _unitOfWork.SaveAsync();
+
+            // Return the updated project DTO
             return _mapper.Map<ProjectDTO>(existingProject);
         }
 

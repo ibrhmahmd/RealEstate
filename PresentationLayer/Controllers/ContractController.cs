@@ -4,13 +4,14 @@ using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Evaluation;
 using Microsoft.Extensions.Logging;
 using PresentationLayer.helper;
 using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User, Admin")]
     public class ContractController : Controller
     {
         private readonly ContractService _contractService;
@@ -18,17 +19,20 @@ namespace PresentationLayer.Controllers
         private readonly PropertyService _propertyService;
         private readonly UserManager<User> _userManager;
         private readonly ILogger<ContractController> _logger;
+        private readonly PaymentService _paymentService;
 
         public ContractController(
             ContractService contractService,
             UserManager<User> userManager,
             PropertyService propertyService,
+            PaymentService paymentService,
             ILogger<ContractController> logger,
             UserService userService)
         {
             _contractService = contractService;
             _userManager = userManager;
             _propertyService = propertyService;
+            _paymentService = paymentService;
             _logger = logger;
             _userService = userService;
         }
@@ -53,42 +57,28 @@ namespace PresentationLayer.Controllers
         }
 
 
-
         public async Task<IActionResult> Create(Guid? propertyId)
         {
-            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim))
+            if (propertyId == null)
             {
-                _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
-                return Unauthorized();
+                return NotFound();
             }
 
-            var userid = Guid.Parse(userIdClaim);
-            var IsuserVerfied = await _userService.IsUserVerified(userid);
-
-            if (IsuserVerfied)
+            try
             {
-                if (propertyId == null)
-                {
-                    return NotFound();
-                }
-                try
-                {
-                    var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
-                    return View("~/Views/Contract/Create.cshtml", contractModel);
-                }
-                catch (KeyNotFoundException)
-                {
-                    _logger.LogWarning("Property with ID {PropertyId} not found.", propertyId);
-                    return NotFound();
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                    return View("~/Views/Contract/Create.cshtml", new ContractDTO { PropertyId = propertyId.Value });
-                }
+                var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
+                return View("~/Views/Contract/Create.cshtml", contractModel);
             }
-            return Unauthorized(ModelState);
+            catch (KeyNotFoundException)
+            {
+                _logger.LogWarning("Property with ID {PropertyId} not found.", propertyId);
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View("~/Views/Contract/Create.cshtml", new ContractDTO { PropertyId = propertyId.Value });
+            }
         }
 
 
@@ -102,30 +92,26 @@ namespace PresentationLayer.Controllers
             {
                 return BadRequest("Contract data is required.");
             }
-
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdClaim))
             {
                 _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
                 return Unauthorized();
             }
-
             var userid = Guid.Parse(userIdClaim);
             var IsuserVerfied = await _userService.IsUserVerified(userid);
-            
-            if (IsuserVerfied) 
-            {
-                contractDto.OccupantId = userid;
 
-                if (ModelState.IsValid)
+            contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
+
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
+                    if (contractDto.ContractDocument == null || contractDto.ContractDocument.Length == 0)
                     {
-                        if (contractDto.ContractDocument == null || contractDto.ContractDocument.Length == 0)
-                        {
-                            ModelState.AddModelError("ContractDocument", "Please upload a contract document.");
-                            return View(contractDto);
-                        }
+                        ModelState.AddModelError("ContractDocument", "Please upload a contract document.");
+                        return View(contractDto);
+                    }
 
                         var fileName = UploadFile.UploadImage("Contracts", contractDto.ContractDocument);
                         if (string.IsNullOrEmpty(fileName))
@@ -134,24 +120,39 @@ namespace PresentationLayer.Controllers
                             return View(contractDto);
                         }
 
-                        contractDto.Document = fileName;
-                        var createdContract = await _contractService.CreateContractAsync(contractDto);
-                        return RedirectToAction(nameof(Details), new { id = createdContract.Id });
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
-                        ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
-                        return View(contractDto);
-                    }
+                    contractDto.Document = fileName;
+                    var createdContract = await _contractService.CreateContractAsync(contractDto);
+                    return RedirectToAction(nameof(Details), new { id = createdContract.Id });
                 }
-
-                return View(contractDto);
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
+                    ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
+                    return View(contractDto);
+                }
             }
-            TempData["ErrorMessage"] = "You need to be Verified First";
 
-            return View(TempData);
+            // If we get here, something went wrong
+            return View(contractDto);
         }
+
+
+
+        public async Task<List<PaymentDTO>> ProcessPayments(ContractDTO contractDto)
+        {
+            try
+            {
+                var payments = await _paymentService.CreatePaymentsFromContractAsync(contractDto);
+                return payments;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing payments for contract {ContractId}.", contractDto.Id);
+                throw new Exception("An error occurred while processing payments: " + ex.Message, ex);
+            }
+        }
+
+
 
 
 
@@ -161,7 +162,6 @@ namespace PresentationLayer.Controllers
             {
                 return NotFound();
             }
-
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);
@@ -193,6 +193,14 @@ namespace PresentationLayer.Controllers
             {
                 try
                 {
+                    var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                    if (string.IsNullOrEmpty(userIdClaim))
+                    {
+                        _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                        return Unauthorized();
+                    }
+                    contractDto.UpdatedBy = Guid.Parse(userIdClaim);
+                    contractDto.UpdatedOn = DateTime.UtcNow;
                     await _contractService.UpdateContractAsync(contractDto);
                     return RedirectToAction(nameof(Details), new { id = contractDto.Id });
                 }
@@ -221,6 +229,14 @@ namespace PresentationLayer.Controllers
             try
             {
                 var contract = await _contractService.GetContractByIdAsync(id.Value);
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim))
+                {
+                    _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                    return Unauthorized();
+                }
+                contract.UpdatedBy = Guid.Parse(userIdClaim);
+                contract.UpdatedOn = DateTime.UtcNow;
                 var user = await _userManager.GetUserAsync(User);
                 if (contract.OccupantId != user?.Id)
                 {
@@ -235,34 +251,6 @@ namespace PresentationLayer.Controllers
                 return NotFound();
             }
         }
-
-        //[HttpPost, ActionName("EndContract")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> EndContractConfirmed(Guid id)
-        //{
-        //    try
-        //    {
-        //        await _contractService.EndContractAsync(id);
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch (KeyNotFoundException)
-        //    {
-        //        _logger.LogWarning("Contract with ID {Id} not found when attempting to end it.", id);
-        //        return NotFound();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error ending contract.");
-        //        ModelState.AddModelError("", $"Error ending contract: {ex.Message}");
-        //        return View();
-        //    }
-        //}
-
-        //public async Task<IActionResult> Index()
-        //{
-        //    var contracts = await _contractService.GetAllContractsAsync();
-        //    return View(contracts);
-        //}
     }
 
 }

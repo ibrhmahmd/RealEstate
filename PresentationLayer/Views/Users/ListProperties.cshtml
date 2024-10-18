@@ -1,7 +1,7 @@
-﻿@model List<BusinessLayer.DTOModels.PropertyDTO>
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
 @{
     ViewData["Title"] = "Property List";
-    ViewData["ActionName"] = "Properties";
+    ViewData["ActionName"] = "Property";
     Layout = "~/Views/Shared/UserLayout.cshtml";
 }
 
@@ -9,119 +9,163 @@
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/custom-styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
-        .sidebar {
-            width: 80px;
-            height: 80vh;
-            position: fixed;
-            left: 0;
-            top: 0;
-        }
-
-        .sidebar-icon {
-            width: 50px;
-            height: 50px;
-        }
-
-        .custom-green {
-            background-color: rgb(46,202,106);
-        }
-
-     
-    </style>
 }
 
 @section content {
-    <br />
-    <br />
-
     <div class="flex min-h-screen">
-    <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
-        <a asp-controller="users" asp-action="ListProperties" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-            <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" alt="Home" />
-        </a>
-        <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-            <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" alt="User" />
-        </a>
-        <a asp-controller="users" asp-action="ListContracts"  class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-            <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" alt="Chat" />
-        </a>
+        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="~/assets/img/house.png" width="27px" title="List Of Properties" alt="Property" />
+            </a>
+            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="~/assets/img/partnership.png" width="27px" title="List Of Contracts" alt="Contract" />
+            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="admin" asp-action="listusers" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                    <img src="~/assets/img/back.png" width="25px" title="Back To User List" alt="Contract" />
+                </a>
+            }
 
-        <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
-            <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
-        </a>
-    </aside>
+        </aside>
 
-    <div class="container">
+
+        <div class="flex-1 p-6 ml-20">
+
             <h2 class="header-title" style="color:darkgreen;">User Properties</h2>
-        <div class="container table-container">
-            @if (Model == null || !Model.Any())
+            <br />
+            @if (Model.Items.Any())
             {
-                <div class="alert alert-success" role="alert">
-                    No properties found for this user.
+                <div class="header-container">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
                 </div>
             }
-            else
-            {
-                <table class="table table-hover table-bordered" id="PropertyTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Location</th>
-                            <th>Description</th>
-                            <th>Area</th>
-                            <th>Price</th>
-                            <th>Type</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody id="Table">
-                        @foreach (var property in Model)
-                        {
-                            <tr>
-                                <td>@property.Name</td>
-                                <td>@property.Location</td>
-                                <td>@property.Description</td>
-                                <td>@property.Area</td>
-                                <td>@property.Price</td>
-                                <td>@property.Type</td>
-                                <td>
-                                    <a asp-action="ShowProperty" asp-controller="Users" asp-route-Id="@property.Id" class="btn btn-custom btn-details" aria-label="View details for @property.Name">
-                                        <i class="fas fa-info-circle"></i> Details
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center">
-                    @* Add your pagination logic here *@
-                </div>
-            }
-
-            <!-- Back Button -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
+            <section class="bg-white rounded shadow-md p-6">
                 <div>
-                    <a asp-action="profile" asp-controller="account" class="ml-auto custom-green text-white rounded px-4 py-2">
-                        <i class="fas fa-rotate-back"></i> Back
-                    </a>
+                    @if (!Model.Items.Any())
+                    {
+                        <div class="alert alert-success" role="alert">
+                            No properties found for this user.
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-bordered" id="PropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Project</th>
+                                    <th>Area</th>
+                                    <th>Price</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="Table">
+                                @foreach (var property in Model.Items)
+                                {
+                                    <tr onclick="location.href='@Url.Action("ShowProperty", "Users", new { Id = property.Id })'" style="cursor: pointer;">
+                                        <td>@property.Name</td>
+                                        <td>@property.Location</td>
+                                        <td>@property.PropertyProject</td>
+                                        <td>@property.Area</td>
+                                        <td>@property.Price</td>
+                                        <td>@property.Type</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <div class="d-flex justify-content-between align-items-center">
+                        @if (User.IsInRole("User"))
+                        {
+                            <div>
+                                <a asp-action="Profile" asp-controller="Account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                                    <i class="fas fa-rotate-back"></i> Back
+                                </a>
+                            </div>
+                        }
+
+
+
+
+                        @{
+                            int maxVisiblePages = 2; // Number of pages to show around the current page
+                            int startPage = Math.Max(1, Model.PageNumber - maxVisiblePages);
+                            int endPage = Math.Min(Model.TotalPages, Model.PageNumber + maxVisiblePages);
+                        }
+
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous Button -->
+                            <li class="page-item @(Model.PageNumber > 1 ? "" : "disabled")">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize" aria-label="Previous page">Previous</a>
+                            </li>
+
+                            <!-- First Page with Ellipsis -->
+                            @if (startPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
+                                </li>
+                            }
+
+                            <!-- Pages Around Current Page -->
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                </li>
+                            }
+
+                            <!-- Last Page with Ellipsis -->
+                            @if (endPage < Model.TotalPages)
+                            {
+                                @if (endPage < Model.TotalPages - 1)
+                                {
+                                    <li class="page-item disabled">
+                                        <span>...</span>
+                                    </li>
+                                }
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@Model.TotalPages" asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                </li>
+                            }
+
+                            <!-- Next Button -->
+                            <li class="page-item @(Model.PageNumber < Model.TotalPages ? "" : "disabled")">
+                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize" aria-label="Next page">Next</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
-    </div>
-    <br />
 }
 
 @section scripts {
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#PropertyTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+
+                // Show message if no results found
+                if (!$('#PropertyTable tbody tr:visible').length) {
+                    $('#PropertyTable tbody').append('<tr><td colspan="6">No properties found.</td></tr>');
+                }
+            });
+        });
+    </script>
 }
+

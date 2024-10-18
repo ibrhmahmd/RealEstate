@@ -10,6 +10,9 @@ namespace BusinessLayer.DTOModels
         [Required, StringLength(100)]
         public string Name { get; set; }
         public Guid? ProjectId { get; set; }
+        public virtual Project? Project { get; set; }
+        public List<Project> Projects { get; set; } = new List<Project>();
+        public string? PropertyProject { get; set; }
         public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
@@ -40,7 +43,10 @@ namespace BusinessLayer.DTOModels
         public string? Description { get; set; }
 
         [MaxLength(50)]
-        public string? Location { get; set; } // Address -{State, City, PostalCode?}
+        public string? Location { get; set; }
+        public Guid? AddressId { get; set; } // Foreign key to Address
+        public virtual Address? Address { get; set; }
+        public List<Address> Locations { get; set; } = new List<Address>();
 
 
         [Required]

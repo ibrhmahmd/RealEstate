@@ -16,7 +16,8 @@ namespace DataAccessLayer.Entities
 
         public bool IsDeleted { get; set; }
         public DateTime DeletedOn { get; set; }
-
+        public string Role { get; set; } // Add this property if it's not present
+        public DateTime CreatedOn { get; set; }
         public bool? IsVerified { get; set; }
         public string? UserPictureUrl { get; set; }
 

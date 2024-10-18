@@ -15,19 +15,27 @@ namespace DataAccessLayer.Entities
         public string? Name { get; set; }
 
         [MaxLength(200)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string? PropertyPictureUrl { get; set; }
 
         [NotMapped]
         public IFormFile? PropertyPicture { get; set; }
 
+
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
    
 
         [MaxLength(50)]
-        public string Location { get; set; }
+        public string? Location { get; set; }
+        public Guid? AddressId { get; set; } // Foreign key to Address
+        public virtual Address? Address { get; set; }
+        public List<Address> Locations { get; set; } = new List<Address>();
+        public Guid? ProjectId { get; set; }
+        public virtual Project? Project { get; set; }
+        public List<Project> Projects { get; set; } = new List<Project>();
+        public string? PropertyProject { get; set; }
         [Required]
         public string Type { get; set; }  // e.g., Apartment, House, Commercial
 
@@ -45,7 +53,6 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public bool IsOccupied { get; set; }
-
         public int? Longitude { get; set; }
         public int? Latitude { get; set; }
 

@@ -1,6 +1,3 @@
-@{
-    Layout = "_Layout";
-}
 
 <main class="main">
 
@@ -10,8 +7,10 @@
             <div class="container">
                 <div class="row d-flex justify-content-center text-center">
                     <div class="col-lg-8">
-                        <h1>ADMIN</h1>
-                        <p class="mb-0"></p>
+                        <h1>Admin Dashboard</h1>
+                        <p class="mb-0">
+                            Manage users, contracts, properties, and more through a centralized and efficient platform.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -20,14 +19,11 @@
             <div class="container">
                 <ol>
                     <li><a href="index.html">Home</a></li>
-                    <li class="current">Services</li>
+                    <li class="current">Admin Services</li>
                 </ol>
             </div>
         </nav>
     </div><!-- End Page Title -->
-    <!-- Logout Button -->
-
-
     <!-- Services Section -->
     <section id="services" class="services section">
         <div class="container">
@@ -39,9 +35,9 @@
                             <i class="bi bi-activity"></i>
                         </div>
                         <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
-                            <h3>Users</h3>
+                            <h3>User Management</h3>
                         </a>
-                        <p>List All Users.</p>
+                        <p>Maintain complete control over user accounts with tools to add, edit, or deactivate users. Manage roles and permissions efficiently to ensure secure and seamless operations.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -51,9 +47,9 @@
                             <i class="bi bi-broadcast"></i>
                         </div>
                         <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
-                            <h3>Contracts</h3>
+                            <h3>Contract Management</h3>
                         </a>
-                        <p>View Contracts.</p>
+                        <p>Easily access, review, and update contracts in one place. Stay on top of renewals, compliance, and active agreements with minimal effort.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -63,9 +59,9 @@
                             <i class="bi bi-easel"></i>
                         </div>
                         <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
-                            <h3>Properties</h3>
+                            <h3>Property Management</h3>
                         </a>
-                        <p>CRUD on Properties</p>
+                        <p>Streamline property administration with intuitive tools to create, update, and manage property listings, ensuring all records remain current and organized.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -75,9 +71,9 @@
                             <i class="bi bi-bounding-box-circles"></i>
                         </div>
                         <a href="@Url.Action("ListPayments", "Admin")" class="stretched-link">
-                            <h3>Payments</h3>
+                            <h3>Payment Reports</h3>
                         </a>
-                        <p>Payments Reports.</p>
+                        <p>Track and manage financial transactions efficiently. Generate comprehensive reports on rental income, sales payments, and other revenue streams to ensure transparency.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -86,10 +82,10 @@
                         <div class="icon">
                             <i class="bi bi-calendar4-week"></i>
                         </div>
-                        <a href="service-details.html" class="stretched-link">
-                            <h3>Velit Doloremque</h3>
+                        <a href="@Url.Action("DeveloperList", "Admin")" class="stretched-link">
+                            <h3>Developer Management</h3>
                         </a>
-                        <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
+                        <p>Manage developer partnerships by maintaining accurate records and monitoring their projects. Streamline communication and ensure timely project progress.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -98,17 +94,15 @@
                         <div class="icon">
                             <i class="bi bi-chat-square-text"></i>
                         </div>
-                        <a href="service-details.html" class="stretched-link">
-                            <h3>Dolori Architecto</h3>
+                        <a href="@Url.Action("ProjectList", "Admin")" class="stretched-link">
+                            <h3>Project Management</h3>
                         </a>
-                        <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
+                        <p>Oversee real estate projects from inception to completion. Manage timelines, resources, and milestones to ensure projects are delivered on time and within budget.</p>
                     </div>
                 </div><!-- End Service Item -->
 
             </div>
-
         </div>
-
-    </section><!-- /Services Section -->
+    </section><!-- End Services Section -->
 
 </main>

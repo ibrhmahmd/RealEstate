@@ -17,7 +17,6 @@ namespace BusinessLayer.DTOModels
 
         [StringLength(50)]
         public string? ReferenceNumber { get; set; }  // Optional reference number for tracking
-
         public bool? IsLate { get; set; } = false;
 
         [Range(0, double.MaxValue, ErrorMessage = "Late fee must be a positive value.")]

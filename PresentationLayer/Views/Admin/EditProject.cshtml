@@ -1,0 +1,116 @@
+﻿@model BusinessLayer.DTOModels.ProjectDTO
+@{
+    ViewData["Title"] = "Edit";
+    ViewData["ActionName"] = "Project List";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@section Styles {
+    <link rel="stylesheet" href="~/assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/custom-styles.css" />
+    <style>
+        .custom-card-container {
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .custom-dropdown {
+            width: 100%;
+            padding: 8px 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background-color: #fff;
+            font-size: 16px;
+            color: #495057;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+            .custom-dropdown:focus {
+                border-color: #80bdff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                outline: none;
+            }
+
+            .custom-dropdown option {
+                padding: 10px;
+            }
+
+        /* Optional: Customize label styling */
+        .control-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+    </style>
+}
+
+@section content {
+
+    <!-- Page Title -->
+    <br />
+
+   
+    <div class="row justify-content-center">
+        <div class="col-md-6 custom-card-container">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Edit Project</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditProject" asp-controller="Admin" method="post">
+
+
+                        <!-- Property Details Fields -->
+                        <div class="mb-3">
+                            <label asp-for="ProjectName" class="form-label">Project Name</label>
+                            <input asp-for="ProjectName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">Description</label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="StartDate" class="form-label">Start Date</label>
+                            <input asp-for="StartDate" type="date" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="EndDate" class="form-label">End Date</label>
+                            <input asp-for="EndDate" class="form-control" type="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label">Status</label>
+                            <input asp-for="Status" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DeveloperCompanyId" class="control-label">DeveloperCompany</label>
+                            <select asp-for="DeveloperCompanyId" class="custom-dropdown" asp-items="@(new SelectList(ViewBag.depts, "Id", "CompanyName"))"></select>
+                        </div>
+
+
+
+
+                        <!-- Save Property Button -->
+                        <button type="submit" class="btn btn-success">Update Project</button>
+                        <a style="margin-left:495px" asp-action="ProjectList" asp-controller="Admin" class="btn btn-success">
+                            <i class="fas fa-rotate-back"></i> Back
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+}
+
+@section scripts {
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+}
