@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20241014132016_DescriptionNullable")]
-    partial class DescriptionNullable
+    [Migration("20241015131327_createdonforuser")]
+    partial class createdonforuser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,9 +70,9 @@ namespace DataAccessLayer.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d741d14b-c19a-4ba6-9f8e-bd15c3aeb595"),
+                            Id = new Guid("4859c63a-e6b8-40bb-b1db-676727ac1bc8"),
                             City = "Cairo",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -82,9 +82,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4a4266ff-6561-4509-9659-41248ebd4684"),
+                            Id = new Guid("fc15513c-a753-49cc-846c-1c3025961ff2"),
                             City = "Alexandria",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -94,9 +94,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a413d87d-a84b-4537-b4ef-a945ad77e902"),
+                            Id = new Guid("9a647d10-adab-46a8-983f-b4e49f9f7f26"),
                             City = "Giza",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -106,9 +106,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9744c8c0-9384-4224-8b4b-29d2761d5cd7"),
+                            Id = new Guid("8c9d8823-7635-4fa1-9a85-8e2cd37cfbe4"),
                             City = "Benha",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -118,9 +118,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("aea7d2e0-0c0e-4a2a-866b-35873ba9e736"),
+                            Id = new Guid("24230dc5-1163-4f82-b87f-0f78b6bd5850"),
                             City = "Mansoura",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -130,9 +130,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3995d304-6f14-4bc8-aa27-deb220097998"),
+                            Id = new Guid("4dd139e1-6c0b-4ec4-ad0d-c47b93a21573"),
                             City = "Damietta",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -142,9 +142,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("e4808bd2-e0ce-4972-8848-e69fa7618d25"),
+                            Id = new Guid("09617ba0-f86e-470c-a2b9-dc3f4930e6c0"),
                             City = "Port Said",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -154,9 +154,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c65382f6-410d-4a3b-a77f-614a214d6872"),
+                            Id = new Guid("bd88f5d6-8b54-4efa-b92c-9c6ea93caefb"),
                             City = "Ismailia",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -166,9 +166,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("747ef39d-d8b4-4dcf-a0a7-21c63fcf8bec"),
+                            Id = new Guid("795e765d-2803-408b-b79d-b252c3e84b7c"),
                             City = "Zagazig",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -178,9 +178,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("156a7d8e-a52d-423e-a2f1-dd43fbb4c112"),
+                            Id = new Guid("7d853d19-50be-4578-86dd-9d382397b6bf"),
                             City = "Kafr El Sheikh",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -190,9 +190,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("2d4ba94e-25e2-4f5a-a214-534e972c1921"),
+                            Id = new Guid("e555d5f2-4933-44df-a2f6-8a35ff45bcf0"),
                             City = "Tanta",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -202,9 +202,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("dd739034-9f45-4b85-9982-3fc761d051c7"),
+                            Id = new Guid("fd47ac7c-c817-449a-9f84-f0d5e5f2cc87"),
                             City = "Shibin El Kom",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -214,9 +214,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("f88c7b4e-9f7d-4091-9732-6f73cf5ef43c"),
+                            Id = new Guid("93761b72-7bed-41d4-8383-519cb13e865a"),
                             City = "Beni Suef",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -226,9 +226,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cfb3f009-47c3-4a41-9241-01e6e48e8e62"),
+                            Id = new Guid("0c8c862f-e439-4072-b0f4-bcc09eac8eba"),
                             City = "Fayoum",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -238,9 +238,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("13d1f239-1ac0-4c02-ba80-457e0e099e00"),
+                            Id = new Guid("ea75b9fd-ad30-4b9b-a32f-1e25f08067a6"),
                             City = "Asyut",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -250,9 +250,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("3b9e2589-7827-4fd8-91e5-bdc6bf1fbb1b"),
+                            Id = new Guid("50961ccc-3595-417a-bf9e-68db5d3c4b1c"),
                             City = "Sohag",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -262,9 +262,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("4f7f74e5-02f9-422c-9e72-ec7ae9e9171e"),
+                            Id = new Guid("39145557-f723-42ce-8e30-22402504a4d2"),
                             City = "Qena",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -274,9 +274,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bf365485-13f9-4f3a-a138-83c19ca3ccc5"),
+                            Id = new Guid("3691f76c-f7ee-463e-a8ac-38d9936b8b21"),
                             City = "Luxor",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -286,9 +286,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("81483128-ca3a-4f51-9da7-c5f52ec2eea1"),
+                            Id = new Guid("77ed15e5-6e23-433a-9bdb-fb57260c693b"),
                             City = "Aswan",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -298,9 +298,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("ea40de84-d1e3-4a7c-8a37-a4868a40352f"),
+                            Id = new Guid("ecf80894-9101-4c2e-acd2-4f8441816e13"),
                             City = "Hurghada",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -310,9 +310,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0a6da93a-4ad3-4a21-b5fa-be75910fdd79"),
+                            Id = new Guid("32f80993-5a00-4c16-bdc2-16897d765754"),
                             City = "Sharm El Sheikh",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -322,9 +322,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("561b12ef-8ae8-4d0e-8c66-027d69f08847"),
+                            Id = new Guid("7761b4c0-adb5-4dcf-bb68-9d82dc9b804c"),
                             City = "Arish",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -334,9 +334,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("293972ee-f104-4125-abde-cd86bfcd0677"),
+                            Id = new Guid("53ccd59d-f0ee-4327-b651-fb742bbba16d"),
                             City = "Marsa Matruh",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -346,9 +346,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("0b2bec22-74cb-42a3-991d-21e8c4785438"),
+                            Id = new Guid("7fe1c649-c931-4e21-be68-c453975ee92a"),
                             City = "Kharga",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -358,9 +358,9 @@ namespace DataAccessLayer.Migrations
                         },
                         new
                         {
-                            Id = new Guid("42162484-7a8a-4ac2-924f-d95b22d0ca59"),
+                            Id = new Guid("d676918b-ee84-467e-98e7-3f1034fe3830"),
                             City = "Suez",
-                            CreatedBy = new Guid("cdd94ce7-5654-4914-9168-f34d2e3342b3"),
+                            CreatedBy = new Guid("09dca139-5edf-48bb-a92d-23aeaf998dbf"),
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DeletedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
@@ -766,6 +766,9 @@ namespace DataAccessLayer.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");

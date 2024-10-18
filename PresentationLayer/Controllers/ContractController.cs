@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace PresentationLayer.Controllers
 {
-    //[Authorize(Roles = "User, Admin")]
+    [Authorize(Roles = "User, Admin")]
     public class ContractController : Controller
     {
         private readonly ContractService _contractService;
@@ -59,28 +59,34 @@ namespace PresentationLayer.Controllers
 
         public async Task<IActionResult> Create(Guid? propertyId)
         {
-            if (propertyId == null)
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
             {
-                return NotFound();
+                _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
+                return Unauthorized();
             }
 
-            try
+            var userid = Guid.Parse(userIdClaim);
+            var IsuserVerfied = await _userService.IsUserVerified(userid);
+            if (IsuserVerfied)
             {
-                var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
-                return View("~/Views/Contract/Create.cshtml", contractModel);
+                if (propertyId == null)
+                {
+                    return NotFound();
+                }
+                try
+                {
+                    var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
+                    return View("~/Views/Contract/Create.cshtml", contractModel);
+                }
+                catch (KeyNotFoundException)
+                {
+                    _logger.LogWarning("Property with ID {PropertyId} not found.", propertyId);
+                    return NotFound();
+                }
             }
-            catch (KeyNotFoundException)
-            {
-                _logger.LogWarning("Property with ID {PropertyId} not found.", propertyId);
-                return NotFound();
-            }
-            catch (InvalidOperationException ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                return View("~/Views/Contract/Create.cshtml", new ContractDTO { PropertyId = propertyId.Value });
-            }
+            return Unauthorized();
         }
-
 
 
 
@@ -99,44 +105,50 @@ namespace PresentationLayer.Controllers
                 _logger.LogWarning("User ID claim not found or invalid. Claim: {UserIdClaim}", userIdClaim);
                 return Unauthorized();
             }
+            var userid = Guid.Parse(userIdClaim);
+            var IsuserVerfied = await _userService.IsUserVerified(userid);
 
-            contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
-            contractDto.Id = Guid.NewGuid();
-            if (ModelState.IsValid)
+            if (IsuserVerfied)
             {
-                try
+                contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
+                contractDto.Id = Guid.NewGuid();
+                if (ModelState.IsValid)
                 {
-                    if (contractDto.ContractDocument == null || contractDto.ContractDocument.Length == 0)
+                    try
                     {
-                        ModelState.AddModelError("ContractDocument", "Please upload a contract document.");
+                        if (contractDto.ContractDocument == null || contractDto.ContractDocument.Length == 0)
+                        {
+                            ModelState.AddModelError("ContractDocument", "Please upload a contract document.");
+                            return View(contractDto);
+                        }
+
+                        var fileName = UploadFile.UploadImage("Contracts", contractDto.ContractDocument);
+                        if (string.IsNullOrEmpty(fileName))
+                        {
+                            ModelState.AddModelError("ContractDocument", "Failed to upload the contract document. Please try again.");
+                            return View(contractDto);
+                        }
+
+                        contractDto.Document = fileName;
+                        contractDto.CreatedOn = DateTime.Now;
+                        contractDto.CreatedBy = Guid.Parse(userIdClaim);
+                        await _contractService.CreateContractAsync(contractDto);
+                        var payments = await ProcessPayments(contractDto);
+
+                        return View("ReviewContractPayments", payments);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
+                        ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
                         return View(contractDto);
                     }
-
-                    var fileName = UploadFile.UploadImage("Contracts", contractDto.ContractDocument);
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        ModelState.AddModelError("ContractDocument", "Failed to upload the contract document. Please try again.");
-                        return View(contractDto);
-                    }
-
-                    contractDto.Document = fileName;
-                    contractDto.CreatedOn = DateTime.Now;
-                    contractDto.CreatedBy = Guid.Parse(userIdClaim);
-                    await _contractService.CreateContractAsync(contractDto);
-                    var payments = await ProcessPayments(contractDto);
-
-                    return View("ReviewContractPayments", payments);
-
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
-                    ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
-                    return View(contractDto);
-                }
+                // If we get here, something went wrong
+                return View(contractDto);
             }
-            // If we get here, something went wrong
-            return View(contractDto);
+            TempData["ErrorMessage"] = "You need to be Verified First";
+            return View(TempData);
         }
 
 

@@ -18,10 +18,19 @@ namespace PresentationLayer.Controllers
             _propertyService = propertyService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var latestProperties = await _propertyService.GetLatestPropertiesAsync(3);
+
+            var viewModel = new PagedListViewModel<PropertyDTO>
+            {
+                Items = latestProperties.Items,
+                TotalRecords = latestProperties.TotalRecords
+            };
+
+            return View(viewModel);
         }
+
 
         public IActionResult About()
         {

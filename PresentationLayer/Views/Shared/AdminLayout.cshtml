@@ -211,6 +211,7 @@
                     <li><a href="@Url.Action("Agents", "Home")">Agents</a></li>
                     <li><a href="@Url.Action("Contact", "Home")">Contact</a></li>
                     <li><a href="@Url.Action("About", "Home")">About</a></li>
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         <!-- Links for authenticated users -->

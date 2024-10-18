@@ -6,10 +6,12 @@ using DataAccessLayer.GenericRepository;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -62,6 +64,47 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<PagedResult<UserDTO>> GetOwners(int pageNumber, int pageSize)
+        {
+            // Define the filter to get users that have contracts with ContractType == "Ownership"
+            Expression<Func<User, bool>> filter = user =>
+                                                  user.Contracts.Any(contract => contract.ContractType == "Ownership");
+
+            var pagedUsers = await _unitOfWork.UserRepository.GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var userDTOs = _mapper.Map<List<UserDTO>>(pagedUsers.Items);
+
+            // Return the paginated result of UserDTOs
+            return new PagedResult<UserDTO>
+            {
+                Items = userDTOs,
+                CurrentPage = pagedUsers.CurrentPage,
+                PageSize = pagedUsers.PageSize,
+                TotalRecords = pagedUsers.TotalRecords
+            };
+        }
+
+        public async Task<PagedResult<UserDTO>> GetRenters(int pageNumber, int pageSize)
+        {
+            // Define the filter to get users that have contracts with ContractType == "Ownership"
+            Expression<Func<User, bool>> filter = user =>
+                                                  user.Contracts.Any(contract => contract.ContractType == "Lease");
+
+            var pagedUsers = await _unitOfWork.UserRepository.GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var userDTOs = _mapper.Map<List<UserDTO>>(pagedUsers.Items);
+
+            // Return the paginated result of UserDTOs
+            return new PagedResult<UserDTO>
+            {
+                Items = userDTOs,
+                CurrentPage = pagedUsers.CurrentPage,
+                PageSize = pagedUsers.PageSize,
+                TotalRecords = pagedUsers.TotalRecords
+            };
+        }
+
+
 
         // Get all users including soft deleted
         public async Task<List<User>> GetAllUsersIncludingDeletedAsync()
@@ -80,7 +123,6 @@ namespace BusinessLayer.Services
             }
             return user; // Return the user entity directly
         }
-
 
 
 
@@ -376,27 +418,31 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task<bool> IsUserVerified(Guid Id)
+        {
+            var userVerificationState = await _unitOfWork.UserRepository.IsUserVerified(Id);
+            return userVerificationState;
+        }
+
 
         public async Task<(List<PropertyDTO> properties, int totalItems)> GetUserPropertiesAsync(Guid userId, int pageNumber, int pageSize)
         {
-            var propertiesQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)
-                .Join(_context.Properties,
-                      contract => contract.PropertyId,
-                      property => property.Id,
-                      (contract, property) => property)
+            // Define the filter expression to select contracts by userId
+            Expression<Func<Contract, bool>> filter = contract => contract.OccupantId == userId;
+
+            var pagedContracts = await _unitOfWork.ContractsRepository
+                .GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var propertyIds = pagedContracts.Items.Select(c => c.PropertyId).ToList();
+
+            var propertiesQuery = _context.Properties
+                .Where(p => propertyIds.Contains(p.Id) && p.IsOccupied == true)
                 .AsQueryable();
 
-            // Get total item count for pagination
-            var totalItems = await propertiesQuery.CountAsync();
+            var totalItems = pagedContracts.TotalRecords;
 
-            // Apply pagination using Skip and Take
-            var properties = await propertiesQuery
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var properties = await propertiesQuery.ToListAsync();
 
-            // Map the properties to PropertyDTO
             var propertyDTOs = properties.Select(p => new PropertyDTO
             {
                 Id = p.Id,
@@ -413,32 +459,33 @@ namespace BusinessLayer.Services
             return (propertyDTOs, totalItems);
         }
 
+
         public async Task<(List<ContractDTO> Contracts, int TotalItems)> GetUserContractsAsync(Guid userId, int pageNumber, int pageSize)
         {
-            var contractsQuery = _context.Contracts
-                .Where(c => c.OccupantId == userId)
-                .Include(c => c.Agent)
-                .AsQueryable();
 
-            var totalItems = await contractsQuery.CountAsync();
+            Expression<Func<Contract, bool>> filter = contract => contract.OccupantId == userId && contract.IsAccepted == true;
 
-            var contracts = await contractsQuery
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var pagedContracts = await _unitOfWork.ContractsRepository
+                .GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var contracts = pagedContracts.Items;
 
             var contractDTOs = contracts.Select(c => new ContractDTO
             {
                 Id = c.Id,
                 ContractType = c.ContractType,
-                AgentId = c.AgentId,
                 EndDate = c.EndDate,
                 TotalAmount = c.TotalAmount,
                 PropertyLocation = c.PropertyLocation,
             }).ToList();
 
+            var totalItems = pagedContracts.TotalRecords;
+
             return (contractDTOs, totalItems);
         }
+
+
+
 
         public async Task<(List<PropertyDTO> properties, int totalItems)> GetOwnedPropertiesAsync(Guid userId, int pageNumber, int pageSize)
         {
@@ -470,6 +517,8 @@ namespace BusinessLayer.Services
                 Type = p.Type,
             }).ToList(), totalItems);
         }
+
+
 
         public async Task<(List<PropertyDTO> properties, int totalItems)> GetLeasedPropertiesAsync(Guid userId, int pageNumber, int pageSize)
         {

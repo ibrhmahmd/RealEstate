@@ -12,7 +12,6 @@ namespace BusinessLayer.MappingProfiles
             // Define mapping between User and UserDTO
             CreateMap<User, UserDTO>()
                     .ReverseMap();
-            //CreateMap<UserDTO, User>();
 
             CreateMap<Property, PropertyDTO>();
             CreateMap<PropertyDTO, Property>();

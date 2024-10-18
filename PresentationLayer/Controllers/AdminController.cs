@@ -66,7 +66,6 @@ namespace PresentationLayer.Controllers
 
                 return View(pagedListViewModel);
             }
-
             return Unauthorized();
         }
         public async Task<IActionResult> ContractDetails(Guid id)
@@ -104,6 +103,49 @@ namespace PresentationLayer.Controllers
             return Unauthorized();
         }
 
+        [HttpGet]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> ListOwners(int pageNumber = 1, int pageSize = 10)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var pagedUsers = await _userService.GetOwners(pageNumber, pageSize);
+
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<UserDTO>
+                {
+                    Items = pagedUsers.Items,
+                    PageNumber = pagedUsers.CurrentPage,
+                    PageSize = pagedUsers.PageSize,
+                    TotalRecords = pagedUsers.TotalRecords
+
+                };
+                return View("ListUsers",viewModel);
+            }
+            return Unauthorized();
+        }
+
+        [HttpGet]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> ListRenters(int pageNumber = 1, int pageSize = 10)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                var pagedUsers = await _userService.GetRenters(pageNumber, pageSize);
+
+                // Pass the paginated result to the view model
+                var viewModel = new PagedListViewModel<UserDTO>
+                {
+                    Items = pagedUsers.Items,
+                    PageNumber = pagedUsers.CurrentPage,
+                    PageSize = pagedUsers.PageSize,
+                    TotalRecords = pagedUsers.TotalRecords
+
+                };
+                return View("ListUsers", viewModel);
+            }
+            return Unauthorized();
+        }
 
         public async Task<IActionResult> ListContracts(int pageNumber = 1, int pageSize = 10)
         {
@@ -240,6 +282,7 @@ namespace PresentationLayer.Controllers
                 propertyDto.PropertyPictureUrl = fileName;
             }
 
+
             // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
             {
@@ -301,6 +344,7 @@ namespace PresentationLayer.Controllers
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
+       
             else
             {
                 // If no new picture is uploaded, keep the existing URL
