@@ -45,18 +45,26 @@
         <br />
         <!-- Sidebar -->
         <aside style="margin-left:10px; margin-top:120px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
-            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img  src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
-            </a>
+
+            @if(User.IsInRole("User"))
+            {
+                <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                    <img src="~/assets/img/house.png" width="27px" title="List Of Properties" alt="Property" />
+                </a>
+                <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                    <img src="~/assets/img/user.png" width="25px" title="Update Profile" alt="User" />
+                </a>
+                <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                    <img src="~/assets/img/partnership.png" width="27px" title="List Of Contracts" alt="Contract" />
+                </a>
+            }
+            else if(User.IsInRole("Admin"))
+            {
             <a asp-controller="users" asp-action="Edit" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/user.png" title="Update Profile" alt="User" />
-            </a>
-            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.Id" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
-            </a>
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
-            </a>
+                    <img src="~/assets/img/user.png" width="25px" title="Update Profile" alt="User" />
+			</a>
+            }
+
         </aside>
 
         <!-- Main Content Area -->

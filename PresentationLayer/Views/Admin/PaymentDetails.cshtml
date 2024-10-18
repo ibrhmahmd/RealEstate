@@ -32,7 +32,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Property Details</h1>
+            <h1 class="header-title" style="color:darkgreen">Payment Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -57,49 +57,52 @@
                                 }
                             }
                         </script>
-                        <div class="swiper-wrapper align-items-center">
-                            <div class="swiper-slide">
-                                <embed src="@Url.Content("~/properties/payment/"  + "#toolbar=0")" width="800px" height="740px" type="application/pdf" />
+
+                        <br />
+
+                    </div>
+                    <div style="width:1250px" class="col-lg-20" data-aos="fade-up" data-aos-delay="100">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Quick Summary</h3>
                             </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethod</li>
+                                    <li class="list-group-item"><strong>Reference Number:</strong> @Model.ReferenceNumber</li>
+                                    <li class="list-group-item"><strong>Late Fee:</strong> @Model.LateFee</li>
+                                    <li class="list-group-item"><strong>Status:</strong> @Model.Status</li>
+                                    <li class="list-group-item"><strong>Amount :</strong> @Model.Amount</li>
+                                    <li class="list-group-item"><strong>Payment Date:</strong> @Model.PaymentDate</li>
+                                    <li class="list-group-item"><strong>Property Name:</strong> </li>
 
+                                </ul>
+
+                            </div>
                         </div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-pagination"></div>
+                        <br />
+                        <a asp-action="Listpayments" style="margin-left:490px" asp-controller="Admin" class="btn btn-success  ">Back To List</a>
+                        <button class="btn btn-success" 
+                        onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Admin",
+                        new {PaymentMethod = Model.PaymentMethod,
+                             ReferenceNumber = Model.ReferenceNumber,
+                             LateFee = Model.LateFee,
+                             Status = Model.Status,
+                             Amount = Model.Amount,
+                             PaymentDate = Model.PaymentDate,})'" class="pdf-viewer">
+                            <i class="bi bi-download"></i>  Download invoice
+                        </button>
+                        <br />
+                        <br />
                     </div>
-                    <br />
-
-                </div>
-                <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Quick Summary</h3>
-                        </div>
-                        <div class="card-body">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethod</li>
-                                <li class="list-group-item"><strong>Reference Number:</strong> @Model.ReferenceNumber</li>
-                                <li class="list-group-item"><strong>Late Fee:</strong> @Model.LateFee</li>
-                                <li class="list-group-item"><strong>Status:</strong> @Model.Status</li>
-                                <li class="list-group-item"><strong>Amount :</strong> @Model.Amount</li>
-                                <li class="list-group-item"><strong>Payment Date:</strong> @Model.PaymentDate</li>
-                                <li class="list-group-item"><strong>Property Name:</strong> </li>
-            
-                            </ul>
-
-                        </div>
-                    </div>
-                    <br />
-                    <a asp-action="Listpayments" style="margin-left:100px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
                 </div>
             </div>
         </div>
-    </div>
 
 }
 
 @section Scripts {
-    <!-- Add your JS scripts here -->
-    <script src="~/assets/js/property-details.js"></script>
+        <!-- Add your JS scripts here -->
+        <script src="~/assets/js/property-details.js"></script>
 
 }
