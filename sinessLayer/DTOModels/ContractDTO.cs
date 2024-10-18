@@ -13,20 +13,18 @@ namespace BusinessLayer.DTOModels
 		public Guid PropertyId { get; set; }
 
 		[Required]
-		public Guid OccupantId { get; set; } // Renamed UserID to TenantId
+		public Guid OccupantId { get; set; } 
 
-		public Guid? AgentId { get; set; } // Optional agent who reviewed the contract
+		public Guid? AgentId { get; set; } 
 
 		[Required]
-		public Guid PaymentMethodId { get; set; } // Foreign Key for PaymentMethod
-
+		public Guid PaymentMethodId { get; set; } 
 
 		public virtual ICollection<Payment>? Payments { get; set; } // Payments associated with the contract
 
 		// Additional Contract Information
 		[Required]
 		public DateTime StartDate { get; set; } = DateTime.Now;
-
 
 		public DateTime EndDate { get; set; } = DateTime.Now.AddMonths(6);
 
@@ -50,19 +48,14 @@ namespace BusinessLayer.DTOModels
 
 		[Required]
 		public decimal LateFee { get; set; } // Late payment fee
-
 		public bool? IsTerminated { get; set; } = false; // Indicates whether the contract is terminated
         public bool IsArcheives { get; set; } = false;
         public bool IsFurnished { get; set; } = false; // Is the property furnished?
-
         public bool IsAccepted { get; set; } = false;
         public DateTime AcceptedOn { get; set; }
 
-
-
         [Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property
-
 
 		[Range(0, 20)]
 		public int Rooms { get; set; } // Number of rooms in the property

@@ -29,30 +29,11 @@ namespace BusinessLayer.Services
         {
             var propertiesPaged = await _unitOfWork.PropertiesRepository.GetAllPagedAsync(pageNumber, pageSize);
 
-            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
-            {
-                Id = property.Id,
-                Name = property.Name,
-                PropertyPictureUrl = property.PropertyPictureUrl,
-                Location = property.Location,
-                Description = property.Description,
-                Area = property.Area,
-                Status = property.Status,
-                PropertyProject=property.PropertyProject,
-                Price = property.Price,
-                AddressId = property.AddressId,
-                Locations = property.Locations,
-                Type = property.Type,
-            }).ToList();
+            var propertiesPagedDto = _mapper.Map<PagedResult<PropertyDTO>>(propertiesPaged);
 
-            return new PagedResult<PropertyDTO>
-            {
-                Items = propertyDTOs,
-                CurrentPage = propertiesPaged.CurrentPage,
-                PageSize = propertiesPaged.PageSize,
-                TotalRecords = propertiesPaged.TotalRecords
-            };
+            return propertiesPagedDto;
         }
+
 
         public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
         {

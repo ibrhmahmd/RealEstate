@@ -64,6 +64,47 @@ namespace BusinessLayer.Services
             };
         }
 
+        public async Task<PagedResult<UserDTO>> GetOwners(int pageNumber, int pageSize)
+        {
+            // Define the filter to get users that have contracts with ContractType == "Ownership"
+            Expression<Func<User, bool>> filter = user =>
+                                                  user.Contracts.Any(contract => contract.ContractType == "Ownership");
+
+            var pagedUsers = await _unitOfWork.UserRepository.GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var userDTOs = _mapper.Map<List<UserDTO>>(pagedUsers.Items);
+
+            // Return the paginated result of UserDTOs
+            return new PagedResult<UserDTO>
+            {
+                Items = userDTOs,
+                CurrentPage = pagedUsers.CurrentPage,
+                PageSize = pagedUsers.PageSize,
+                TotalRecords = pagedUsers.TotalRecords
+            };
+        }
+
+        public async Task<PagedResult<UserDTO>> GetRenters(int pageNumber, int pageSize)
+        {
+            // Define the filter to get users that have contracts with ContractType == "Ownership"
+            Expression<Func<User, bool>> filter = user =>
+                                                  user.Contracts.Any(contract => contract.ContractType == "Lease");
+
+            var pagedUsers = await _unitOfWork.UserRepository.GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            var userDTOs = _mapper.Map<List<UserDTO>>(pagedUsers.Items);
+
+            // Return the paginated result of UserDTOs
+            return new PagedResult<UserDTO>
+            {
+                Items = userDTOs,
+                CurrentPage = pagedUsers.CurrentPage,
+                PageSize = pagedUsers.PageSize,
+                TotalRecords = pagedUsers.TotalRecords
+            };
+        }
+
+
 
         // Get all users including soft deleted
         public async Task<List<User>> GetAllUsersIncludingDeletedAsync()
@@ -82,7 +123,6 @@ namespace BusinessLayer.Services
             }
             return user; // Return the user entity directly
         }
-
 
 
 

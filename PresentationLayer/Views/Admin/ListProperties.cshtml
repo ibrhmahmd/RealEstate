@@ -32,19 +32,22 @@
                         <th>Area</th>
                         <th>Price</th>
                         <th>Type</th>
+                        <th>Current state </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody id="Table">
                     @foreach (var property in Model.Items)
                     {
-                        <tr>
+                        <tr onclick="location.href='@Url.Action("ShowProperty", "Admin", new { Id = property.Id })'" style="cursor: pointer;">
                             <td>@property.Name</td>
                             <td>@property.Location</td>
                             <td>@property.PropertyProject</td>
                             <td>@property.Area</td>
                             <td>@property.Price</td>
                             <td>@property.Type</td>
+                            <td>@(property.IsOccupied ? "Occupied" : "Free")</td>
+
                             <td>
                                 <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
                                     <i class="fas fa-edit"></i> Edit
@@ -52,9 +55,6 @@
                                 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal" data-id="@property.Id">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
-                                <a asp-action="ShowProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-custom btn-details">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </a>
                             </td>
                         </tr>
                     }
@@ -180,34 +180,36 @@
                             <div class="icon">
                                 <i class="bi bi-activity"></i>
                             </div>
-                            <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
+                            <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                                 <h3>Users</h3>
                             </a>
-                            <p>List All Users.</p>
+                            <p>Manage Contracts.</p>
                         </div>
-                    </div><!-- End Service Item -->
+                    </div>
+                    <!-- End Service Item -->
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                         <div class="service-item position-relative">
                             <div class="icon">
                                 <i class="bi bi-broadcast"></i>
                             </div>
-                            <a href="service-details.html" class="stretched-link">
+                            <a href="@Url.Action("DeveloperList", "Admin")" class="stretched-link">
                                 <h3>Contracts</h3>
                             </a>
-                            <p>View Contracts.</p>
+                            <p>Real Estate Developers.</p>
                         </div>
-                    </div><!-- End Service Item -->
+                    </div>
+                    <!-- End Service Item -->
 
                     <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                         <div class="service-item position-relative">
                             <div class="icon">
                                 <i class="bi bi-easel"></i>
                             </div>
-                            <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
-                                <h3>Properties</h3>
+                            <a href="@Url.Action("ProjectList", "Admin")" class="stretched-link">
+                                <h3>Real Estate Projects</h3>
                             </a>
-                            <p>CRUD on Properties</p>
+                            <p></p>
                         </div>
                     </div><!-- End Service Item -->
                 </div>

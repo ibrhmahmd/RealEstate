@@ -27,7 +27,7 @@
                             <th>Email</th>
                             <th>Phone Number</th>
                             <th>Verified</th>
-                            <th>Deleted</th>
+                            <th>Role</th>
                             <th>Delete</th>
                             <th>Details</th>
                         </tr>
@@ -45,11 +45,7 @@
                                         @(item.IsVerified.HasValue ? (item.IsVerified.Value ? "Verified" : "Not Verified") : "Unknown")
                                     </span>
                                 </td>
-                                <td>
-                                    <span class="status-label @(item.IsDeleted ? "status-deleted" : "status-active")">
-                                        @(item.IsDeleted ? "Deleted" : "Active")
-                                    </span>
-                                </td>
+                                <td>@item.Role</td>
                                 <td>
                                     <a asp-action="Delete" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-custom btn-delete">
                                         <i class="fas fa-trash"></i> Delete
@@ -163,30 +159,30 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-activity"></i></div>
-                        <a href="@Url.Action("ListUsers", "Admin")" class="stretched-link">
-                            <h3>Users</h3>
+                        <a href="@Url.Action("ListOwners", "Admin")" class="stretched-link">
+                            <h3>Owners</h3>
                         </a>
-                        <p>List All Users.</p>
+                        <p>Manage Owners</p>
                     </div>
                 </div><!-- End Service Item -->
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-broadcast"></i></div>
-                        <a href="service-details.html" class="stretched-link">
-                            <h3>Contracts</h3>
+                        <a href="@Url.Action("ListRenters", "Admin")" class="stretched-link">
+                            <h3>Renters</h3>
                         </a>
-                        <p>View Contracts.</p>
+                        <p>Manage Renters.</p>
                     </div>
                 </div><!-- End Service Item -->
 
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="service-item position-relative">
                         <div class="icon"><i class="bi bi-easel"></i></div>
-                        <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                             <h3>Properties</h3>
                         </a>
-                        <p>CRUD on Properties</p>
+                        <p>Manage Contracts</p>
                     </div>
                 </div><!-- End Service Item -->
             </div>
