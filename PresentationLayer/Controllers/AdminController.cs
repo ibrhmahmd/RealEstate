@@ -12,6 +12,9 @@ using PresentationLayer.Models;
 using System.Drawing.Printing;
 using DataAccessLayer.Entities;
 using System.Security.Claims;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.Globalization;
 namespace PresentationLayer.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -48,8 +51,67 @@ namespace PresentationLayer.Controllers
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
         }
+        public IActionResult GeneratePaymentPDF(PaymentDTO payment)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                Document pdfDoc = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
 
+                // Add PDF title with styling
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 20, BaseColor.DarkGray);
+                pdfDoc.Add(new Paragraph("Invoice", titleFont));
+                pdfDoc.Add(new Paragraph("\n")); // Add space
 
+                // Add company information (optional)
+                var companyFont = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.Black);
+                pdfDoc.Add(new Paragraph("Estate Agency", companyFont));
+                pdfDoc.Add(new Paragraph("123 Real Estate St.", companyFont));
+                pdfDoc.Add(new Paragraph("City, Country", companyFont));
+                pdfDoc.Add(new Paragraph("Phone: +123 456 7890", companyFont));
+                pdfDoc.Add(new Paragraph("Email: info@estateagency.com", companyFont));
+                pdfDoc.Add(new Paragraph("\n")); // Add space
+
+                // Add Payment Details Table
+                PdfPTable table = new PdfPTable(2);
+                table.WidthPercentage = 100;
+                table.SetWidths(new float[] { 1, 2 });
+
+                // Add table headers
+                AddCellToTable(table, "Payment Method:", true);
+                AddCellToTable(table, payment.PaymentMethod);
+                AddCellToTable(table, "Reference Number:", true);
+                AddCellToTable(table, payment.ReferenceNumber);
+                AddCellToTable(table, "Late Fee:", true);
+                AddCellToTable(table, payment.LateFee?.ToString("C", new CultureInfo("en-EG")));
+                AddCellToTable(table, "Total Amount:", true);
+                AddCellToTable(table, payment.Amount.ToString("C", new CultureInfo("en-EG")));
+                AddCellToTable(table, "Payment Date:", true);
+                AddCellToTable(table, payment.PaymentDate.ToShortDateString());
+
+                pdfDoc.Add(table); // Add table to the PDF
+
+                // Add footer
+                pdfDoc.Add(new Paragraph("\nThank you for your business!", companyFont));
+
+                pdfDoc.Close();
+
+                return File(stream.ToArray(), "application/pdf", "PaymentDetails.pdf");
+            }
+        }
+
+        private void AddCellToTable(PdfPTable table, string text, bool isHeader = false)
+        {
+            var font = isHeader ? FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.White) : FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.Black);
+            var cell = new PdfPCell(new Phrase(text, font))
+            {
+                BackgroundColor = isHeader ? BaseColor.Gray : BaseColor.White,
+                Padding = 5,
+                Border = Rectangle.BOX
+            };
+            table.AddCell(cell);
+        }
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 10)
         {

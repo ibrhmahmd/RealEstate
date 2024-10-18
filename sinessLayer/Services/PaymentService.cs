@@ -39,7 +39,6 @@ namespace BusinessLayer.Services
                 Amount = payment.Amount,
                 ContractId = payment.ContractId,
                 PaymentMethod = payment.PaymentMethod,
-
                 Status = payment.Status,
 
 
