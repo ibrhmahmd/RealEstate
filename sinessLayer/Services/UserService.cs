@@ -121,8 +121,64 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
+             var UserDto = new UserDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                UserPictureUrl = user.UserPictureUrl,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.Role,
+                IsVerified = user.IsVerified,
+            };
             return user; // Return the user entity directly
         }
+
+
+        public async Task<string> ChangeUserRole(Guid userId, string newRole)
+        {
+            // Fetch the user by ID
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {userId} not found.");
+            }
+
+            // Get current roles of the user
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove the user from current roles (if any)
+            if (currentRoles.Any())
+            {
+                var removeFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeFromRolesResult.Succeeded)
+                {
+                    throw new InvalidOperationException("Could not remove user from current roles.");
+                }
+            }
+
+            // Add the user to the new role
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, newRole);
+            if (!addToRoleResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Could not add user to the role {newRole}");
+            }
+
+            user.Role = newRole;  
+            await _unitOfWork.UserRepository.UpdateAsync(user); 
+
+            await _unitOfWork.SaveAsync();
+
+            var confirmedRoles = await _userManager.GetRolesAsync(user);
+            if (!confirmedRoles.Contains(newRole))
+            {
+                throw new InvalidOperationException($"User role did not change to {newRole}. Current role(s): {string.Join(", ", confirmedRoles)}");
+            }
+
+            // Return the new role instead of UserDTO
+            return newRole;
+        }
+
 
 
 

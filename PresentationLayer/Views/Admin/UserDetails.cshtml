@@ -102,16 +102,22 @@
                         <label class="block text-gray-600 mb-1">Email</label>
                         <div class="w-full border rounded p-2 bg-gray-100">@Model.Email</div>
                     </div>
+
+                    <!-- User role in Boxes -->
                     <div>
                         <label class="block text-gray-600 mb-1">Role</label>
-                        <div class="w-full border rounded p-2 bg-gray-100">
-                            <select asp-for="Role"  required style="border: none; width: 635px; background-color: transparent; outline: none; font-size: 16px; ;">
+                        <div class="flex items-center w-full border rounded bg-gray-100 p-2">
+                            <select id="role" name="role" required class="flex-grow bg-transparent outline-none text-base" style="width: auto;">
                                 <option value="User">User</option>
                                 <option value="Admin">Admin</option>
                             </select>
-                            <span asp-validation-for="Role" class="text-danger"></span>
+                            <button id="saveRoleBtn" style="display:none;" class="ml-2 custom-green text-white rounded px-4 py-2 hover:bg-green-600 transition duration-300">
+                                Save Role
+                            </button>
                         </div>
+                        <input type="hidden" name="userId" value="@Model.Id" />
                     </div>
+
                 </div>
 
                 <!-- Email Address Section -->
@@ -131,3 +137,42 @@
 
 </body>
 </html>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#role').change(function () {
+                // Show the save role button when the role is changed
+                $('#saveRoleBtn').show();
+            });
+
+            $('#saveRoleBtn').click(function () {
+                var userId = $("input[name='userId']").val();
+                var role = $('#role').val();
+
+                // Send AJAX request to change the user role
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ChangeUserRole", "Admin")',
+                    data: {
+                        userId: userId,
+                        role: role
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message); // Show success message
+                            $('#saveRoleBtn').hide(); // Hide the button after successful change
+                        } else {
+                            alert(response.message); // Show error message
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle AJAX errors
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+}
