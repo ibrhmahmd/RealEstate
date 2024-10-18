@@ -112,6 +112,7 @@ namespace PresentationLayer.Controllers
             };
             table.AddCell(cell);
         }
+
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 10)
         {

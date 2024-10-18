@@ -82,18 +82,16 @@
                         </div>
                         <br />
                         <a asp-action="Listpayments" style="margin-left:490px" asp-controller="Admin" class="btn btn-success  ">Back To List</a>
-                        <button class="btn btn-success" onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Admin", new {
-    PaymentMethod = Model.PaymentMethod,
-    ReferenceNumber = Model.ReferenceNumber,
-    LateFee = Model.LateFee,
-    Status = Model.Status,
-    Amount = Model.Amount,
-    PaymentDate = Model.PaymentDate,
-})'" class="pdf-viewer">
+                        <button class="btn btn-success" 
+                        onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Admin",
+                        new {PaymentMethod = Model.PaymentMethod,
+                             ReferenceNumber = Model.ReferenceNumber,
+                             LateFee = Model.LateFee,
+                             Status = Model.Status,
+                             Amount = Model.Amount,
+                             PaymentDate = Model.PaymentDate,})'" class="pdf-viewer">
                             <i class="bi bi-download"></i>  Download invoice
                         </button>
-
-
                         <br />
                         <br />
                     </div>
