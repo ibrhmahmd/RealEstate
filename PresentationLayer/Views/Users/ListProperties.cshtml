@@ -17,7 +17,7 @@
 
 @section content {
     <div class="flex min-h-screen">
-        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center
+        <aside style="margin-left:10px; margin-top:160px; height:532px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
 
             <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/home.png" title="List Of Properties" alt="Property" />
@@ -25,9 +25,11 @@
             <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
-            <a href="#" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center">
-                <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings" />
+            <a asp-controller="admin" asp-action="listusers"  class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="https://img.icons8.com/ios-glyphs/30/000000/chat.png" title="List Of Contracts" alt="Contract" />
             </a>
+
+
         </aside>
 
 
