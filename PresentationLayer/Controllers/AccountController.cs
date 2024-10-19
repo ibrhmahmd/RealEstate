@@ -144,11 +144,14 @@ namespace PresentationLayer.Controllers
         // Method to create an admin user for seeding
         public async Task<IActionResult> SeedAdminUser()
         {
-            var email = "admin@a.com";
+            var email = "Admin@admin.com";
+            var Username = "First Admin";
             var password = "admin";
             var role = "Admin";
-
-            var result = await _userService.RegisterUserAsync(email, password, role);
+            var phonenumber = "123456789";
+            var user = new User { UserName = Username , Email = email, Role= role, PasswordHash = password, PhoneNumber = phonenumber, CreatedOn = DateTime.Now, IsVerified =true};
+            await _userService.CreateUserAsync(user);
+            var result = await _userService.RegisterUserAsync(Username, email, password, role);
 
             if (result) 
             {
@@ -202,14 +205,14 @@ namespace PresentationLayer.Controllers
             return View(users); // If model state is invalid, return the same view with DTO data
         }
 
-        public IActionResult Profile(User users)
+        public async Task<IActionResult> Profile(User users)
         {
             if (users.UserPicture != null)
             {
                 var fileName = UploadFile.UploadImage("userpicture", users.UserPicture);
                 users.UserPictureUrl = fileName;
             }
-            var user = _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
+            var user = await _userService.GetCurrentUser(User); // Passing the ClaimsPrincipal to fetch the user
 
             if (user == null)
             {

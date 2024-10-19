@@ -221,7 +221,7 @@ namespace BusinessLayer.Services
         }
 
 
-        public User GetCurrentUser(ClaimsPrincipal userPrincipal)
+        public async Task<User> GetCurrentUser(ClaimsPrincipal userPrincipal)
         {
             // Get the user ID from the claims
             var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -235,7 +235,7 @@ namespace BusinessLayer.Services
             if (Guid.TryParse(userId, out Guid parsedUserId))
             {
                 // Fetch the user from the database using the parsed Guid userId
-                return _context.Users.SingleOrDefault(e => e.Id == parsedUserId);
+                return await _unitOfWork.UserRepository.GetByIdAsync(parsedUserId);
             }
 
             return null; // If the userId cannot be parsed to Guid, return null
@@ -397,29 +397,23 @@ namespace BusinessLayer.Services
             return $"{Convert.ToBase64String(salt)}.{hashed}";
         }
 
-
-        public async Task<bool> RegisterUserAsync(string email, string password, string role)
+        public async Task<bool> RegisterUserAsync(string userName, string email, string password, string role)
         {
-            // Create the user
-            var user = new User { Email = email, UserName = email };
+            var user = new User { Email = email, UserName = userName, Role = role};
 
             // Hash the password using the custom hashing method
             user.PasswordHash = HashPassword(password);
             user.SecurityStamp = Guid.NewGuid().ToString();
-
             // Create the user
 
+            // Create the user
             await CreateUserAsync(user);
 
             var result = await GetUserByIdAsync(user.Id);
             var insertionOK = false;
 
-            if (result != user)
-                insertionOK = false;
-            else
-            {
-                insertionOK = true;
-            }
+            if (result != user) insertionOK = false;
+            else insertionOK = true;
 
 
             if (insertionOK)

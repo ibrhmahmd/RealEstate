@@ -134,6 +134,7 @@ namespace PresentationLayer.Controllers
 
             try
             {
+                var currentUser = await _userService.GetCurrentUser(User);
                 var updatedRole = await _userService.ChangeUserRole(userId, role);
                 return Json(new { success = true, message = "User role updated successfully.", role = updatedRole });
             }
