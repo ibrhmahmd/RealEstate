@@ -382,12 +382,17 @@ namespace PresentationLayer.Controllers
             }
 
             // Handle property image upload.
-            if (propertyDto.PropertyPicture != null)
+            if (propertyDto.PropertyPicture != null && propertyDto.PropertyPicture.Length > 0)
             {
+                // Upload the image and get the file name.
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
-                propertyDto.PropertyPictureUrl = fileName;
+                propertyDto.PropertyPictureUrl = fileName; 
             }
-
+            else
+            {
+                // No file uploaded, set default image path.
+                propertyDto.PropertyPictureUrl = "~/Properties/PropertyPicture/default.jpg"; 
+            }
 
             // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
@@ -501,6 +506,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
+            if (user.Email == "Admin@admin.com") return View("~/Views/Account/AccessDenied.cshtml");
             return View(user);
         }
 

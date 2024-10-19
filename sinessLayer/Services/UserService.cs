@@ -121,7 +121,7 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
-             var UserDto = new UserDTO
+            var UserDto = new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -164,8 +164,8 @@ namespace BusinessLayer.Services
                 throw new InvalidOperationException($"Could not add user to the role {newRole}");
             }
 
-            user.Role = newRole;  
-            await _unitOfWork.UserRepository.UpdateAsync(user); 
+            user.Role = newRole;
+            await _unitOfWork.UserRepository.UpdateAsync(user);
 
             await _unitOfWork.SaveAsync();
 
@@ -283,6 +283,9 @@ namespace BusinessLayer.Services
         public async Task SoftDeleteUserAsync(Guid id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            if (user.Email == "Admin@admin.com")
+                throw new InvalidOperationException("Deleting the primary administrator account is not allowed.");
+
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
@@ -399,7 +402,7 @@ namespace BusinessLayer.Services
 
         public async Task<bool> RegisterUserAsync(string userName, string email, string password, string role)
         {
-            var user = new User { Email = email, UserName = userName, Role = role};
+            var user = new User { Email = email, UserName = userName, Role = role };
 
             // Hash the password using the custom hashing method
             user.PasswordHash = HashPassword(password);
