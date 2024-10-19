@@ -195,7 +195,7 @@ namespace BusinessLayer.Services
             {
                 user.PasswordHash = HashPassword(user.PasswordHash);
             }
-
+            if (user.Role == null) user.Role = "User";
             user.SecurityStamp = Guid.NewGuid().ToString();
 
             // Check if the role exists, if not create it

@@ -109,6 +109,8 @@ namespace PresentationLayer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(User user)
         {
+            if (user.Role == null) user.Role = "User";
+
             if (ModelState.IsValid)
             {
                 try
@@ -157,7 +159,6 @@ namespace PresentationLayer.Controllers
             {
                 return Ok("Admin user seeded successfully.");
             }
-
             return BadRequest("Failed to seed admin user.");
         }
         [HttpGet("{Id}")]
