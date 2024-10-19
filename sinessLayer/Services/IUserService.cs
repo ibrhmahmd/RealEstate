@@ -9,9 +9,10 @@ namespace BusinessLayer.Services
     {
         Task<User> AuthenticateUserAsync(string email, string password);
         Task<User> CreateUserAsync(User user);
+
         Task<PagedResult<UserDTO>> GetAllUsersAsync(int pageNumber, int pageSize);
         Task<List<User>> GetAllUsersIncludingDeletedAsync();
-        User GetCurrentUser(ClaimsPrincipal userPrincipal);
+        Task<User> GetCurrentUser(ClaimsPrincipal userPrincipal);
         Task<(List<PropertyDTO> properties, int totalItems)> GetLeasedPropertiesAsync(Guid userId, int pageNumber, int pageSize);
         Task<(List<PropertyDTO> properties, int totalItems)> GetOwnedPropertiesAsync(Guid userId, int pageNumber, int pageSize);
         Task<User> GetUserByIdAsync(Guid id);
@@ -19,7 +20,8 @@ namespace BusinessLayer.Services
         Task<(List<PropertyDTO> properties, int totalItems)> GetUserPropertiesAsync(Guid userId, int pageNumber, int pageSize);
         Task<List<string>> GetUserRolesAsync(Guid userId);
         Task HardDeleteUserAsync(Guid id);
-        Task<bool> RegisterUserAsync(string email, string password, string role);
+        Task<bool> RegisterUserAsync(string userName, string email, string password, string role);
+
         Task RestoreUserAsync(Guid id);
         Task SoftDeleteUserAsync(Guid id);
         Task<User> UpdateUserAsync(User user);
