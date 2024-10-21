@@ -68,30 +68,10 @@ namespace PresentationLayer.Controllers
         {
             return View();
         }
-        [HttpGet]
+
         public IActionResult Contact()
         {
-            return View(new ContactFormViewModel()); // Initialize the view model
-        }
-        [HttpPost]
-        public async Task<IActionResult> Contact(ContactFormViewModel contact)
-        {
-            if (ModelState.IsValid)
-            {
-              
-                var result = await contact.SendMailAsync("mariaammaagdy22@gmail.com", "2410203mm");
-                if (result)
-                {
-                    // Optionally redirect or display a success message
-                    ViewBag.Message = "Your message has been sent successfully.";
-                }
-                else
-                {
-                    ModelState.AddModelError("", "Unable to send email. Please try again.");
-                }
-            }
-
-            return View(contact); // Return the view with the model to display validation errors
+            return View(); // Initialize the view model
         }
 
         public IActionResult Privacy()
