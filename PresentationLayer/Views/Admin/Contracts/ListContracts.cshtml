@@ -27,8 +27,8 @@
                 <thead>
                     <tr>
                         <th>Type</th>
-@*                         <th>Agent</th>
- *@                        <th>End Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
 						<th>Total Amount</th>
 						<th>Terminated</th>
 						<th>Location</th>
@@ -40,8 +40,8 @@
                     {
                         <tr>
                             <td>@contract.ContractType</td>
-@*                             <td>@contract.AgentId</td>
- *@                            <td>@contract.EndDate</td>
+                            <td>@contract.StartDate.ToShortDateString()</td>
+                            <td>@contract.EndDate.ToShortDateString()</td>
                             <td>@contract.TotalAmount</td>
                             <td>@contract.IsTerminated</td>
                             <td>@contract.PropertyLocation</td>
