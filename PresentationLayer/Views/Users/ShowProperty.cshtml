@@ -64,7 +64,7 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img">
+                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';">
 
                             </div>
 
@@ -99,7 +99,8 @@
                         </div>
                     </div>
                     <br />
-                    <a asp-action="ListProperties" style="margin-left:85px" asp-controller="Users" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
+                    <a asp-action="ListProperties" style="margin-left:85px" asp-controller="Users" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value"
+                       class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
 
 
 
