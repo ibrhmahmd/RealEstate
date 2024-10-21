@@ -74,8 +74,8 @@
                                     <tr onclick="location.href='@Url.Action("ContractDetails", "Users", new { Id = contract.Id })'"
                                         style="cursor: pointer;">
                                         <td>@contract.ContractType</td>
-                                        <td>@contract.StartDate.ToString("dd/MM/yyyy")</td>
-                                        <td>@contract.EndDate.ToString("dd/MM/yyyy")</td> <!-- Shorten date format -->
+                                        <td>@contract.StartDate.ToShortDateString()</td>
+                                        <td>@contract.EndDate.ToShortDateString()</td>
                                         <td>
                                             @(contract.TotalAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG")) )
                                         </td> <!-- Formats as currency -->

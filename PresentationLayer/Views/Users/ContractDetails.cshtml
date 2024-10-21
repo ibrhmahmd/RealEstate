@@ -98,12 +98,8 @@
                     </div>
                     <br />
 
-
-<<<<<<< HEAD
-                    <a asp-action="ListContracts" style="margin-left:85px" asp-controller="Users" asp-route-id="@Model.OccupantId" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
-=======
                     <a asp-action="ListContracts" style="margin-left:85px" asp-controller="Users" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
->>>>>>> 18c31c0355aed3c2dd0d1a1bcd6a97dc257f6157
+
                 </div>
             </div>
         </div>

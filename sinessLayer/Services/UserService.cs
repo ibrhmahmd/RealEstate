@@ -527,6 +527,7 @@ namespace BusinessLayer.Services
             {
                 Id = c.Id,
                 ContractType = c.ContractType,
+                StartDate = c.StartDate,
                 EndDate = c.EndDate,
                 TotalAmount = c.TotalAmount,
                 PropertyLocation = c.PropertyLocation,
