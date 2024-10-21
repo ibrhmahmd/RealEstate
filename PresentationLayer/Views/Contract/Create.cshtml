@@ -2,7 +2,22 @@
 @{
     ViewBag.Title = "Create Contract";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool IsOwnership = Model.ContractType == "Ownership";
+
 }
+
+<style>
+
+    .custom-green {
+        background-color: rgb(46,202,106);
+        border: none;
+    }
+
+        .custom-green:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s;
+        }
+</style>
 
 <div class="container mt-5">
     <br />
@@ -10,8 +25,18 @@
     <br />
     <br />
     <h2 class="text-center">Open New Contract</h2>
+
+    <div class="text-center mb-4">
+        <a asp-action="DownloadContractFile" asp-controller="Contract"
+           class="btn custom-green text-white rounded px-5 py-2 transition duration-300"
+           style="width: 100%; max-width: 300px;">
+            Review Contract Terms
+        </a>
+    </div>
+
     <hr />
     <p class="text-muted text-center">Please fill in the details for the new contract.</p>
+
 
     @using (Html.BeginForm("Create", "Contract", FormMethod.Post, new { @id = "contractForm", @class = "row", enctype = "multipart/form-data" }))
     {
@@ -20,28 +45,69 @@
         @Html.HiddenFor(model => model.PropertyId)
         @Html.HiddenFor(model => model.OccupantId)
         @Html.HiddenFor(model => model.PropertyLocation)
+        @Html.HiddenFor(model => model.PropertyName)
         @Html.HiddenFor(model => model.ContractType)
+        @Html.HiddenFor(model => model.TotalAmount)
+        @Html.HiddenFor(model => model.Period)
+
+
 
         <div class="col-md-6">
             <h4>Date and Financial Information</h4>
-
-            <!-- Start Date: Editable field -->
+            <!-- Start Date: Month and Year -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.StartDate, new { @class = "form-label" })
-                @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") })
+                <label for="StartDateMonth" class="form-label">Starting In</label>
+                <div class="d-flex">
+                    <select id="StartDateMonth" name="StartDateMonth" class="form-control me-2">
+                        @for (int month = 1; month <= 12; month++)
+                        {
+                            var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+                            var isSelected = month == Model.StartDate.Month ? "selected" : "";
+                            <option value="@month" isSelected>@monthName</option>
+                        }
+                    </select>
+                    <input type="number" id="StartDateYear" name="StartDateYear" class="form-control"
+                           min="2024" value="@Model.StartDate.Year" required />
+                </div>
                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
             </div>
 
-            <!-- End Date: Editable field -->
+
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.EndDate, new { @class = "form-label" })
-                @Html.TextBoxFor(model => model.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddMonths(6).ToString("yyyy-MM-dd") })
+                <label for="EndDateMonth" class="form-label">Ending In</label>
+                <div class="d-flex">
+                    <select id="EndDateMonth" name="EndDateMonth" class="form-control me-2">
+                        @for (int month = 1; month <= 12; month++)
+                        {
+                            <option value="@month">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)</option>
+                        }
+                    </select>
+                    @if (IsOwnership)
+                    {
+                        <!-- Display End Date as a label styled like the text box -->
+                        <div class="form-control" style="background-color: white; border: 1px solid #ced4da; padding: 0.375rem 0.75rem;">
+                            @Model.EndDate.ToString("yyyy")
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Editable End Date field -->
+                        <input type="number" id="EndDateYear" name="EndDateYear" class="form-control" min="2024" required placeholder="Year" />
+                    }
+                </div>
                 @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+
+            <!--  Period: Display only -->
+            <div class="form-group mb-3">
+                <label for="Period" class="form-label">Period</label>
+                @Html.HiddenFor(model => model.Period)
+                <div class="form-control">@Model.Period Months</div>
             </div>
 
             <!-- Initial Payment: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.InitialPayment, new { @class = "form-label" })
+                <label for="InitialPayment" class="form-label">Initial Payment</label>
                 <div class="form-control">
                     @(Model.InitialPayment?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")
                 </div>
@@ -50,67 +116,90 @@
 
             <!-- Recurring Payment Amount: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.RecurringPaymentAmount, new { @class = "form-label" })
+                @{ 
+                    if (IsOwnership)
+                    {
+                        <label for="RecurringPaymentAmount" class="form-label">Quarterly Payment</label>
+                    }
+                    else
+                    {
+                        <label for="RecurringPaymentAmount" class="form-label">Monthly Payment</label>
+                    }
+                }
                 <div class="form-control">
                     @(Model.RecurringPaymentAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG")) ?? "N/A")
                 </div>
                 @Html.HiddenFor(model => model.RecurringPaymentAmount)
             </div>
 
-
-
             <!-- Late Fee: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.LateFee, new { @class = "form-label" })
+                <label for="LateFee" class="form-label">Late Fee 10% (if applicable)</label>
                 <div class="form-control">@Model.LateFee.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
             </div>
+
+            <!-- Total Amount: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.TotalAmount, new { @class = "form-label" })
+                <label for="TotalAmount" class="form-label">Total Contract Paymnets</label>
                 <div class="form-control">@Model.TotalAmount?.ToString("C", new System.Globalization.CultureInfo("en-EG"))</div>
             </div>
         </div>
 
         <div class="col-md-6">
             <h4>Property Information</h4>
+
+            <!-- Property Name: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.PropertyLocation, new { @class = "form-label" })
+                <label for="PropertyName" class="form-label">Property</label>
+                @Html.HiddenFor(model => model.PropertyLocation)
+                <div class="form-control">@Model.PropertyName</div>
+            </div>
+
+            <!-- Property Location: Display only -->
+            <div class="form-group mb-3">
+                <label for="PropertyLocation" class="form-label">Location</label>
                 @Html.HiddenFor(model => model.PropertyLocation)
                 <div class="form-control">@Model.PropertyLocation</div>
             </div>
+
             <!-- Contract Type: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.ContractType, new { @class = "form-label" })
+                <label for="ContractType" class="form-label">Contract Type</label>
                 <div class="form-control">@Model.ContractType</div>
             </div>
 
-            <!-- Add more property-related fields here as needed -->
+            <!-- Rooms: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.Rooms, new { @class = "form-label" })
+                <label for="Rooms" class="form-label">Rooms</label>
                 @Html.HiddenFor(model => model.Rooms)
                 <div class="form-control">@Model.Rooms</div>
             </div>
+
             <!-- Recurring Payment Frequency: Display only -->
             <div class="form-group mb-3">
-                @Html.LabelFor(model => model.RecurringPaymentFrequency, new { @class = "form-label" })
+                <label for="RecurringPaymentFrequency" class="form-label">Frequency</label>
                 <div class="form-control">@Model.RecurringPaymentFrequency</div>
             </div>
-            <!-- Hidden field to store the uploaded file path -->
-            @Html.HiddenFor(model => model.ContractDocument)
+
+            <!-- Contract Document: Upload field -->
             <div class="form-group mb-3">
-                <label for="pdfFile" class="form-label">Upload Contract PDF</label>
+                <label for="ContractDocument" class="form-label">Upload Sgned Contract </label>
                 <input type="file" id="ContractDocument" name="ContractDocument" class="form-control" accept=".pdf" required />
             </div>
         </div>
 
-
         <div class="col-12 text-center mt-4">
-            <button type="submit" class="btn btn-primary">Create Contract</button>
-            <button type="button" id="downloadPdfBtn" class="btn btn-secondary" disabled>Download PDF</button>
+            <button type="submit" class="btn custom-green text-white rounded px-5 py-2 transition duration-300"
+                    style="width: 100%; max-width: 300px;">
+                Confirm
+            </button>
         </div>
-        <!-- PDF Upload field -->
-    
     }
 </div>
+<br />
+<br />
+<br />
+<br />
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
@@ -126,8 +215,12 @@
                 formData.append('ContractDocument', $('#ContractDocument')[0].files[0]);
                 formData.append('PropertyId', $('#PropertyId').val());
                 formData.append('OccupantId', $('#OccupantId').val());
-                formData.append('StartDate', $('#StartDate').val());
-                formData.append('EndDate', $('#EndDate').val());
+                // Manually append fields to FormData
+                formData.append('StartDateMonth', $('#StartDateMonth').val());
+                formData.append('StartDateYear', $('#StartDateYear').val());
+                formData.append('EndDateMonth', $('#EndDateMonth').val());
+                formData.append('EndDateYear', $('#EndDateYear').val());
+
                 formData.append('ContractType', $('#ContractType').val());
                 formData.append('PropertyLocation', $('#PropertyLocation').val());
 
@@ -151,6 +244,7 @@
                     }
                 });
             });
+
 
             $("#downloadPdfBtn").click(function () {
                 var filePath = $('#ContractFilePath').val();

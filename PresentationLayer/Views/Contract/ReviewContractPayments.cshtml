@@ -1,4 +1,4 @@
-﻿@model List<BusinessLayer.DTOModels.PaymentDTO>; 
+﻿@model List<BusinessLayer.DTOModels.PaymentDTO>;
 
 @{
     ViewData["Title"] = "Review Contract Payments";
@@ -10,12 +10,9 @@
 
 <div class="container">
     <h2 class="header-title">Review Contract Payments</h2>
-<div class="container table-container">
+    <div class="container table-container">
 
-    <table class="table table-hover table-bordered" id="PaymentTable">
-
-        <table class="table table-hover table-bordered" id="paymentTable">
-
+        <table class="table table-hover table-bordered" id="PaymentTable">
             <thead>
                 <tr>
                     <th>Payment Date</th>
@@ -27,24 +24,21 @@
             <tbody id="paymentTable">
                 @foreach (var payment in Model)
                 {
-                        <tr onclick="location.href='@Url.Action("paymentdetails", "Admin", new { Id = payment.Id })'" style="cursor: pointer;">
+                    <tr onclick="location.href='@Url.Action("paymentdetails", "Contract", new { Id = payment.Id })'" style="cursor: pointer;">
                         <td>@payment.PaymentDate</td>
                         <td>@payment.Amount</td>
                         <td>@payment.PaymentMethod</td>
                         <td>@payment.ContractId</td>
-
                     </tr>
                 }
             </tbody>
         </table>
-    </table>
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <a asp-action="Details" asp-controller="Contract" asp-route-id="@Model.FirstOrDefault()?.ContractId" class="ml-auto custom-green text-white rounded px-4 py-2">Start Contract</a>
-    
+            </div>
+        </div>
     </div>
-</div>
-</div>
 </div>
 
 

@@ -31,7 +31,11 @@ namespace BusinessLayer.DTOModels
         [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.
 
-		[Range(0, double.MaxValue)]
+		[Required, MaxLength(20)]
+		public string PropertyName { get; set; }
+        public int Period { get; set; } // months
+
+        [Range(0, double.MaxValue)]
 		public decimal? InitialPayment { get; set; } // Initial down payment or security deposit
 
 		[Range(0, double.MaxValue)]

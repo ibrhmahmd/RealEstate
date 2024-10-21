@@ -20,7 +20,7 @@ namespace PresentationLayer.Controllers
         private readonly UserManager<User> _userManager;
         private readonly ILogger<ContractController> _logger;
         private readonly PaymentService _paymentService;
-
+        private ContractDTO? ContractDTO;
         public ContractController(
             ContractService contractService,
             UserManager<User> userManager,
@@ -132,7 +132,8 @@ namespace PresentationLayer.Controllers
                         contractDto.Document = fileName;
                         contractDto.CreatedOn = DateTime.Now;
                         contractDto.CreatedBy = Guid.Parse(userIdClaim);
-                        await _contractService.CreateContractAsync(contractDto);
+                        ContractDTO = contractDto;
+                        //await _contractService.CreateContractAsync(contractDto);
                         var payments = await ProcessPayments(contractDto);
 
                         return View("ReviewContractPayments", payments);
@@ -167,8 +168,36 @@ namespace PresentationLayer.Controllers
             }
         }
 
+        public async Task<IActionResult> DownloadContractFile()
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "application/pdf";
+            var fileName = Path.GetFileName(path);
+            return File(memory, contentType, fileName);
+        }
+
+        //public async Task<IActionResult> SaveContract(ContractDTO contractDto, List<PaymentDTO> paymentList)
+        //{
+        //    await _contractService.CreateContractAsync(contractDto);
+        //}
 
 
+
+        public async Task<IActionResult> PaymentDetails(Guid id)
+        {
+            var pay = await _paymentService.GetPaymenttByIdAsync(id);
+            if (pay == null)
+            {
+                return NotFound();
+            }
+            return View(pay);
+        }
 
 
         public async Task<IActionResult> Edit(Guid? id)

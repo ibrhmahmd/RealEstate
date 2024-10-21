@@ -7,7 +7,7 @@ using DataAccessLayer.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 
 namespace BusinessLayer.Services
 {
@@ -41,6 +41,7 @@ namespace BusinessLayer.Services
                 TotalAmount = contract.TotalAmount,
                 IsTerminated = contract.IsTerminated,
                 PropertyLocation = contract.PropertyLocation,
+                PropertyName = contract.PropertyName,
 
             }).ToList();
             return new PagedResult<ContractDTO>
@@ -260,14 +261,6 @@ namespace BusinessLayer.Services
         }
 
 
-        private void ValidatePropertyPrice(decimal price)
-        {
-            if (price <= 0 || price > 1_000_000_000) // Adjust the upper limit as needed
-            {
-                throw new ArgumentOutOfRangeException(nameof(price), "Property price must be positive and within a reasonable range.");
-            }
-        }
- 
         private ContractDTO CreateBaseContractModel(Property property)
         {
             return new ContractDTO
@@ -277,11 +270,10 @@ namespace BusinessLayer.Services
                 IsFurnished = property.IsFUrnished,
                 Rooms = property.Rooms,
                 ContractType = property.Status.ToString(),
-                TotalAmount = property.Price
+                TotalAmount = property.Price,
+                PropertyName = property.Name,
             };
         }
-
-
         private void ProcessContractByStatus(ContractDTO contractModel, Property property)
         {
             switch (property.Status.Value)
@@ -300,28 +292,49 @@ namespace BusinessLayer.Services
             }
         }
 
+        private void ValidatePropertyPrice(decimal price)
+        {
+            if (price <= 0 || price > 1_000_000_000) // Adjust the upper limit as needed
+            {
+                throw new ArgumentOutOfRangeException(nameof(price), "Property price must be positive and within a reasonable range.");
+            }
+        }
+
+
+
+
+
 
         private void ProcessLeaseContract(ContractDTO contractModel, decimal price)
         {
             contractModel.RecurringPaymentFrequency = "Monthly";
-            contractModel.RecurringPaymentAmount = Math.Round(price / 12, 2);
-            contractModel.InitialPayment = Math.Round(price / 6, 2);
+            contractModel.RecurringPaymentAmount = Math.Round(price / 0.5m, 1);
+            contractModel.InitialPayment = Math.Round((decimal)(contractModel.RecurringPaymentAmount * 2), 1);
             contractModel.TotalAmount = Math.Round(price, 2);
         }
-
 
         private void ProcessOwnershipContract(ContractDTO contractModel, decimal price)
         {
+            // Define the recurring payment frequency
             contractModel.RecurringPaymentFrequency = "Quarterly";
-            contractModel.RecurringPaymentAmount = Math.Round(price / 4, 2);
-            contractModel.InitialPayment = Math.Round(price * 0.75m, 2);
-            contractModel.TotalAmount = Math.Round(price, 2);
+
+            // Set the initial payment as 30% of the total price
+            contractModel.InitialPayment = Math.Round(price * 0.3m, 2); // 30% upfront
+
+            // Calculate the remaining amount after the initial payment
+            decimal remainingAmount = (decimal)(price - contractModel.InitialPayment);
+
+            // Define how much each recurring payment should be (15% of total price)
+            contractModel.RecurringPaymentAmount = Math.Round(price * 0.15m, 2); // Each quarterly payment is 15% of total price
+
+            // Calculate how many quarterly payments are needed to cover the remaining amount
+            int numberOfQuarters = (int)Math.Ceiling((decimal)(remainingAmount / contractModel.RecurringPaymentAmount));
+
+            // Calculate the total amount based on the initial payment and the recurring payments
+            contractModel.TotalAmount = contractModel.InitialPayment + (numberOfQuarters * contractModel.RecurringPaymentAmount);
+
+            // Calculate the total period in months
+            contractModel.Period = numberOfQuarters * 3; // Total period in months
         }
-
-
-
-
-
-
     }
 }
