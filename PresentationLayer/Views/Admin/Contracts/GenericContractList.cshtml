@@ -27,7 +27,7 @@
                 <thead>
                     <tr>
                         <th>Type</th>
-                        <th>Agent</th>
+                        <th>Start Date</th>
                         <th>End Date</th>
                         <th>Total Amount</th>
                         <th>Terminated</th>
@@ -40,8 +40,8 @@
                     {
                         <tr>
                             <td>@contract.ContractType</td>
-                            <td>@contract.AgentId</td>
-                            <td>@contract.EndDate</td>
+                            <td>@contract.StartDate.ToShortDateString()</td>
+                            <td>@contract.EndDate.ToShortDateString()</td>
                             <td>@contract.TotalAmount</td>
                             <td>@contract.IsTerminated</td>
                             <td>@contract.PropertyLocation</td>
@@ -62,47 +62,87 @@
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Back Button on the left -->
                 <div>
-                    <a asp-action="Admin" asp-controller="Account" class="btn btn-custom btn-details">
+                    <a asp-action="Listcontracts" asp-controller="Admin" class="btn btn-custom btn-details">
                         <i class="fas fa-rotate-back"></i> Back
                     </a>
                 </div>
 
                 <!-- Pagination on the right -->
                 <div>
-                    <ul class="pagination justify-content-center">
-                        @if (Model.PageNumber > 1)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="page-item disabled">
-                                <span class="page-link">Previous</span>
-                            </li>
-                        }
-                        @for (int i = 1; i <= Model.TotalPages; i++)
-                        {
-                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
-                            </li>
-                        }
-                        @if (Model.PageNumber < Model.TotalPages)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListContracts" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        }
-                    </ul>
+                    @{
+                        int maxVisiblePages = 2; // Max number of visible page links around the current page
+                        int startPage = Math.Max(1, Model.PageNumber - 1); // Start page logic
+                        int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // End page logic
+                    }
+                    <div>
+                        <ul class="pagination justify-content-center">
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="AcceptedContractsList"
+                                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                       asp-route-pageSize="@Model.PageSize">Previous</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            }
 
-                </div>
+                            @if (startPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="AcceptedContractsList"
+                                       asp-route-pageNumber="1"
+                                       asp-route-pageSize="@Model.PageSize">1</a>
+                                </li>
+
+
+                            }
+
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" asp-action="AcceptedContractsList"
+                                       asp-route-pageNumber="@i"
+                                       asp-route-pageSize="@Model.PageSize">@i</a>
+                                </li>
+                            }
+
+                            @if (endPage < Model.TotalPages)
+                            {
+                                @if (endPage < Model.TotalPages - 1) // Ellipsis for gap after endPage
+                                {
+                                    <li class="page-item disabled">
+                                        <span>...</span>
+                                    </li>
+                                }
+
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="AcceptedContractsList"
+                                       asp-route-pageNumber="@Model.TotalPages"
+                                       asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                </li>
+                            }
+
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="AcceptedContractsList"
+                                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                       asp-route-pageSize="@Model.PageSize">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
             </div>
         </div>
     </div>
@@ -120,8 +160,8 @@
                         <div class="icon">
                             <i class="bi bi-activity"></i>
                         </div>
-                        <a href="@Url.Action("AcceptedContractsList", "Admin")" class="stretched-link">
-                            <h3>Accepted</h3>
+                        <a href="@Url.Action("ArchivedContractsList", "Admin")" class="stretched-link">
+                            <h3>Archived</h3>
                         </a>
                         <p>Review Accepted Contracts</p>
                     </div>

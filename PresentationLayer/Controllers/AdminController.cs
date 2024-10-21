@@ -15,6 +15,7 @@ using System.Security.Claims;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 namespace PresentationLayer.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -29,6 +30,7 @@ namespace PresentationLayer.Controllers
         private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<ContractController> _logger;
+        private readonly UserManager<User> _userManager;
 
         public AdminController(
             PropertyService propertyService,
@@ -39,7 +41,9 @@ namespace PresentationLayer.Controllers
             ProjectService projectService,
             MyDbContext context,
             IWebHostEnvironment webHostEnvironment,
-            ILogger<ContractController> logger)
+            ILogger<ContractController> logger, 
+            UserManager<User> userManager
+            )
         {
             _propertyService = propertyService;
             _userService = userService;
@@ -50,6 +54,7 @@ namespace PresentationLayer.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
+            _userManager = userManager;
         }
         public IActionResult GeneratePaymentPDF(PaymentDTO payment)
         {
@@ -112,6 +117,45 @@ namespace PresentationLayer.Controllers
             };
             table.AddCell(cell);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserRole(Guid userId, string role)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Json(new { success = false, message = "You are not authorized to change user roles." });
+            }
+
+            if (string.IsNullOrWhiteSpace(role) || userId == Guid.Empty)
+            {
+                return Json(new { success = false, message = "Invalid role or user ID." });
+            }
+
+            try
+            {
+                var currentUser = await _userService.GetCurrentUser(User);
+                var updatedRole = await _userService.ChangeUserRole(userId, role);
+                return Json(new { success = true, message = "User role updated successfully.", role = updatedRole });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred while updating the role: " + ex.Message });
+            }
+        }
+
+
+
+
+
         // Property CRUD Operations
         public async Task<IActionResult> ListProperties(int pageNumber = 1, int pageSize = 10)
         {
@@ -338,12 +382,17 @@ namespace PresentationLayer.Controllers
             }
 
             // Handle property image upload.
-            if (propertyDto.PropertyPicture != null)
+            if (propertyDto.PropertyPicture != null && propertyDto.PropertyPicture.Length > 0)
             {
+                // Upload the image and get the file name.
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
-                propertyDto.PropertyPictureUrl = fileName;
+                propertyDto.PropertyPictureUrl = fileName; 
             }
-
+            else
+            {
+                // No file uploaded, set default image path.
+                propertyDto.PropertyPictureUrl = "~/Properties/PropertyPicture/default.jpg"; 
+            }
 
             // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
@@ -457,6 +506,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
+            if (user.Email == "Admin@admin.com") return View("~/Views/Account/AccessDenied.cshtml");
             return View(user);
         }
 
@@ -778,5 +828,6 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory, contentType, fileName);
         }
+
     }
 }

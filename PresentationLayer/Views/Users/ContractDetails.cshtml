@@ -63,7 +63,7 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <embed  src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="740px" type="application/pdf" />
+                                <embed src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="700px" type="application/pdf" />
                            
                             </div>
 
@@ -84,7 +84,8 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><strong>Contract Type:</strong> @Model.ContractType</li>
                                 <li class="list-group-item"><strong>Location:</strong> @Model.PropertyLocation</li>
-                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate</li>
+                                <li class="list-group-item"><strong>Start Date:</strong> @Model.StartDate.ToShortDateString()</li>
+                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate.ToShortDateString()</li>
                                 <li class="list-group-item"><strong>Intial Payment:</strong> @Model.InitialPayment</li>
                                 <li class="list-group-item"><strong>Recurring Payment Amount:</strong> @Model.RecurringPaymentAmount</li>
                                 <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
@@ -98,7 +99,11 @@
                     <br />
 
 
+<<<<<<< HEAD
                     <a asp-action="ListContracts" style="margin-left:85px" asp-controller="Users" asp-route-id="@Model.OccupantId" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
+=======
+                    <a asp-action="ListContracts" style="margin-left:85px" asp-controller="Users" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
+>>>>>>> 18c31c0355aed3c2dd0d1a1bcd6a97dc257f6157
                 </div>
             </div>
         </div>

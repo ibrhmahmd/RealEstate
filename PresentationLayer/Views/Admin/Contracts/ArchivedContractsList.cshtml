@@ -19,7 +19,7 @@
     <thead>
         <tr>
             <th>Type</th>
-            <th>Agent</th>
+            <th>Start Date</th>
             <th>End Date</th>
             <th>Total Amount</th>
             <th>Location</th>
@@ -34,8 +34,8 @@
             {
             <tr>
                 <td>@contract.ContractType</td>
-                <td>@contract.AgentId</td>
-                <td>@contract.EndDate</td>
+                <td>@contract.StartDate.ToShortDateString()</td>
+                <td>@contract.EndDate.ToShortDateString()</td>
                 <td>@contract.TotalAmount</td>
                 <td>@contract.PropertyLocation</td>
                 <td>@(contract.IsArcheives ? "Archived" : "Active")</td>
@@ -60,7 +60,128 @@
                     <i class="fas fa-rotate-back"></i> Back
                 </a>
             </div>
-            
+            <!-- Pagination on the right -->
+            <div>
+                @{
+                    int maxVisiblePages = 2; // Max number of visible page links around the current page
+                    int startPage = Math.Max(1, Model.PageNumber - 1); // Start page logic
+                    int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // End page logic
+                }
+                <div>
+                    <ul class="pagination justify-content-center">
+                        @if (Model.PageNumber > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ArchivedContractsList"
+                                   asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                   asp-route-pageSize="@Model.PageSize">Previous</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Previous</span>
+                            </li>
+                        }
+
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ArchivedContractsList"
+                                   asp-route-pageNumber="1"
+                                   asp-route-pageSize="@Model.PageSize">1</a>
+                            </li>
+
+
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                <a class="page-link" asp-action="ArchivedContractsList"
+                                   asp-route-pageNumber="@i"
+                                   asp-route-pageSize="@Model.PageSize">@i</a>
+                            </li>
+                        }
+
+                        @if (endPage < Model.TotalPages)
+                        {
+                            @if (endPage < Model.TotalPages - 1) // Ellipsis for gap after endPage
+                            {
+                                <li class="page-item disabled">
+                                    <span>...</span>
+                                </li>
+                            }
+
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ArchivedContractsList"
+                                   asp-route-pageNumber="@Model.TotalPages"
+                                   asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                            </li>
+                        }
+
+                        @if (Model.PageNumber < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="ArchivedContractsList"
+                                   asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                   asp-route-pageSize="@Model.PageSize">Next</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">Next</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+       
+        </div>
+    </div>
 </div>
-</div>
+
+
+<br />
+
+</p>
+<div class="services section">
+    <div class="container">
+        <div class="row gy-4">
+
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="service-item position-relative">
+                    <div class="icon">
+                        <i class="bi bi-activity"></i>
+                    </div>
+                    <a href="@Url.Action("AcceptedContractsList", "Admin")" class="stretched-link">
+                        <h3>Accepted</h3>
+                    </a>
+                    <p>Review Accepted Contracts</p>
+                </div>
+            </div><!-- End Service Item -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-item position-relative">
+                    <div class="icon">
+                        <i class="bi bi-broadcast"></i>
+                    </div>
+                    <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
+                        <h3>Contracts</h3>
+                    </a>
+                    <p>Contracts Under Review</p>
+                </div>
+            </div><!-- End Service Item -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-item position-relative">
+                    <div class="icon">
+                        <i class="bi bi-easel"></i>
+                    </div>
+                    <a href="@Url.Action("TerminatedContractsList", "Admin")" class="stretched-link">
+                        <h3>Terminated</h3>
+                    </a>
+                    <p>Review Terminated Contracts </p>
+                </div>
+            </div><!-- End Service Item -->
+        </div>
+     </div>
 </div>

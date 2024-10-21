@@ -57,24 +57,19 @@
         </div>
     </div>
 
-    <!-- Role Selection Dropdown -->
-    <div class="input-div pass">
+    <!-- Role Selection - Hidden Field -->
+    <div class="input-div pass" style="display:none;">
         <div class="i">
             <i class="fas fa-lock"></i>
         </div>
         <div class="div">
-            <h5>Role</h5>
-            <select asp-for="Role" class="input" required style="border: none; width: 320px; margin-top: 20px; background-color: transparent; outline: none; font-size: 16px; ;">
-                <option value="" disabled selected></option>
-                <option value="User">User</option>
-                <option value="Admin">Admin</option>
-            </select>
+            <!-- Hidden input instead of dropdown -->
+            <input asp-for="Role" type="hidden" value="User" />
             <span asp-validation-for="Role" class="text-danger"></span>
         </div>
     </div>
 
 
-    
 
     <input type="submit" class="btn" value="Register">
 

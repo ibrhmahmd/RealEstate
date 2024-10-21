@@ -57,7 +57,7 @@
                     </script>
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
-                            <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpg" : Model.PropertyPictureUrl))"
+                            <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpeg" : Model.PropertyPictureUrl))"
                                  class="img-fluid"
                                  alt="@Model.Name"
                                  onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
@@ -124,7 +124,7 @@
                                 <li><strong>Current State:</strong> <span>@Model.IsOccupied</span></li>
                             </ul>
                             <!-- Open Contract Button -->
-                            <a href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" class="btn btn-primary">Open Contract</a>
+                            <a class="ml-auto custom-green text-white rounded px-3 py-2" href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" >Open Contract</a>
                         </div>
                     </div>
                 </div>
