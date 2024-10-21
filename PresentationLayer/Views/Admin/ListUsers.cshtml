@@ -54,7 +54,10 @@
                                     @if (IsFirstAdmin)
                                     {
                                         <!-- Show only a gray icon without button styling -->
-                                        <i class="fas fa-trash" style="color: gray; cursor: not-allowed;" title="Cannot delete the first admin"></i>
+                                        <a style="color: lightgray; cursor: not-allowed;" class="btn btn-custom btn-delete" title="Cannot delete the first admin" disable>
+											<i class="fas fa-trash" style="color: lightgray; cursor: not-allowed;" ></i>
+                                            Delete
+										</a>
                                     }
                                     else
                                     {
