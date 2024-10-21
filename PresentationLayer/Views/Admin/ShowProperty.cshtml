@@ -60,7 +60,7 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img">
+                                <img style="width:800px" src="@Url.Content("~/properties/propertypicture/" + Model.PropertyPictureUrl)" class="card-img" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';">
 
                             </div>
 
