@@ -24,7 +24,7 @@ namespace BusinessLayer.DTOModels
 
 		// Additional Contract Information
 		[Required]
-		public DateTime StartDate { get; set; } = DateTime.Now;
+		public DateTime StartDate { get; set; }
 
 		public DateTime EndDate { get; set; } = DateTime.Now.AddMonths(6);
 

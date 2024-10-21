@@ -28,7 +28,7 @@
             <!-- Start Date: Editable field -->
             <div class="form-group mb-3">
                 @Html.LabelFor(model => model.StartDate, new { @class = "form-label" })
-                @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") })
+                @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @value = DateTime.Now.ToString("yyyy-MM-dd"), @type = "date", @min = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") })
                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
             </div>
 
