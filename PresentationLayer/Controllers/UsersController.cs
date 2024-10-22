@@ -330,7 +330,7 @@ namespace PresentationLayer.Controllers
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
-        public async Task<IActionResult> UserPayments(Guid Id, int pageNumber = 1, int pageSize =2)
+        public async Task<IActionResult> UserPayments(Guid Id, int pageNumber = 1, int pageSize =1)
         {
             if (Id == Guid.Empty)  // Adjusted to check for an empty Guid
             {

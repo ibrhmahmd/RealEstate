@@ -41,12 +41,12 @@
 
         <div class="flex-1 p-6 ml-20">
 
-            <h2 class="header-title" style="color: rgb(46,202,106);">User Properties</h2>
+            <h2 class="header-title" style="color: rgb(46,202,106);">User Payments</h2>
             <br />
             @if (Model.Items.Any())
             {
                 <div class="header-container">
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Payments..." />
                 </div>
             }
             <section class="bg-white rounded shadow-md p-6">
@@ -54,7 +54,7 @@
                     @if (!Model.Items.Any())
                     {
                         <div class="alert alert-success" role="alert">
-                            No properties found for this user.
+                            No Payments found for this user.
                         </div>
                     }
                     else
