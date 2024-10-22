@@ -330,6 +330,29 @@ namespace PresentationLayer.Controllers
             propertyDto.Locations = await _context.Addresses.ToListAsync();
             return View(propertyDto);
         }
+        public async Task<IActionResult> UserPayments(Guid Id, int pageNumber = 1, int pageSize =2)
+        {
+            if (Id == Guid.Empty)  // Adjusted to check for an empty Guid
+            {
+                return BadRequest("Invalid user ID.");
+            }
+
+            // Retrieve the payments and total item count for the user
+            var (payments, totalItems) = await _userService.GetUserPaymentsAsync(Id, pageNumber, pageSize);
+
+            // Create a PagedListViewModel for PaymentDTOs
+            var pagedListViewModel = new PagedListViewModel<PaymentDTO>
+            {
+                UserId = Id,
+                Items = payments,   // Use payments instead of properties
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalItems,
+            };
+
+            return View(pagedListViewModel);
+        }
+
 
 
 

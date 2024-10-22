@@ -433,7 +433,7 @@ namespace DataAccessLayer.GenericRepository
         {
             // Ensure that the type T has an IsArchived property using reflection
             var query = Context.Set<T>()
-                .Where(e => EF.Property<bool>(e, "IsTerminated") == true)
+                .Where(e => EF.Property<bool>(e, "IsTerminated") == true || EF.Property<bool>(e, "IsDeclined") == true)
                 .OrderBy(e => EF.Property<int>(e, "CreatedOn"));
             return await query.ToPagedResultAsync(pageNumber, pageSize);
         }

@@ -205,7 +205,7 @@ namespace BusinessLayer.Services
                     PaymentDate = contractDto.StartDate,
                     Amount = contractDto.InitialPayment.Value,
                     Status = PaymentStatus.Pending,
-                    PaymentMethod = "Initial Payment",
+                    PaymentMethod = "Cash",
                     LateFee = contractDto.RecurringPaymentAmount * 12 / 100,
                 });
             }
@@ -229,7 +229,7 @@ namespace BusinessLayer.Services
                         PropertyName = contractDto.PropertyName,
                         Amount = contractDto.RecurringPaymentAmount.Value,
                         Status = PaymentStatus.Pending,
-                        PaymentMethod = "Recurring Payment",
+                        PaymentMethod = "Cash ",
                         ReferenceNumber = Guid.NewGuid().ToString(),
                         LateFee = contractDto.RecurringPaymentAmount * 12 / 100,
                     });

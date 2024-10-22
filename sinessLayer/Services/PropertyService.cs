@@ -4,7 +4,6 @@ using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
