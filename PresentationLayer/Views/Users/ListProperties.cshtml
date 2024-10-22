@@ -73,8 +73,9 @@
                                         <td>@property.Location</td>
                                         <td>@property.PropertyProject</td>
                                         <td>@property.Area</td>
-                                        <td>@property.Price</td>
+                                        <td>@String.Format("{0:N2} EGP", property.Price)</td>
                                         <td>@property.Type</td>
+                                    
                                     </tr>
                                 }
                             </tbody>
@@ -100,45 +101,71 @@
                         }
 
                         <ul class="pagination justify-content-center">
-                            <!-- Previous Button -->
-                            <li class="page-item @(Model.PageNumber > 1 ? "" : "disabled")">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize" aria-label="Previous page">Previous</a>
-                            </li>
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                       asp-route-pageSize="@Model.PageSize">Previous</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            }
 
-                            <!-- First Page with Ellipsis -->
                             @if (startPage > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">1</a>
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="1"
+                                       asp-route-pageSize="@Model.PageSize">1</a>
                                 </li>
+
+
                             }
 
-                            <!-- Pages Around Current Page -->
                             @for (int i = startPage; i <= endPage; i++)
                             {
                                 <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.PageSize">@i</a>
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@i"
+                                       asp-route-pageSize="@Model.PageSize">@i</a>
                                 </li>
                             }
 
-                            <!-- Last Page with Ellipsis -->
                             @if (endPage < Model.TotalPages)
                             {
-                                @if (endPage < Model.TotalPages - 1)
+                                @if (endPage < Model.TotalPages - 1) // Ellipsis for gap after endPage
                                 {
                                     <li class="page-item disabled">
                                         <span>...</span>
                                     </li>
                                 }
+
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@Model.TotalPages" asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@Model.TotalPages"
+                                       asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
                                 </li>
                             }
 
-                            <!-- Next Button -->
-                            <li class="page-item @(Model.PageNumber < Model.TotalPages ? "" : "disabled")">
-                                <a class="page-link" asp-action="ListProperties" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize" aria-label="Next page">Next</a>
-                            </li>
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                       asp-route-pageSize="@Model.PageSize">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            }
                         </ul>
                     </div>
                 </div>

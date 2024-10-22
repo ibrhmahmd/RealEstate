@@ -60,6 +60,7 @@
                 </tbody>
             </table>
             <!-- Pagination and Back Button Container -->
+
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Back Button on the left -->
                 <div>
@@ -67,8 +68,6 @@
                         <i class="fas fa-rotate-back"></i> Back
                     </a>
                 </div>
-
-                <!-- Pagination on the right -->
                 <div>
                     @{
                         int maxVisiblePages = 2; // Max number of visible page links around the current page
@@ -100,7 +99,7 @@
                                        asp-route-pageSize="@Model.PageSize">1</a>
                                 </li>
 
-                              
+
                             }
 
                             @for (int i = startPage; i <= endPage; i++)
@@ -149,7 +148,7 @@
             </div>
         </div>
     </div>
-
+    
 
     <br />
 

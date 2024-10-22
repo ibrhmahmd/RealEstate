@@ -77,6 +77,7 @@ namespace PresentationLayer.Controllers
                 try
                 {
                     var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
+
                     return View("~/Views/Contract/Create.cshtml", contractModel);
                 }
                 catch (KeyNotFoundException)
@@ -112,6 +113,7 @@ namespace PresentationLayer.Controllers
             {
                 contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
                 contractDto.Id = Guid.NewGuid();
+
                 if (ModelState.IsValid)
                 {
                     try
