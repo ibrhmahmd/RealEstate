@@ -1,13 +1,12 @@
 @model PagedListViewModel<BusinessLayer.DTOModels.PropertyDTO>
+
 @{
     ViewData["Title"] = "Property List";
-    ViewData["ActionName"] = "Property";
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
 @section Styles {
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/custom-styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 }
@@ -22,45 +21,51 @@
             <a asp-action="CreateProperty" asp-controller="Admin" class="btn btn-add">Add Property</a>
         </div>
 
+
         <div class="container table-container">
             <table class="table table-hover table-bordered" id="PropertyTable">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Project</th>
-                        <th>Area</th>
-                        <th>Price</th>
-                        <th>Type</th>
-                        <th>Current state </th>
-                        <th>Actions</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Project</th>
+                        <th scope="col">Area (sqm)</th>
+                        <th scope="col">Price (EGP)</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Current State</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="Table">
+                <tbody>
                     @foreach (var property in Model.Items)
                     {
-                        <tr onclick="location.href='@Url.Action("ShowProperty", "Admin", new { Id = property.Id })'" style="cursor: pointer;">
+                        <tr style="cursor: pointer;"
+                            onclick="window.location='@Url.Action("ShowProperty", "Admin", new { Id = property.Id })';">
                             <td>@property.Name</td>
                             <td>@property.Location</td>
                             <td>@property.PropertyProject</td>
                             <td>@property.Area</td>
-                            <td>@property.Price</td>
+                            <td>@String.Format("{0:N2} EGP", property.Price)</td>
                             <td>@property.Type</td>
                             <td>@(property.IsOccupied ? "Occupied" : "Free")</td>
-
                             <td>
-                                <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id" class="btn btn-success btn-sm">
+                                <a asp-action="EditProperty" asp-controller="Admin" asp-route-Id="@property.Id"
+                                   class="btn btn-success btn-sm me-1">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePropertyModal" data-id="@property.Id">
+                                <a class="btn btn-danger btn-sm"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#deletePropertyModal"
+                                   data-id="@property.Id"
+                                   onclick="event.stopPropagation();">
                                     <i class="fas fa-trash"></i> Delete
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <!-- Pagination and Back Button Container -->
+
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Back Button on the left -->
                 <div>
@@ -68,96 +73,96 @@
                         <i class="fas fa-rotate-back"></i> Back
                     </a>
                 </div>
-
-                <!-- Pagination on the right -->
-                @{
-                    int maxVisiblePages = 2; // Max number of visible page links around the current page
-                    int startPage = Math.Max(1, Model.PageNumber - 1); // Start page logic
-                    int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // End page logic
-                }
-
                 <div>
-                    <ul class="pagination justify-content-center">
-                        @if (Model.PageNumber > 1)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties"
-                                   asp-route-pageNumber="@(Model.PageNumber - 1)"
-                                   asp-route-pageSize="@Model.PageSize">Previous</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="page-item disabled">
-                                <span class="page-link">Previous</span>
-                            </li>
-                        }
-
-                        @if (startPage > 1)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties"
-                                   asp-route-pageNumber="1"
-                                   asp-route-pageSize="@Model.PageSize">1</a>
-                            </li>
-
-                      
-                        }
-
-                        @for (int i = startPage; i <= endPage; i++)
-                        {
-                            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                <a class="page-link" asp-action="ListProperties"
-                                   asp-route-pageNumber="@i"
-                                   asp-route-pageSize="@Model.PageSize">@i</a>
-                            </li>
-                        }
-
-                        @if (endPage < Model.TotalPages)
-                        {
-                            @if (endPage < Model.TotalPages - 1) // Ellipsis if there's a gap to last page
+                    @{
+                        int maxVisiblePages = 2; // Max number of visible page links around the current page
+                        int startPage = Math.Max(1, Model.PageNumber - 1); // Start page logic
+                        int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); // End page logic
+                    }
+                    <div>
+                        <ul class="pagination justify-content-center">
+                            @if (Model.PageNumber > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                       asp-route-pageSize="@Model.PageSize">Previous</a>
+                                </li>
+                            }
+                            else
                             {
                                 <li class="page-item disabled">
-                                    <span class="page-link">...</span>
+                                    <span class="page-link">Previous</span>
                                 </li>
                             }
 
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties"
-                                   asp-route-pageNumber="@Model.TotalPages"
-                                   asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
-                            </li>
-                        }
+                            @if (startPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="1"
+                                       asp-route-pageSize="@Model.PageSize">1</a>
+                                </li>
 
-                        @if (Model.PageNumber < Model.TotalPages)
-                        {
-                            <li class="page-item">
-                                <a class="page-link" asp-action="ListProperties"
-                                   asp-route-pageNumber="@(Model.PageNumber + 1)"
-                                   asp-route-pageSize="@Model.PageSize">Next</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="page-item disabled">
-                                <span class="page-link">Next</span>
-                            </li>
-                        }
-                    </ul>
+
+                            }
+
+                            @for (int i = startPage; i <= endPage; i++)
+                            {
+                                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@i"
+                                       asp-route-pageSize="@Model.PageSize">@i</a>
+                                </li>
+                            }
+
+                            @if (endPage < Model.TotalPages)
+                            {
+                                @if (endPage < Model.TotalPages - 1) // Ellipsis for gap after endPage
+                                {
+                                    <li class="page-item disabled">
+                                        <span>...</span>
+                                    </li>
+                                }
+
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@Model.TotalPages"
+                                       asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                </li>
+                            }
+
+                            @if (Model.PageNumber < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-action="ListProperties"
+                                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                       asp-route-pageSize="@Model.PageSize">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">Next</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+
                 </div>
-
-
             </div>
         </div>
+    </div>
 
-        <br />
 
-        <!-- Delete Property Modal -->
+    <br />
+
+
         <div class="modal fade" id="deletePropertyModal" tabindex="-1" aria-labelledby="deletePropertyModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="deletePropertyModalLabel">Delete Property</h5>
+                        <h5 class="modal-title">Delete Property</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -171,81 +176,78 @@
                 </div>
             </div>
         </div>
-
-        <div class="services section">
-            <div class="container">
-                <div class="row gy-4">
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <i class="bi bi-activity"></i>
-                            </div>
-                            <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
-                                <h3>Users</h3>
-                            </a>
-                            <p>Manage Contracts.</p>
+    <div class="services section">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-activity"></i>
                         </div>
+                        <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
+                            <h3>Contracts</h3>
+                        </a>
+                        <p>Manage Contracts.</p>
                     </div>
-                    <!-- End Service Item -->
-
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <i class="bi bi-broadcast"></i>
-                            </div>
-                            <a href="@Url.Action("DeveloperList", "Admin")" class="stretched-link">
-                                <h3>Contracts</h3>
-                            </a>
-                            <p>Real Estate Developers.</p>
-                        </div>
-                    </div>
-                    <!-- End Service Item -->
-
-                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <i class="bi bi-easel"></i>
-                            </div>
-                            <a href="@Url.Action("ProjectList", "Admin")" class="stretched-link">
-                                <h3>Real Estate Projects</h3>
-                            </a>
-                            <p></p>
-                        </div>
-                    </div><!-- End Service Item -->
                 </div>
+                <!-- End Service Item -->
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-broadcast"></i>
+                        </div>
+                        <a href="@Url.Action("DeveloperList", "Admin")" class="stretched-link">
+                            <h3>Real Estate Developers</h3>
+                        </a>
+                        <p>Real Estate Developers.</p>
+                    </div>
+                </div>
+                <!-- End Service Item -->
+
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-item position-relative">
+                        <div class="icon">
+                            <i class="bi bi-easel"></i>
+                        </div>
+                        <a href="@Url.Action("ProjectList", "Admin")" class="stretched-link">
+                            <h3>Projects</h3>
+                        </a>
+                        <p>Real Estate Projects</p>
+                    </div>
+                </div><!-- End Service Item -->
             </div>
         </div>
     </div>
 }
 
 @section scripts {
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/main.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <script>
         $(document).ready(function () {
-            // Search function
+            // Filter properties on search input
             $('#searchInput').on('keyup', function () {
                 var value = $(this).val().toLowerCase();
                 $('#PropertyTable tbody tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                    $(this).toggle($(this).text().toLowerCase().includes(value));
                 });
             });
 
-            // Delete Property Modal behavior
+            // Handle delete property modal
             $('#deletePropertyModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var id = button.data('id');
-                $('#deletePropertyId').val(id);
+                var propertyId = button.data('id');
+                $('#deletePropertyId').val(propertyId);
                 $('#confirmDeleteButton').off('click').on('click', function () {
-                    window.location.href = '@Url.Action("SoftDeleteProperty", "Admin")/' + id;
+                    window.location.href = '@Url.Action("SoftDeleteProperty", "Admin")/' + propertyId;
                 });
+            }).on('hidden.bs.modal', function () {
+                $('#deletePropertyId').val(''); // Reset the hidden input
             });
         });
+
     </script>
 }

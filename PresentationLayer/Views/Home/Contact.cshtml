@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ContactFormViewModel
+@{
     Layout = "_Layout"; // Reference to the layout file
 }
 
@@ -21,14 +22,7 @@
                     </div>
                 </div>
             </div>
-            <nav class="breadcrumbs">
-                <div class="container">
-                    <ol>
-                        <li><a href="~/">Home</a></li>
-                        <li class="current">Contact</li>
-                    </ol>
-                </div>
-            </nav>
+           
         </div><!-- End Page Title -->
         <!-- Contact Section -->
         <section id="contact" class="contact section">
@@ -74,35 +68,34 @@
                     </div>
 
                     <div class="col-lg-8">
-                        <form action="~/forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                        <form asp-action="Contact" asp-controller="Home" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                             <div class="row gy-4">
-
                                 <div class="col-md-6">
-                                    <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+                                    <input asp-for="Name" class="form-control" placeholder="Your Name" required />
                                 </div>
-
-                                <div class="col-md-6 ">
-                                    <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                                <div class="col-md-6">
+                                    <input asp-for="Email" class="form-control" placeholder="Your Email" required />
                                 </div>
-
+                                <div class="col-md-6">
+                                    <input asp-for="To" class="form-control" placeholder="To" readonly />
+                                </div>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+                                    <input asp-for="Subject" class="form-control" placeholder="Subject" required />
                                 </div>
-
                                 <div class="col-md-12">
-                                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                                    <textarea asp-for="Message" class="form-control" rows="6" placeholder="Message" required></textarea>
                                 </div>
 
                                 <div class="col-md-12 text-center">
                                     <div class="loading">Loading</div>
-                                    <div class="error-message"></div>
-                                    <div class="sent-message">Your message has been sent. Thank you!</div>
-
+                                    <div class="error-message">@Html.ValidationSummary("", new { @class = "text-danger" })</div>
+                                    <div class="sent-message">@TempData["SuccessMessage"]</div>
                                     <button type="submit">Send Message</button>
                                 </div>
-
                             </div>
                         </form>
+
+
                     </div><!-- End Contact Form -->
 
                 </div>

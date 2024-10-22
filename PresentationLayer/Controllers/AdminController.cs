@@ -12,6 +12,10 @@ using PresentationLayer.Models;
 using System.Drawing.Printing;
 using DataAccessLayer.Entities;
 using System.Security.Claims;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 namespace PresentationLayer.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -26,6 +30,7 @@ namespace PresentationLayer.Controllers
         private readonly MyDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<ContractController> _logger;
+        private readonly UserManager<User> _userManager;
 
         public AdminController(
             PropertyService propertyService,
@@ -36,7 +41,9 @@ namespace PresentationLayer.Controllers
             ProjectService projectService,
             MyDbContext context,
             IWebHostEnvironment webHostEnvironment,
-            ILogger<ContractController> logger)
+            ILogger<ContractController> logger,
+            UserManager<User> userManager
+            )
         {
             _propertyService = propertyService;
             _userService = userService;
@@ -47,7 +54,106 @@ namespace PresentationLayer.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
+            _userManager = userManager;
         }
+        public IActionResult GeneratePaymentPDF(PaymentDTO payment)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                Document pdfDoc = new Document(PageSize.A4, 25, 25, 30, 30);
+                PdfWriter.GetInstance(pdfDoc, stream);
+                pdfDoc.Open();
+
+                // Add PDF title with styling
+                var titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 20, BaseColor.DarkGray);
+                pdfDoc.Add(new Paragraph("Invoice", titleFont));
+                pdfDoc.Add(new Paragraph("\n")); // Add space
+
+                // Add company information (optional)
+                var companyFont = FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.Black);
+                pdfDoc.Add(new Paragraph("Estate Agency", companyFont));
+                pdfDoc.Add(new Paragraph("123 Real Estate St.", companyFont));
+                pdfDoc.Add(new Paragraph("City, Country", companyFont));
+                pdfDoc.Add(new Paragraph("Phone: +123 456 7890", companyFont));
+                pdfDoc.Add(new Paragraph("Email: info@estateagency.com", companyFont));
+                pdfDoc.Add(new Paragraph("\n")); // Add space
+
+                // Add Payment Details Table
+                PdfPTable table = new PdfPTable(2);
+                table.WidthPercentage = 100;
+                table.SetWidths(new float[] { 1, 2 });
+
+                // Add table headers
+                AddCellToTable(table, "Payment Method:", true);
+                AddCellToTable(table, payment.PaymentMethod);
+                AddCellToTable(table, "Reference Number:", true);
+                AddCellToTable(table, payment.ReferenceNumber);
+                AddCellToTable(table, "Late Fee:", true);
+                AddCellToTable(table, payment.LateFee?.ToString("C", new CultureInfo("en-EG")));
+                AddCellToTable(table, "Total Amount:", true);
+                AddCellToTable(table, payment.Amount.ToString("C", new CultureInfo("en-EG")));
+                AddCellToTable(table, "Payment Date:", true);
+                AddCellToTable(table, payment.PaymentDate.ToShortDateString());
+
+                pdfDoc.Add(table); // Add table to the PDF
+
+                // Add footer
+                pdfDoc.Add(new Paragraph("\nThank you for your business!", companyFont));
+
+                pdfDoc.Close();
+
+                return File(stream.ToArray(), "application/pdf", "PaymentDetails.pdf");
+            }
+        }
+
+        private void AddCellToTable(PdfPTable table, string text, bool isHeader = false)
+        {
+            var font = isHeader ? FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.White) : FontFactory.GetFont(FontFactory.HELVETICA, 12, BaseColor.Black);
+            var cell = new PdfPCell(new Phrase(text, font))
+            {
+                BackgroundColor = isHeader ? BaseColor.Gray : BaseColor.White,
+                Padding = 5,
+                Border = Rectangle.BOX
+            };
+            table.AddCell(cell);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserRole(Guid userId, string role)
+        {
+            if (!User.IsInRole("Admin"))
+            {
+                return Json(new { success = false, message = "You are not authorized to change user roles." });
+            }
+
+            if (string.IsNullOrWhiteSpace(role) || userId == Guid.Empty)
+            {
+                return Json(new { success = false, message = "Invalid role or user ID." });
+            }
+
+            try
+            {
+                var currentUser = await _userService.GetCurrentUser(User);
+                var updatedRole = await _userService.ChangeUserRole(userId, role);
+                return Json(new { success = true, message = "User role updated successfully.", role = updatedRole });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "An error occurred while updating the role: " + ex.Message });
+            }
+        }
+
+
+
 
 
         // Property CRUD Operations
@@ -119,7 +225,7 @@ namespace PresentationLayer.Controllers
                     TotalRecords = pagedUsers.TotalRecords
 
                 };
-                return View("ListUsers",viewModel);
+                return View("ListUsers", viewModel);
             }
             return Unauthorized();
         }
@@ -178,12 +284,17 @@ namespace PresentationLayer.Controllers
             }
 
             // Handle property image upload.
-            if (propertyDto.PropertyPicture != null)
+            if (propertyDto.PropertyPicture != null && propertyDto.PropertyPicture.Length > 0)
             {
+                // Upload the image and get the file name.
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
-
+            else
+            {
+                // No file uploaded, set default image path.
+                propertyDto.PropertyPictureUrl = "~/Properties/PropertyPicture/default.jpg";
+            }
 
             // Map AddressId to Location if available.
             if (propertyDto.AddressId.HasValue)
@@ -246,7 +357,7 @@ namespace PresentationLayer.Controllers
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
-       
+
             else
             {
                 // If no new picture is uploaded, keep the existing URL
@@ -297,6 +408,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var user = await _userService.GetUserByIdAsync(id);
+            if (user.Email == "Admin@admin.com") return View("~/Views/Account/AccessDenied.cshtml");
             return View(user);
         }
 
@@ -314,8 +426,26 @@ namespace PresentationLayer.Controllers
         // User Details
         public async Task<IActionResult> Details(Guid id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-            if (user == null)
+            if (id == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+                var UserDto = new UserDTO
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    UserPictureUrl = user.UserPictureUrl,
+                    PhoneNumber = user.PhoneNumber,
+                    Role = user.Role,
+                    IsVerified = user.IsVerified,
+                };
+                return View("~/Views/Admin/UserDetails.cshtml", UserDto);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -366,8 +496,11 @@ namespace PresentationLayer.Controllers
             };
             return View(viewModel);
             return Unauthorized();
+        }
 
         }
+
+
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
             var pay = await _paymentService.GetPaymenttByIdAsync(id);
@@ -417,6 +550,28 @@ namespace PresentationLayer.Controllers
             }
             return RedirectToAction("ListContracts");
         }
+
+
+        public async Task<IActionResult> Decline(Guid id)
+        {
+            try
+            {
+                await _contractService.DeclineContract(id);
+                await _contractService.TerminateAsync(id);
+                TempData["SuccessMessage"] = "Contract Accepted successfully.";
+            }
+            catch (KeyNotFoundException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while Accepting the contract.";
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("ListContracts");
+        }
+
 
         //Developer
         public async Task<IActionResult> DeveloperList(int pageNumber = 1, int pageSize = 5)
@@ -585,7 +740,6 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ProjectList");
         }
 
-
         public async Task<IActionResult> DownloadFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
@@ -599,5 +753,37 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory, contentType, fileName);
         }
+        [HttpGet] 
+        public async Task<IActionResult> DownloadFileadmin(Guid contractId)
+        {
+            var contract = await _contractService.GetContractByIdAsync(contractId);
+
+            if (contract == null || string.IsNullOrEmpty(contract.Document))
+            {
+                _logger.LogWarning("Contract not found or document missing for contract ID: {contractId}", contractId);
+                return NotFound("Contract not found or document missing.");
+            }
+
+            var path = Path.Combine("wwwroot", "properties", "contracts", contract.Document);
+
+            if (!System.IO.File.Exists(path))
+            {
+                _logger.LogWarning("File not found at path: {path}", path);
+                return NotFound("File not found.");
+            }
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "application/pdf"; 
+            var fileName = Path.GetFileName(path); 
+
+            // Return the file to the user
+            return File(memory, contentType, fileName);
+        }
+
+
     }
 }

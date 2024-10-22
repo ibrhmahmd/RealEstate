@@ -488,8 +488,8 @@ namespace DataAccessLayer.GenericRepository
                     return false; // Contract not found
                 }
 
-                var deletedEntity = contract as dynamic;
-                deletedEntity.IsTerminated = true;
+                var Entity = contract as dynamic;
+                Entity.IsTerminated = true;
 
                 await Context.SaveChangesAsync();
 

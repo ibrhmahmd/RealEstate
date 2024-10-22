@@ -21,6 +21,7 @@
     <None Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+	  
     <None Include="wwwroot\assets\css\style.css" />
     <None Include="wwwroot\assets\img\avatar.svg" />
     <None Include="wwwroot\assets\img\bg.svg" />
@@ -32,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.22" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -41,9 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Properties\Contract\" />
-    <Folder Include="wwwroot\Properties\UserPicture\" />
-    <Folder Include="wwwroot\Properties\userpicture\" />
+    <Folder Include="wwwroot\pdfs\" />
+    <Folder Include="wwwroot\Properties\payment\" />
   </ItemGroup>
 
   <ItemGroup>

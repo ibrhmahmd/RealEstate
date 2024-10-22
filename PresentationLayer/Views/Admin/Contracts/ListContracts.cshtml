@@ -27,10 +27,9 @@
                 <thead>
                     <tr>
                         <th>Type</th>
-@*                         <th>Agent</th>
- *@                        <th>End Date</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
 						<th>Total Amount</th>
-						<th>Terminated</th>
 						<th>Location</th>
                         <th>Actions</th>
                     </tr>
@@ -40,10 +39,9 @@
                     {
                         <tr>
                             <td>@contract.ContractType</td>
-@*                             <td>@contract.AgentId</td>
- *@                            <td>@contract.EndDate</td>
+                            <td>@contract.StartDate.ToShortDateString()</td>
+                            <td>@contract.EndDate.ToShortDateString()</td>
                             <td>@contract.TotalAmount</td>
-                            <td>@contract.IsTerminated</td>
                             <td>@contract.PropertyLocation</td>
 
                             <td>
@@ -62,6 +60,7 @@
                 </tbody>
             </table>
             <!-- Pagination and Back Button Container -->
+
             <div class="d-flex justify-content-between align-items-center">
                 <!-- Back Button on the left -->
                 <div>
@@ -69,8 +68,6 @@
                         <i class="fas fa-rotate-back"></i> Back
                     </a>
                 </div>
-
-                <!-- Pagination on the right -->
                 <div>
                     @{
                         int maxVisiblePages = 2; // Max number of visible page links around the current page
@@ -82,7 +79,7 @@
                             @if (Model.PageNumber > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@(Model.PageNumber - 1)"
                                        asp-route-pageSize="@Model.PageSize">Previous</a>
                                 </li>
@@ -97,18 +94,18 @@
                             @if (startPage > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="1"
                                        asp-route-pageSize="@Model.PageSize">1</a>
                                 </li>
 
-                              
+
                             }
 
                             @for (int i = startPage; i <= endPage; i++)
                             {
                                 <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@i"
                                        asp-route-pageSize="@Model.PageSize">@i</a>
                                 </li>
@@ -124,7 +121,7 @@
                                 }
 
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@Model.TotalPages"
                                        asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
                                 </li>
@@ -133,7 +130,7 @@
                             @if (Model.PageNumber < Model.TotalPages)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@(Model.PageNumber + 1)"
                                        asp-route-pageSize="@Model.PageSize">Next</a>
                                 </li>
@@ -151,7 +148,7 @@
             </div>
         </div>
     </div>
-
+    
 
     <br />
 

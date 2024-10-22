@@ -24,7 +24,6 @@ namespace BusinessLayer.DTOModels
         [Required, Range(0, double.MaxValue)]
         public decimal Area { get; set; }
 
-
         [Required, Range(0, 20)]
         public int Rooms { get; set; }
 
@@ -33,8 +32,6 @@ namespace BusinessLayer.DTOModels
 
         [Required]
         public bool IsFUrnished { get; set; }
-
-      
 
         [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
@@ -47,7 +44,6 @@ namespace BusinessLayer.DTOModels
         public Guid? AddressId { get; set; } // Foreign key to Address
         public virtual Address? Address { get; set; }
         public List<Address> Locations { get; set; } = new List<Address>();
-
 
         [Required]
         public bool IsAvailable { get; set; }

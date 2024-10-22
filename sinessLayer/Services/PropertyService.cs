@@ -4,6 +4,7 @@ using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,10 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
         {
              var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
-
-            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            var filteredProperties = propertiesPaged.Items
+              .Where(property => property.IsDeleted ==false)
+              .ToList();
+            var propertyDTOs = filteredProperties.Select(property => new PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -62,8 +65,7 @@ namespace BusinessLayer.Services
             };
         }
 
-
-
+  
 
 
         public async Task<PagedResult<PropertyDTO>> GetAvailblePropertiesAsync(int pageNumber, int pageSize)
@@ -126,7 +128,8 @@ namespace BusinessLayer.Services
         {
             // Use AutoMapper to map PropertyDTO to Property entity
             var property = _mapper.Map<Property>(propertyDto);
-
+            property.CreatedOn = DateTime.Now;
+            property.UpdatedOn = DateTime.Now; // Ensure this is set
             await _unitOfWork.PropertiesRepository.InsertAsync(property);
             await _unitOfWork.SaveAsync();
 
@@ -145,8 +148,11 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Property with Id {propertyDto.Id} not found.");
             }
 
+            // Only update the UpdatedOn property
+        
             _mapper.Map(propertyDto, existingProperty);
-
+            existingProperty.UpdatedOn = DateTime.Now;
+            
             await _unitOfWork.PropertiesRepository.UpdateAsync(existingProperty);
             await _unitOfWork.SaveAsync();
 
@@ -154,7 +160,6 @@ namespace BusinessLayer.Services
         }
 
 
-        // Soft delete a property
         public async Task SoftDeletePropertyAsync(Guid Id)
         {
             var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
@@ -163,9 +168,11 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
+            property.DeletedOn = DateTime.Now;
             await _unitOfWork.PropertiesRepository.SoftDeleteAsync(Id);
             await _unitOfWork.SaveAsync();
         }
+
 
         // Hard delete a property
         public async Task HardDeletePropertyAsync(Guid Id)
@@ -200,9 +207,9 @@ namespace BusinessLayer.Services
 
 
 
-        public async Task PropertyOccupiedAsync(Guid Contractid, Guid UserId)
+        public async Task PropertyOccupiedAsync(Guid propertyId, Guid UserId)
         {
-            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
 
             if (selectedProperty != null)
             {
@@ -213,6 +220,35 @@ namespace BusinessLayer.Services
                 await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
 
                 // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task PropertyNotAvailbleAsync(Guid propertyId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = false;
+                selectedProperty.UpdatedOn = DateTime.Now;
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+        public async Task PropertyAvailbleAsync(Guid propertyId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = true;
+                selectedProperty.UpdatedOn = DateTime.Now;
+                selectedProperty.IsOccupied = false;
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
                 await _unitOfWork.SaveAsync();
             }
         }

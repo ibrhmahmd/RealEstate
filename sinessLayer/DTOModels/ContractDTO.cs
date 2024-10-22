@@ -13,9 +13,10 @@ namespace BusinessLayer.DTOModels
 		public Guid PropertyId { get; set; }
 
 		[Required]
-		public Guid OccupantId { get; set; } 
-
-		public Guid? AgentId { get; set; } 
+		public Guid OccupantId { get; set; }
+        [StringLength(50)]
+        public string Occupantname { get; set; }
+        public Guid? AgentId { get; set; } 
 
 		[Required]
 		public Guid PaymentMethodId { get; set; } 
@@ -24,14 +25,18 @@ namespace BusinessLayer.DTOModels
 
 		// Additional Contract Information
 		[Required]
-		public DateTime StartDate { get; set; } = DateTime.Now;
+		public DateTime StartDate { get; set; }
 
 		public DateTime EndDate { get; set; } = DateTime.Now.AddMonths(6);
 
         [Required, MaxLength(20)]
 		public string ContractType { get; set; } // Lease, Ownership, etc.
 
-		[Range(0, double.MaxValue)]
+		[Required, MaxLength(20)]
+		public string PropertyName { get; set; }
+        public int Period { get; set; } // months
+
+        [Range(0, double.MaxValue)]
 		public decimal? InitialPayment { get; set; } // Initial down payment or security deposit
 
 		[Range(0, double.MaxValue)]
@@ -53,6 +58,10 @@ namespace BusinessLayer.DTOModels
         public bool IsFurnished { get; set; } = false; // Is the property furnished?
         public bool IsAccepted { get; set; } = false;
         public DateTime AcceptedOn { get; set; }
+
+        public bool IsDecliened { get; set; } = false;
+        public DateTime DeclienedOn { get; set; }
+
 
         [Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property

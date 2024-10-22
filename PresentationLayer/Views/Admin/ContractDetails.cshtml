@@ -16,9 +16,126 @@
             object-fit: cover; /* Ensures images cover the area without distortion */
         }
 
+        /* Page Wrapper */
+        .page-wrapper {
+            margin-top: 50px;
+            padding-bottom: 30px;
+        }
+
+        /* Property Details Header */
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #32be8f;
+        }
+
+        /* Card Styling */
         .card {
-            height: auto; /* Allow the card to grow automatically based on content */
-            padding: 20px; /* Add more padding inside the card */
+            border: none;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s;
+            margin-top: 30px;
+        }
+
+            .card:hover {
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+                transform: translateY(-5px);
+            }
+
+        .card-header {
+            background-color: #38d39f;
+            color: #fff;
+            font-weight: bold;
+            padding: 15px;
+            text-align: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 10px 0;
+            font-size: 1rem;
+            color: #333;
+        }
+
+            .list-group-item strong {
+                font-weight: 600;
+            }
+
+        /* Property Image Container */
+        .property-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+            .property-image-container:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .property-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+            .property-image:hover {
+                opacity: 0.9;
+            }
+
+        .swiper-button-prev, .swiper-button-next {
+            color: #32be8f;
+        }
+
+        /* Property Summary Section */
+        .property-summary {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        /* Back to List Button */
+        .btn-back-to-list {
+            background-color: rgb(46,202,106);
+            color: white;
+            padding: 10px;
+            border-radius: 50px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+            display: block;
+            width: 140px;
+            margin: 20px;
+            margin-left: 80px;
+            font-weight: 300;
+        }
+
+            .btn-back-to-list:hover {
+                background-color: #28a37f;
+                color: white;
+            }
+
+
+        .custom-green {
+            background-color: rgb(46,202,106);
         }
     </style>
 }
@@ -32,7 +149,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Contract Details</h1>
+            <h1 class="header-title" style="color: rgb(46,202,106)">Contract Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -59,17 +176,19 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <embed src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="740px" type="application/pdf" />
+                                <embed src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="700px" type="application/pdf" />
                             </div>
                         </div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-pagination"></div>
+                    
                     </div>
-                    <br />
-                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
 
-                </div>
+                    <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
+					<br /><br />
+                        <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
+    <br /><br />
+
+</div>
+				</div>   
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-header">
@@ -77,26 +196,29 @@
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
-                                <li class="list-group-item"><strong>Contract Type:</strong> @Model.ContractType</li>
+                                <li class="list-group-item"><strong>Type:</strong> @Model.ContractType</li>
+                                <li class="list-group-item"><strong>Property:</strong> @Model.PropertyName</li>
+                                <li class="list-group-item"><strong>Occupant:</strong> @Model.Occupantname</li>
+                                <li class="list-group-item"><strong>Condition Required:</strong> @Model.IsConditionCheckRequired</li>
+                                <li class="list-group-item"><strong>Accepted:</strong> @Model.IsAccepted</li>
                                 <li class="list-group-item"><strong>Location:</strong> @Model.PropertyLocation</li>
-@*                                 <li class="list-group-item"><strong>Agent:</strong> @Model.AgentId</li>
- *@                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate</li>
-                                <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethodId</li>
+                                <li class="list-group-item"><strong>Start Date:</strong> @Model.StartDate.ToShortDateString()</li>
+                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate.ToShortDateString()</li>
                                 <li class="list-group-item"><strong>Intial Payment:</strong> @Model.InitialPayment</li>
-                                <li class="list-group-item"><strong>Recurring Payment Amount:</strong> @Model.RecurringPaymentAmount</li>
-                                <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
-                                <li class="list-group-item"><strong>Total Amount:</strong> @Model.TotalAmount</li>
+                                <li class="list-group-item"><strong>Recurring Amount:</strong> @Model.RecurringPaymentAmount</li>
+                                <li class="list-group-item"><strong>Frequency:</strong> @Model.RecurringPaymentFrequency</li>
+                                <li class="list-group-item"><strong>Total :</strong> @Model.TotalAmount</li>
                                 <li class="list-group-item"><strong>LateFee:</strong> @Model.LateFee</li>
-                                <li class="list-group-item"><strong>Is Terminated:</strong> @Model.IsTerminated</li>
-                                <li class="list-group-item"><strong>Is Furnished:</strong> @Model.IsFurnished</li>
                             </ul>
 
                         </div>
                     </div>
                     <br />
+                    <a asp-action="Terminate"style="margin-left: 105px; background-color: #dc3545; border-color: #dc3545;"asp-controller="Admin"asp-route-Id="@Model.Id"class="btn btn-danger btn-sm text-white"><i class="fas fa-trash"></i> Terminate</a>
+                    <br />
+                    <br />
 
-                    <a asp-action="Terminate" asp-controller="Admin" class="btn btn-success btn-sm ">Terminate</a>
-                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+                    <a asp-action="ListContracts" style="margin-left:80px" asp-controller="Admin" class="btn-back-to-list">Back To List</a>
                 </div>
             </div>
         </div>

@@ -121,8 +121,64 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
             }
+            var UserDto = new UserDTO
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                UserPictureUrl = user.UserPictureUrl,
+                PhoneNumber = user.PhoneNumber,
+                Role = user.Role,
+                IsVerified = user.IsVerified,
+            };
             return user; // Return the user entity directly
         }
+
+
+        public async Task<string> ChangeUserRole(Guid userId, string newRole)
+        {
+            // Fetch the user by ID
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"User with ID {userId} not found.");
+            }
+
+            // Get current roles of the user
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove the user from current roles (if any)
+            if (currentRoles.Any())
+            {
+                var removeFromRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeFromRolesResult.Succeeded)
+                {
+                    throw new InvalidOperationException("Could not remove user from current roles.");
+                }
+            }
+
+            // Add the user to the new role
+            var addToRoleResult = await _userManager.AddToRoleAsync(user, newRole);
+            if (!addToRoleResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Could not add user to the role {newRole}");
+            }
+
+            user.Role = newRole;
+            await _unitOfWork.UserRepository.UpdateAsync(user);
+
+            await _unitOfWork.SaveAsync();
+
+            var confirmedRoles = await _userManager.GetRolesAsync(user);
+            if (!confirmedRoles.Contains(newRole))
+            {
+                throw new InvalidOperationException($"User role did not change to {newRole}. Current role(s): {string.Join(", ", confirmedRoles)}");
+            }
+
+            // Return the new role instead of UserDTO
+            return newRole;
+        }
+
 
 
 
@@ -139,7 +195,7 @@ namespace BusinessLayer.Services
             {
                 user.PasswordHash = HashPassword(user.PasswordHash);
             }
-
+            if (user.Role == null) user.Role = "User";
             user.SecurityStamp = Guid.NewGuid().ToString();
 
             // Check if the role exists, if not create it
@@ -165,7 +221,7 @@ namespace BusinessLayer.Services
         }
 
 
-        public User GetCurrentUser(ClaimsPrincipal userPrincipal)
+        public async Task<User> GetCurrentUser(ClaimsPrincipal userPrincipal)
         {
             // Get the user ID from the claims
             var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -179,7 +235,7 @@ namespace BusinessLayer.Services
             if (Guid.TryParse(userId, out Guid parsedUserId))
             {
                 // Fetch the user from the database using the parsed Guid userId
-                return _context.Users.SingleOrDefault(e => e.Id == parsedUserId);
+                return await _unitOfWork.UserRepository.GetByIdAsync(parsedUserId);
             }
 
             return null; // If the userId cannot be parsed to Guid, return null
@@ -227,6 +283,9 @@ namespace BusinessLayer.Services
         public async Task SoftDeleteUserAsync(Guid id)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+            if (user.Email == "Admin@admin.com")
+                throw new InvalidOperationException("Deleting the primary administrator account is not allowed.");
+
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {id} not found.");
@@ -341,29 +400,23 @@ namespace BusinessLayer.Services
             return $"{Convert.ToBase64String(salt)}.{hashed}";
         }
 
-
-        public async Task<bool> RegisterUserAsync(string email, string password, string role)
+        public async Task<bool> RegisterUserAsync(string userName, string email, string password, string role)
         {
-            // Create the user
-            var user = new User { Email = email, UserName = email };
+            var user = new User { Email = email, UserName = userName, Role = role };
 
             // Hash the password using the custom hashing method
             user.PasswordHash = HashPassword(password);
             user.SecurityStamp = Guid.NewGuid().ToString();
-
             // Create the user
 
+            // Create the user
             await CreateUserAsync(user);
 
             var result = await GetUserByIdAsync(user.Id);
             var insertionOK = false;
 
-            if (result != user)
-                insertionOK = false;
-            else
-            {
-                insertionOK = true;
-            }
+            if (result != user) insertionOK = false;
+            else insertionOK = true;
 
 
             if (insertionOK)
@@ -436,7 +489,7 @@ namespace BusinessLayer.Services
             var propertyIds = pagedContracts.Items.Select(c => c.PropertyId).ToList();
 
             var propertiesQuery = _context.Properties
-                .Where(p => propertyIds.Contains(p.Id) && p.IsOccupied == true)
+                .Where(p => propertyIds.Contains(p.Id) && p.IsOccupied == true && p.IsDeleted==false)
                 .AsQueryable();
 
             var totalItems = pagedContracts.TotalRecords;
@@ -474,7 +527,9 @@ namespace BusinessLayer.Services
             {
                 Id = c.Id,
                 ContractType = c.ContractType,
+                StartDate = c.StartDate,
                 EndDate = c.EndDate,
+                CreatedOn = c.CreatedOn,
                 TotalAmount = c.TotalAmount,
                 PropertyLocation = c.PropertyLocation,
             }).ToList();
