@@ -81,8 +81,8 @@
                             </div>
                         </div>
                         <br />
-                        <a asp-action="Listpayments" style="margin-left:490px" asp-controller="Admin" class="btn btn-success  ">Back To List</a>
-                        <button class="btn btn-success" 
+                        <a asp-action="Listpayments" style="margin-left:490px" asp-controller="Admin" class="btn btn-edit  ">Back To List</a>
+                        <button class="btn btn-edit" 
                         onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Admin",
                         new {PaymentMethod = Model.PaymentMethod,
                              ReferenceNumber = Model.ReferenceNumber,
