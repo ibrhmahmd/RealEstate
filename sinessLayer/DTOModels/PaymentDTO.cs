@@ -9,6 +9,14 @@ namespace BusinessLayer.DTOModels
         [Required]
         public Guid ContractId { get; set; }
 
+        [StringLength(50)]
+
+        public string PropertyName{ get; set; }
+        
+        [StringLength(50)]
+        public string Occupantname{ get; set; }
+
+
         [Required]
         public DateTime PaymentDate { get; set; }
 

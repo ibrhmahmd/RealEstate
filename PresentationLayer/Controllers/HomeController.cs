@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using PresentationLayer.Models;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.Net.Mail;
+using System.Net;
 
 namespace PresentationLayer.Controllers
 {
@@ -66,12 +68,31 @@ namespace PresentationLayer.Controllers
         {
             return View();
         }
-
+        [HttpGet]
         public IActionResult Contact()
         {
-            return View();
+            return View(new ContactFormViewModel()); // Initialize the view model
         }
+        [HttpPost]
+        public async Task<IActionResult> Contact(ContactFormViewModel contact)
+        {
+            if (ModelState.IsValid)
+            {
 
+                var result = await contact.SendMailAsync("", "");
+                if (result)
+                {
+                    // Optionally redirect or display a success message
+                    ViewBag.Message = "Your message has been sent successfully.";
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Unable to send email. Please try again.");
+                }
+            }
+
+            return View(contact); // Return the view with the model to display validation errors
+        }
         public IActionResult Privacy()
         {
             return View();

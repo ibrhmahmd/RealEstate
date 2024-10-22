@@ -51,52 +51,73 @@
         @Html.HiddenFor(model => model.Period)
 
 
-
         <div class="col-md-6">
             <h4>Date and Financial Information</h4>
-            <!-- Start Date: Month and Year -->
+
+            <!-- Start Date: Editable field -->
             <div class="form-group mb-3">
-                <label for="StartDateMonth" class="form-label">Starting In</label>
-                <div class="d-flex">
-                    <select id="StartDateMonth" name="StartDateMonth" class="form-control me-2">
-                        @for (int month = 1; month <= 12; month++)
-                        {
-                            var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
-                            var isSelected = month == Model.StartDate.Month ? "selected" : "";
-                            <option value="@month" isSelected>@monthName</option>
-                        }
-                    </select>
-                    <input type="number" id="StartDateYear" name="StartDateYear" class="form-control"
-                           min="2024" value="@Model.StartDate.Year" required />
-                </div>
+                @Html.LabelFor(model => model.StartDate, new { @class = "form-label" })
+                @Html.TextBoxFor(model => model.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @value = DateTime.Now.ToString("yyyy-MM-dd"), @type = "date", @min = DateTime.Now.AddDays(-7).ToString("yyyy-MM-dd") })
                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
             </div>
+             @* <!-- Start Date: Month and Year -->
+             <div class="form-group mb-3">
+                 <label for="StartDateMonth" class="form-label">Starting In</label>
+                 <div class="d-flex">
+                     <select id="StartDateMonth" name="StartDateMonth" class="form-control me-2">
+                         @for (int month = 1; month <= 12; month++)
+                         {
+                             var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+                             var isSelected = month == DateTime.Now.Month ? "selected" : "";
+                             <option value="DateTime.Now.Month">@monthName</option>
+                         }
+                     </select>
+                     <input type="number" id="StartDateYear" name="StartDateYear" class="form-control"
+                            min="2024" value="@DateTime.Now.Year" required />
 
+                 </div>
+                 @Html.HiddenFor(model => model.StartDate)
+                 @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+             </div>
+ *@
+            @{
+                if (IsOwnership)
+                {
+                    <!-- End Date: Month and Year -->
+                    <div class="form-group mb-3">                        
+                        @Html.HiddenFor(model => model.EndDate)
+                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    <!-- End Date: Month and Year -->
+                    <div class="form-group mb-3">
+                        @Html.LabelFor(model => model.EndDate, new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @min = DateTime.Now.AddMonths(6).ToString("yyyy-MM-dd") })
+                        @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    </div>
+                    // <div class="form-group mb-3">
+                    //     <label for="EndDateMonth" class="form-label">Ending In</label>
+                    //     <div class="d-flex">
+                    //         <select id="EndDateMonth" name="EndDateMonth" class="form-control me-2">
+                    //             @for (int month = 1; month <= 12; month++)
+                    //             {
+                    //                 var monthName = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
+                    //                 var isSelected = month == Model.EndDate.Month ? "selected" : "";
+                    //                 <option value="@month" isSelected>@monthName</option>
+                    //             }
+                    //         </select>
+                    //         <input type="number" id="EndDateYear" name="EndDateYear" class="form-control"
+                    //                min="2024" value="@Model.EndDate.Year" required />
+                    //     </div>
+                    //     @Html.HiddenFor(model => model.EndDate)
+                    //     @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                    // </div>
+                }
+            }
+           
 
-            <div class="form-group mb-3">
-                <label for="EndDateMonth" class="form-label">Ending In</label>
-                <div class="d-flex">
-                    <select id="EndDateMonth" name="EndDateMonth" class="form-control me-2">
-                        @for (int month = 1; month <= 12; month++)
-                        {
-                            <option value="@month">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month)</option>
-                        }
-                    </select>
-                    @if (IsOwnership)
-                    {
-                        <!-- Display End Date as a label styled like the text box -->
-                        <div class="form-control" style="background-color: white; border: 1px solid #ced4da; padding: 0.375rem 0.75rem;">
-                            @Model.EndDate.ToString("yyyy")
-                        </div>
-                    }
-                    else
-                    {
-                        <!-- Editable End Date field -->
-                        <input type="number" id="EndDateYear" name="EndDateYear" class="form-control" min="2024" required placeholder="Year" />
-                    }
-                </div>
-                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
-            </div>
 
             <!--  Period: Display only -->
             <div class="form-group mb-3">
@@ -204,56 +225,75 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    
     <script>
-        $(document).ready(function () {
-            $("#contractForm").submit(function (e) {
-                e.preventDefault();
+    $(document).ready(function () {
+        $("#contractForm").submit(function (e) {
+            e.preventDefault();
 
-                var formData = new FormData();
+            var formData = new FormData();
 
-                // Manually append fields to FormData
-                formData.append('ContractDocument', $('#ContractDocument')[0].files[0]);
-                formData.append('PropertyId', $('#PropertyId').val());
-                formData.append('OccupantId', $('#OccupantId').val());
-                // Manually append fields to FormData
-                formData.append('StartDateMonth', $('#StartDateMonth').val());
-                formData.append('StartDateYear', $('#StartDateYear').val());
-                formData.append('EndDateMonth', $('#EndDateMonth').val());
-                formData.append('EndDateYear', $('#EndDateYear').val());
+            // Retrieve selected month and year for StartDate and EndDate
+            var startDateMonth = $('#StartDateMonth').val();
+            var startDateYear = $('#StartDateYear').val();
+            var endDateMonth = $('#EndDateMonth').val();
+            var endDateYear = $('#EndDateYear').val();
 
-                formData.append('ContractType', $('#ContractType').val());
-                formData.append('PropertyLocation', $('#PropertyLocation').val());
+            // Logging the retrieved values for debugging
+            console.log('Start Date Month:', startDateMonth);
+            console.log('Start Date Year:', startDateYear);
+            console.log('End Date Month:', endDateMonth);
+            console.log('End Date Year:', endDateYear);
 
-                $.ajax({
-                    url: '@Url.Action("Create", "Contract")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.success) {
-                            alert('Contract created successfully!');
-                            $('#ContractFilePath').val(response.filePath);
-                            $('#downloadPdfBtn').prop('disabled', false);
-                        } else {
-                            alert('Error creating contract: ' + response.message);
-                        }
-                    },
-                    error: function (error) {
-                        alert('Error creating contract: ' + error.responseText);
+            // Create StartDate and EndDate by combining the month and year into a proper date string (yyyy-MM-dd)
+            var startDate = startDateYear + '-' + (startDateMonth.length === 1 ? '0' + startDateMonth : startDateMonth) + '-01';
+            var endDate = endDateYear + '-' + (endDateMonth.length === 1 ? '0' + endDateMonth : endDateMonth) + '-01';
+
+            // Append form fields manually
+            formData.append('ContractDocument', $('#ContractDocument')[0].files[0]);
+            formData.append('PropertyId', $('#PropertyId').val());
+            formData.append('OccupantId', $('#OccupantId').val());
+            formData.append('PropertyLocation', $('#PropertyLocation').val());
+            formData.append('PropertyName', '@Model.PropertyName');
+            formData.append('ContractType', $('#ContractType').val());
+            formData.append('StartDate', startDate);  // Append formatted startDate
+            formData.append('EndDate', endDate);  // Append formatted endDate
+
+            // Debugging FormData contents
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+
+            $.ajax({
+                url: '@Url.Action("Create", "Contract")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert('Contract created successfully!');
+                        $('#ContractFilePath').val(response.filePath);
+                        $('#downloadPdfBtn').prop('disabled', false);
+                    } else {
+                        alert('Error creating contract: ' + response.message);
                     }
-                });
-            });
-
-
-            $("#downloadPdfBtn").click(function () {
-                var filePath = $('#ContractFilePath').val();
-                if (filePath) {
-                    window.location.href = '@Url.Action("DownloadPdf", "Contract")' + '?filePath=' + encodeURIComponent(filePath);
-                } else {
-                    alert('No PDF file available for download.');
+                },
+                error: function (error) {
+                    alert('Error creating contract: ' + error.responseText);
                 }
             });
         });
-    </script>
+
+        $("#downloadPdfBtn").click(function () {
+            var filePath = $('#ContractFilePath').val();
+            if (filePath) {
+                window.location.href = '@Url.Action("DownloadPdf", "Contract")' + '?filePath=' + encodeURIComponent(filePath);
+            } else {
+                alert('No PDF file available for download.');
+            }
+        });
+    });
+</script>
+
 }

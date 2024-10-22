@@ -50,6 +50,24 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        
+        .btn-add {
+            background-color: rgb(46,202,106); /* Button color */
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-add:hover {
+                background-color: rgb(46,202,106); /* Darker green on hover */
+            }
+
+        .custom-green {
+            background-color: rgb(46,202,106);
+        }
+
 
         .header-container {
             display: flex;
@@ -226,7 +244,7 @@
 
             <a href="@Url.Action("Index", "Home")" class="logo d-flex align-items-center">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-                <img src="~/assets/img/logo.png" alt="">
+             
                 <h1 class="sitename">Estate<span>Agency</span></h1>
             </a>
 

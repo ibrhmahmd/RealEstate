@@ -37,6 +37,7 @@ namespace BusinessLayer.Services
                 Id = contract.Id,
                 ContractType = contract.ContractType,
                 AgentId = contract.AgentId,
+                StartDate = contract.StartDate,
                 EndDate = contract.EndDate,
                 TotalAmount = contract.TotalAmount,
                 IsTerminated = contract.IsTerminated,
@@ -133,15 +134,17 @@ namespace BusinessLayer.Services
         // Create a new contract
         public async Task<ContractDTO> CreateContractAsync(ContractDTO contractDto)
         {
-            // contract AutoMapper to map ContractDTO to Contract entity
+            // AutoMapper to map ContractDTO to Contract entity
             var contract = _mapper.Map<Contract>(contractDto);
+            contract.CreatedOn = DateTime.Now;
+            contract.UpdatedOn = DateTime.Now;
+
             await _unitOfWork.ContractsRepository.InsertAsync(contract);
             await _unitOfWork.SaveAsync();
 
             // Return the mapped ContractDTO (this might return a contract with an ID if you need it)
             return _mapper.Map<ContractDTO>(contract);
         }
-
 
 
         // Update a contract
@@ -153,15 +156,17 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Contract with ID {contractDto.Id} not found.");
             }
 
-            // Contract AutoMapper to update the existing Contract entity
+            // AutoMapper to update the existing Contract entity
             _mapper.Map(contractDto, existingContract);
 
+            existingContract.UpdatedOn = DateTime.Now;
             await _unitOfWork.ContractsRepository.UpdateAsync(existingContract);
             await _unitOfWork.SaveAsync();
 
             // Return the mapped ContractDTO
             return _mapper.Map<ContractDTO>(existingContract);
         }
+
 
 
         public async Task AcceptContract(Guid Id)
@@ -171,10 +176,16 @@ namespace BusinessLayer.Services
             {
                 throw new KeyNotFoundException($"Contract with ID {Id} not found.");
             }
+
+            contract.AcceptedOn = DateTime.Now;
+
+            // Assuming PropertyOccupiedAsync sets the property as occupied
             await _propertyService.PropertyOccupiedAsync(contract.PropertyId, contract.OccupantId);
+
             await _unitOfWork.ContractsRepository.Accept(Id);
             await _unitOfWork.SaveAsync();
         }
+
 
 
         // Soft delete a contract

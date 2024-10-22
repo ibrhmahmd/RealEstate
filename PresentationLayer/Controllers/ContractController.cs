@@ -77,6 +77,7 @@ namespace PresentationLayer.Controllers
                 try
                 {
                     var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
+
                     return View("~/Views/Contract/Create.cshtml", contractModel);
                 }
                 catch (KeyNotFoundException)
@@ -112,6 +113,7 @@ namespace PresentationLayer.Controllers
             {
                 contractDto.OccupantId = Guid.Parse(userIdClaim); // Use the claim's value for the OccupantId
                 contractDto.Id = Guid.NewGuid();
+
                 if (ModelState.IsValid)
                 {
                     try
@@ -132,8 +134,9 @@ namespace PresentationLayer.Controllers
                         contractDto.Document = fileName;
                         contractDto.CreatedOn = DateTime.Now;
                         contractDto.CreatedBy = Guid.Parse(userIdClaim);
+                        contractDto.EndDate = contractDto.StartDate.AddDays(contractDto.Period * 30);
                         ContractDTO = contractDto;
-                        //await _contractService.CreateContractAsync(contractDto);
+                        await _contractService.CreateContractAsync(contractDto);
                         var payments = await ProcessPayments(contractDto);
 
                         return View("ReviewContractPayments", payments);
@@ -182,21 +185,16 @@ namespace PresentationLayer.Controllers
             return File(memory, contentType, fileName);
         }
 
-        //public async Task<IActionResult> SaveContract(ContractDTO contractDto, List<PaymentDTO> paymentList)
-        //{
-        //    await _contractService.CreateContractAsync(contractDto);
-        //}
-
-
 
         public async Task<IActionResult> PaymentDetails(Guid id)
         {
-            var pay = await _paymentService.GetPaymenttByIdAsync(id);
-            if (pay == null)
+            var payment = await _paymentService.GetPaymenttByIdAsync(id);
+            if (payment == null)
             {
                 return NotFound();
             }
-            return View(pay);
+
+            return View("~/Views/Contract/PaymentDetails.cshtml", payment);
         }
 
 

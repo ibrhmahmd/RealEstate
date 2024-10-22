@@ -126,7 +126,8 @@ namespace BusinessLayer.Services
         {
             // Use AutoMapper to map PropertyDTO to Property entity
             var property = _mapper.Map<Property>(propertyDto);
-
+            property.CreatedOn = DateTime.Now;
+            property.UpdatedOn = DateTime.Now; // Ensure this is set
             await _unitOfWork.PropertiesRepository.InsertAsync(property);
             await _unitOfWork.SaveAsync();
 
@@ -145,8 +146,11 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Property with Id {propertyDto.Id} not found.");
             }
 
+            // Only update the UpdatedOn property
+        
             _mapper.Map(propertyDto, existingProperty);
-
+            existingProperty.UpdatedOn = DateTime.Now;
+            
             await _unitOfWork.PropertiesRepository.UpdateAsync(existingProperty);
             await _unitOfWork.SaveAsync();
 
@@ -154,7 +158,6 @@ namespace BusinessLayer.Services
         }
 
 
-        // Soft delete a property
         public async Task SoftDeletePropertyAsync(Guid Id)
         {
             var property = await _unitOfWork.PropertiesRepository.GetByIdAsync(Id);
@@ -163,9 +166,11 @@ namespace BusinessLayer.Services
                 throw new KeyNotFoundException($"Property with Id {Id} not found.");
             }
 
+            property.DeletedOn = DateTime.Now;
             await _unitOfWork.PropertiesRepository.SoftDeleteAsync(Id);
             await _unitOfWork.SaveAsync();
         }
+
 
         // Hard delete a property
         public async Task HardDeletePropertyAsync(Guid Id)

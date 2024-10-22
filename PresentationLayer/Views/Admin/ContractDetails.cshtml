@@ -32,7 +32,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Property Details</h1>
+            <h1 class="header-title" style="color:darkgreen">Contract Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -59,7 +59,7 @@
                         </script>
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
-                                <embed src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="740px" type="application/pdf" />
+                                <embed src="@Url.Content("~/properties/Contracts/" + Model.Document + "#toolbar=0")" width="800px" height="700px" type="application/pdf"  />
                             </div>
 
                         </div>
@@ -67,10 +67,11 @@
                         <div class="swiper-button-next"></div>
                         <div class="swiper-pagination"></div>
                     </div>
-                    <br />
-                    <a asp-action="DownloadFile" asp-controller="Admin" class="btn btn-success ">Download</a>
+                
+                    <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
+					<br /><br />
 
-                </div>
+				</div>   
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-header">
@@ -80,24 +81,20 @@
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item"><strong>Contract Type:</strong> @Model.ContractType</li>
                                 <li class="list-group-item"><strong>Location:</strong> @Model.PropertyLocation</li>
-@*                                 <li class="list-group-item"><strong>Agent:</strong> @Model.AgentId</li>
- *@                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate</li>
-                                <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethodId</li>
+                                <li class="list-group-item"><strong>Start Date:</strong> @Model.StartDate.ToShortDateString()</li>
+                                <li class="list-group-item"><strong>End Date:</strong> @Model.EndDate.ToShortDateString()</li>
                                 <li class="list-group-item"><strong>Intial Payment:</strong> @Model.InitialPayment</li>
                                 <li class="list-group-item"><strong>Recurring Payment Amount:</strong> @Model.RecurringPaymentAmount</li>
                                 <li class="list-group-item"><strong>Recurring Payment Frequency:</strong> @Model.RecurringPaymentFrequency</li>
                                 <li class="list-group-item"><strong>Total Amount:</strong> @Model.TotalAmount</li>
                                 <li class="list-group-item"><strong>LateFee:</strong> @Model.LateFee</li>
-                                <li class="list-group-item"><strong>Is Terminated:</strong> @Model.IsTerminated</li>
-                                <li class="list-group-item"><strong>Is Furnished:</strong> @Model.IsFurnished</li>
                             </ul>
 
                         </div>
                     </div>
                     <br />
 
-                    <a asp-action="Terminate" asp-controller="Admin" class="btn btn-success btn-sm ">Terminate</a>
-                    <a asp-action="ListContracts" style="margin-left:120px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+                    <a asp-action="ListContracts" style="margin-left:105px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
                 </div>
             </div>
         </div>

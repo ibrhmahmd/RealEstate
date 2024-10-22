@@ -57,7 +57,7 @@
                     </script>
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide">
-                            <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpg" : Model.PropertyPictureUrl))"
+                            <img src="@Url.Content("~/properties/propertypicture/" + (string.IsNullOrEmpty(Model.PropertyPictureUrl) ? "default.jpeg" : Model.PropertyPictureUrl))"
                                  class="img-fluid"
                                  alt="@Model.Name"
                                  onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
@@ -113,18 +113,33 @@
 
                     <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                         <div class="portfolio-info">
-                            <h3>Quick Summary</h3>
+                            <h3>info</h3>
                             <ul>
-                                <li><strong>Property Name:</strong> @Model.Name</li>
-                                <li><strong>Property Rooms:</strong> @Model.Rooms</li>
-                                <li><strong>Property Furnished:</strong> @Model.IsFUrnished</li>
+                                <li><strong>Property :</strong> @Model.Name</li>
+                                <li><strong>Price:</strong> <span>@Model.Price</span></li>
+                                <li><strong>Rooms:</strong> @Model.Rooms</li>
+                                <li>
+                                    <strong>Furnished:</strong>
+                                    @{
+                                        if (Model.IsFUrnished == true)
+                                        {
+                                            @:YES
+                                        }
+                                        else
+                                        {
+                                            @:NO
+                                        }
+                                    }
+                                </li>
                                 <li><strong>Location:</strong> @Model.Location</li>
-                                <li><strong>Type:</strong> @Model.Type</li>
+                                <li><strong>Type:</strong>  @Model.Type</li>
+                                <li><strong>Listed For:</strong>  @Model.Status</li>
                                 <li><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
-                                <li><strong>Current State:</strong> <span>@Model.IsOccupied</span></li>
+                                <li><strong>Project:</strong> <span>@Model.PropertyProject</span></li>
+                                <li><strong>Currently :</strong> <span>@(Model.IsOccupied ? "Occupied" : "Free")</span></li>
                             </ul>
                             <!-- Open Contract Button -->
-                            <a href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" class="btn btn-primary">Open Contract</a>
+                            <a class="ml-auto custom-green text-white rounded px-3 py-2" href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" >Open Contract</a>
                         </div>
                     </div>
                 </div>
