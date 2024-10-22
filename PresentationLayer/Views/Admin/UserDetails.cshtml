@@ -1,4 +1,4 @@
-﻿@model  BusinessLayer.DTOModels.UserDTO
+﻿@model BusinessLayer.DTOModels.UserDTO
 @{
     ViewData["Title"] = "User Details";
 
@@ -19,7 +19,7 @@
 
         .sidebar {
             width: 80px;
-            height: 62vh;
+            height: 466px;
             position: fixed;
             left: 0;
             top: 0;
@@ -74,8 +74,8 @@
 
                     @* Debug information *@
                     @* <div class="text-sm text-gray-500 mb-2">
-                        IsVerified value: @Model.IsVerified
-                        IsVerified type: @Model.IsVerified.GetType().FullName
+                    IsVerified value: @Model.IsVerified
+                    IsVerified type: @Model.IsVerified.GetType().FullName
                     </div>*@
 
                     @if (Model.IsVerified == true)
@@ -102,32 +102,95 @@
                         <label class="block text-gray-600 mb-1">Email</label>
                         <div class="w-full border rounded p-2 bg-gray-100">@Model.Email</div>
                     </div>
+
+                    @{
+                        // Check if the user is an Admin 
+                        bool isAdmin = User.IsInRole("Admin");
+                        bool hasClaim = User.Claims.Any(c => c.Value == Model.Id.ToString());
+                        bool isFirstAdmin = Model.Email == "Admin@admin.com";
+                    }
+
+                    <!-- User role in Boxes -->
                     <div>
                         <label class="block text-gray-600 mb-1">Role</label>
-                        <div class="w-full border rounded p-2 bg-gray-100">
-                            <select asp-for="Role"  required style="border: none; width: 635px; background-color: transparent; outline: none; font-size: 16px; ;">
-                                <option value="User">User</option>
-                                <option value="Admin">Admin</option>
-                            </select>
-                            <span asp-validation-for="Role" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Email Address Section -->
-                <div class="mt-6">
-                    <h3 class="text-gray-700 mb-2">Send a Message</h3>
-                    <div class="flex items-center bg-gray-100 p-4 rounded">
-                        <img src="https://img.icons8.com/ios-filled/50/4a90e2/new-post.png" class="w-8 h-8 mr-4" alt="email" />
-                        <div>
-                            <p class="font-semibold">@Model.Email</p>
-                            <p class="text-gray-500 text-sm">1 month ago</p>
+                        @if (isAdmin && hasClaim || isFirstAdmin)
+                        {
+                            <!-- Show the current role as plain text if the user is not an Admin or doesn't meet the condition -->
+                            <div class="flex items-center w-full border rounded bg-gray-100 p-2">
+                                <span class="text-base">@Model.Role</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Show the dropdown if the user is an Admin and meets the condition -->
+                            <div class="flex items-center w-full border rounded bg-gray-100 p-2">
+                                <select id="role" name="role" required class="flex-grow bg-transparent outline-none text-base" style="width: auto;">
+                                    <option value="User">User</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                                <button id="saveRoleBtn" style="display:none;" class="ml-2 custom-green text-white rounded px-4 py-2 hover:bg-green-600 transition duration-300">
+                                    Save Role
+                                </button>
+                            </div>
+                        }
+                        <input type="hidden" name="userId" value="@Model.Id" />
+                    </div>
+
+
+                    <!-- Email Address Section -->
+                    <div class="mt-6">
+                        <h3 class="text-gray-700 mb-2">Send a Message</h3>
+                        <div class="flex items-center bg-gray-100 p-4 rounded">
+                            <img src="https://img.icons8.com/ios-filled/50/4a90e2/new-post.png" class="w-8 h-8 mr-4" alt="email" />
+                            <div>
+                                <p class="font-semibold">@Model.Email</p>
+                                <p class="text-gray-500 text-sm">1 month ago</p>
+                            </div>
                         </div>
                     </div>
-                </div>
             </section>
         </div>
     </div>
 
 </body>
 </html>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#role').change(function () {
+                // Show the save role button when the role is changed
+                $('#saveRoleBtn').show();
+            });
+
+            $('#saveRoleBtn').click(function () {
+                var userId = $("input[name='userId']").val();
+                var role = $('#role').val();
+
+                // Send AJAX request to change the user role
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ChangeUserRole", "Admin")',
+                    data: {
+                        userId: userId,
+                        role: role
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message); // Show success message
+                            $('#saveRoleBtn').hide(); // Hide the button after successful change
+                        } else {
+                            alert(response.message); // Show error message
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle AJAX errors
+                        alert("An error occurred: " + error);
+                    }
+                });
+            });
+        });
+    </script>
+}
