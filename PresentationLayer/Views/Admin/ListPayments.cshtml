@@ -21,8 +21,10 @@
                     <tr>
                         <th>Payment Date</th>
                         <th>Amount</th>
+                        <th>ReferenceNumber</th>
                         <th>Payment Method</th>
-                        <th>Contract</th>
+                        <th>Property</th>
+                        <th>Occupant</th>
                    
                     </tr>
                 </thead>
@@ -32,8 +34,10 @@
                             <tr onclick="location.href='@Url.Action("paymentdetails", "Admin", new { Id = payment.Id })'" style="cursor: pointer;">
                             <td>@payment.PaymentDate</td>
                             <td>@payment.Amount</td>
+                            <td>@payment.ReferenceNumber</td>
                             <td>@payment.PaymentMethod</td>
-                            <td>@payment.ContractId</td>
+                            <td>@payment.PropertyName</td>
+                            <td>@payment.Occupantname</td>
                      
                         </tr>
                     }
