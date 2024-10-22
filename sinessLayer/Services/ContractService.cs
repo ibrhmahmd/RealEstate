@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BusinessLayer.Services
 {
@@ -27,7 +26,6 @@ namespace BusinessLayer.Services
             _propertyService = propertyService;
             _logger = logger;
         }
-
 
         // Get all Contracts
         public async Task<PagedResult<ContractDTO>> GetAllContractsAsync(int pageNumber, int pageSize)
