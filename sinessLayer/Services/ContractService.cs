@@ -277,6 +277,7 @@ namespace BusinessLayer.Services
         {
             return new ContractDTO
             {
+                Id = Guid.NewGuid(),
                 PropertyId = property.Id,
                 PropertyLocation = property.Location,
                 IsFurnished = property.IsFUrnished,

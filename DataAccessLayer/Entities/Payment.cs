@@ -14,7 +14,12 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public DateTime PaymentDate { get; set; }
+        [StringLength(50)]
 
+        public string PropertyName { get; set; }
+
+        [StringLength(50)]
+        public string Occupantname { get; set; }
         [StringLength(50)]
         public string? PaymentMethod { get; set; }  // CreditCard, BankTransfer, ...
 

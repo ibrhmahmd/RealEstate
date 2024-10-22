@@ -590,8 +590,8 @@ namespace PresentationLayer.Controllers
 
             }
             return Unauthorized();
-
         }
+
 
 
         public async Task<IActionResult> PaymentDetails(Guid id)

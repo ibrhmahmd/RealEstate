@@ -26,13 +26,24 @@
     <br />
     <h2 class="text-center">Open New Contract</h2>
 
-    <div class="text-center mb-4">
-        <a asp-action="DownloadContractFile" asp-controller="Contract"
-           class="btn custom-green text-white rounded px-5 py-2 transition duration-300"
-           style="width: 100%; max-width: 300px;">
-            Review Contract Terms
-        </a>
-    </div>
+    @using (Html.BeginForm("GenerateInititalContractPDF", "Contract", FormMethod.Post, new { @class = "text-center mb-4" }))
+        {
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.PropertyLocation)
+                @Html.HiddenFor(model => model.PropertyName)
+                @Html.HiddenFor(model => model.Occupantname)
+                @Html.HiddenFor(model => model.ContractType)
+                @Html.HiddenFor(model => model.TotalAmount)
+                @Html.HiddenFor(model => model.Period)
+                @Html.HiddenFor(model => model.CreatedOn)
+
+            <button type="submit" class="btn custom-green text-white rounded px-5 py-2 transition duration-300" 
+                    style="width: 100%; max-width: 300px;">
+                Review Contract Terms
+            </button>
+        }
+
+
 
     <hr />
     <p class="text-muted text-center">Please fill in the details for the new contract.</p>
@@ -42,8 +53,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id )
         @Html.HiddenFor(model => model.PropertyId)
         @Html.HiddenFor(model => model.OccupantId)
+        @Html.HiddenFor(model => model.Occupantname)
         @Html.HiddenFor(model => model.PropertyLocation)
         @Html.HiddenFor(model => model.PropertyName)
         @Html.HiddenFor(model => model.ContractType)
@@ -286,12 +299,36 @@
         });
 
         $("#downloadPdfBtn").click(function () {
-            var filePath = $('#ContractFilePath').val();
-            if (filePath) {
-                window.location.href = '@Url.Action("DownloadPdf", "Contract")' + '?filePath=' + encodeURIComponent(filePath);
+            // Collect necessary data
+            var contractId = $('#ContractId').val(); // Assuming you have a hidden field for ContractId
+            var propertyId = $('#PropertyId').val(); // Assuming this is already being captured
+
+            // Validate the existence of the contractId and propertyId
+            if (contractId && propertyId) {
+                $.ajax({
+                    url: '@Url.Action("GenerateContractPDF", "Contract")',
+                    type: 'GET',
+                    data: {
+                        contractId: contractId,
+                        propertyId: propertyId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // If the response contains a file URL, initiate the download
+                            window.location.href = response.fileUrl; // Adjust this based on your response structure
+                        } else {
+                            alert('Error generating PDF: ' + response.message);
+                        }
+                    },
+                    error: function (error) {
+                        alert('Error generating PDF: ' + error.responseText);
+                    }
+                });
             } else {
-                alert('No PDF file available for download.');
+                alert('Missing required information for PDF generation.');
             }
+        });
+
         });
     });
 </script>

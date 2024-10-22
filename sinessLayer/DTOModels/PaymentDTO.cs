@@ -16,7 +16,6 @@ namespace BusinessLayer.DTOModels
         [StringLength(50)]
         public string Occupantname{ get; set; }
 
-
         [Required]
         public DateTime PaymentDate { get; set; }
 

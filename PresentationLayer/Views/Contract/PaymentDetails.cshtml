@@ -68,6 +68,8 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Property:</strong> @Model.PropertyName</li>
+                                    <li class="list-group-item"><strong>Occupant:</strong> @Model.Occupantname</li>
                                     <li class="list-group-item"><strong>Payment Method:</strong> @Model.PaymentMethod</li>
                                     <li class="list-group-item"><strong>Reference Number:</strong> @Model.ReferenceNumber</li>
                                     <li class="list-group-item"><strong>Late Fee:</strong> @Model.LateFee</li>
@@ -83,15 +85,10 @@
                         <br />
                         <a asp-action="Listpayments" style="margin-left:490px" asp-controller="Admin" class="btn btn-success  ">Back To List</a>
                         <button class="btn btn-success"
-                                onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Admin",
-                        new {PaymentMethod = Model.PaymentMethod,
-                             ReferenceNumber = Model.ReferenceNumber,
-                             LateFee = Model.LateFee,
-                             Status = Model.Status,
-                             Amount = Model.Amount,
-                             PaymentDate = Model.PaymentDate,})'" class="pdf-viewer">
-                            <i class="bi bi-download"></i>  Download invoice
+                                onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Contract", new { paymentId = Model.Id })'">
+                            <i class="bi bi-download"></i> Download Invoice
                         </button>
+
                         <br />
                         <br />
                     </div>

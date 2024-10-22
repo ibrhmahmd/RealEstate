@@ -14,7 +14,8 @@ namespace DataAccessLayer.Entities
 
         [Required]
         public Guid OccupantId { get; set; } // Renamed UserID to TenantId
-
+        [StringLength(50)]
+        public string Occupantname { get; set; }
         public Guid? AgentId { get; set; } // Optional agent who reviewed the contract
 
         [Required]
@@ -48,7 +49,7 @@ namespace DataAccessLayer.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public DateTime AcceptedOn { get; set; }
-
+        public DateTime DeclienedOn { get; set; }
         public int Period { get; set; } // months
 
         [Required, MaxLength(20)]
@@ -78,8 +79,8 @@ namespace DataAccessLayer.Entities
         [Required]
         public bool IsConditionCheckRequired { get; set; } = false; // Pre-contract inspections
         public bool IsAccepted { get; set; } = false;
+        public bool IsDecliened { get; set; } = false;
         public bool IsFurnished { get; set; } = false; // Is the property furnished?
-
         public string? Document { get; set; } // Path to the contract document (optional)
 
 
