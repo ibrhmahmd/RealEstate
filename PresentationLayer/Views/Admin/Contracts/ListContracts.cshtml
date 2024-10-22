@@ -79,7 +79,7 @@
                             @if (Model.PageNumber > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@(Model.PageNumber - 1)"
                                        asp-route-pageSize="@Model.PageSize">Previous</a>
                                 </li>
@@ -94,7 +94,7 @@
                             @if (startPage > 1)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="1"
                                        asp-route-pageSize="@Model.PageSize">1</a>
                                 </li>
@@ -105,7 +105,7 @@
                             @for (int i = startPage; i <= endPage; i++)
                             {
                                 <li class="page-item @(Model.PageNumber == i ? "active" : "")">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@i"
                                        asp-route-pageSize="@Model.PageSize">@i</a>
                                 </li>
@@ -121,7 +121,7 @@
                                 }
 
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@Model.TotalPages"
                                        asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
                                 </li>
@@ -130,7 +130,7 @@
                             @if (Model.PageNumber < Model.TotalPages)
                             {
                                 <li class="page-item">
-                                    <a class="page-link" asp-action="ListContracts"
+                                    <a class="page-link" asp-controller="admin" asp-action="ListContracts"
                                        asp-route-pageNumber="@(Model.PageNumber + 1)"
                                        asp-route-pageSize="@Model.PageSize">Next</a>
                                 </li>
