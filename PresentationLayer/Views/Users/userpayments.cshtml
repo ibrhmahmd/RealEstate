@@ -1,0 +1,194 @@
+﻿@model PagedListViewModel<BusinessLayer.DTOModels.PaymentDTO>
+@{
+    Layout = "~/Views/Shared/UserLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/custom-styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+}
+
+@section content {
+    <div class="flex min-h-screen">
+
+        <aside style="margin-left:10px; margin-top:173px; height:617px; border-radius:5px; position:absolute;" class="sidebar bg-white shadow-lg p-4 flex flex-col justify-start items-center">
+
+            <a asp-controller="users" asp-action="ListProperties" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="~/assets/img/house.png" width="27px" title="List Of Properties" alt="Property" />
+            </a>
+            <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                <img src="~/assets/img/partnership.png" width="27px" title="List Of Contracts" alt="Contract" />
+            </a>
+                                     <a asp-controller="users" asp-action="userpayments" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+       <div class="icon">
+                                <i style="width:40px; color:black" class="bi bi-cash-coin"></i>
+                            </div>
+                </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="admin" asp-action="listusers" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+                    <img src="~/assets/img/back.png" width="25px" title="Back To User List" alt="Contract" />
+                </a>
+            }
+
+        </aside>
+
+
+        <div class="flex-1 p-6 ml-20">
+
+            <h2 class="header-title" style="color: rgb(46,202,106);">User Properties</h2>
+            <br />
+            @if (Model.Items.Any())
+            {
+                <div class="header-container">
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+                </div>
+            }
+            <section class="bg-white rounded shadow-md p-6">
+                <div>
+                    @if (!Model.Items.Any())
+                    {
+                        <div class="alert alert-success" role="alert">
+                            No properties found for this user.
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-bordered" id="PropertyTable">
+                            <thead>
+                                <tr>
+                                    <th>Payment Date</th>
+                                    <th>Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var payment in Model.Items)
+                                {
+                                    <tr onclick="location.href='@Url.Action("Paymentdetails", "contract", new { Id = payment.Id })'" style="cursor: pointer;">
+                                        <td>@payment.PaymentDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@String.Format("{0:N2} EGP", payment.Amount)</td>
+                                        <td>@payment.PaymentMethod</td>
+                                        <td>@payment.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <a asp-action="Profile" asp-controller="Account" class="ml-auto custom-green text-white rounded px-4 py-2">
+                                <i class="fas fa-rotate-back"></i> Back
+                            </a>
+                        </div>
+                        <div>
+                            @* Pagination Logic *@
+                            @{
+                                int maxVisiblePages = 2; 
+                                int startPage = Math.Max(1, Model.PageNumber - 1); 
+                                int endPage = Math.Min(Model.TotalPages, startPage + maxVisiblePages - 1); 
+                            }
+                            <ul class="pagination justify-content-center">
+                                @if (Model.PageNumber > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="UserPayments"
+                                           asp-route-pageNumber="@(Model.PageNumber - 1)"
+                                           asp-route-pageSize="@Model.PageSize">Previous</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                }
+
+                                @if (startPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="UserPayments"
+                                           asp-route-pageNumber="1"
+                                           asp-route-pageSize="@Model.PageSize">1</a>
+                                    </li>
+                                }
+
+                                @for (int i = startPage; i <= endPage; i++)
+                                {
+                                    <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                                        <a class="page-link" asp-action="UserPayments"
+                                           asp-route-pageNumber="@i"
+                                           asp-route-pageSize="@Model.PageSize">@i</a>
+                                    </li>
+                                }
+
+                                @if (endPage < Model.TotalPages)
+                                {
+                                    @if (endPage < Model.TotalPages - 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span>...</span>
+                                        </li>
+                                    }
+
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="UserPayments"
+                                           asp-route-pageNumber="@Model.TotalPages"
+                                           asp-route-pageSize="@Model.PageSize">@Model.TotalPages</a>
+                                    </li>
+                                }
+
+                                @if (Model.PageNumber < Model.TotalPages)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" asp-action="UserPayments"
+                                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                                           asp-route-pageSize="@Model.PageSize">Next</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#PaymentTable tbody tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+
+                // Show message if no results found
+                if (!$('#PaymentTable tbody tr:visible').length) {
+                    $('#PaymentTable tbody').append('<tr><td colspan="6">No payments found.</td></tr>');
+                }
+            });
+        });
+    </script>
+}
+
+@{
+    ViewData["Title"] = "User Payments";
+}

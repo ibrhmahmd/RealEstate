@@ -512,6 +512,47 @@ namespace BusinessLayer.Services
             return (propertyDTOs, totalItems);
         }
 
+        public async Task<(List<PaymentDTO> payments, int totalItems)> GetUserPaymentsAsync(Guid userId, int pageNumber, int pageSize)
+        {
+            // Define the filter expression to select contracts by userId (OccupantId)
+            Expression<Func<Contract, bool>> filter = contract => contract.OccupantId == userId;
+
+            // Fetch paged contracts for the user
+            var pagedContracts = await _unitOfWork.ContractsRepository
+                .GetFilteredAndPagedAsync(pageNumber, pageSize, filter);
+
+            // Get contract Ids from the paged results
+            var contractIds = pagedContracts.Items.Select(c => c.Id).ToList();
+
+            // Fetch payments based on the contract Ids
+            var paymentsQuery = _context.Payments
+                .Where(p => contractIds.Contains(p.ContractId))
+                .AsQueryable();
+
+            // Retrieve total number of payments matching the filter
+            var totalItems = pagedContracts.TotalRecords;
+
+            // Fetch the payments
+            var payments = await paymentsQuery.ToListAsync();
+
+            // Map the payments to PaymentDTOs
+            var paymentDTOs = payments.Select(p => new PaymentDTO
+            {
+                Id = p.Id,
+                Amount = p.Amount,
+                PaymentDate = p.PaymentDate,
+                PaymentMethod = p.PaymentMethod,
+                ReferenceNumber = p.ReferenceNumber,
+                LateFee = p.LateFee,
+                Status = p.Status,
+                ContractId = p.ContractId
+            }).ToList();
+
+            // Return the payments and total number of items
+            return (paymentDTOs, totalItems);
+        }
+
+
 
         public async Task<(List<ContractDTO> Contracts, int TotalItems)> GetUserContractsAsync(Guid userId, int pageNumber, int pageSize)
         {
