@@ -31,7 +31,7 @@
  
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #f8f9fa;
+          background-color:white;
         }
 
         .sidebar {
@@ -46,7 +46,7 @@
             flex: 1;
             margin-right: 10px;
             padding: 10px 15px;
-            border: 2px solid darkgreen;
+            border: 2px solid rgb(46,202,106);
             border-radius: 20px;
             outline: none;
             transition: box-shadow 0.3s ease-in-out;
@@ -227,22 +227,7 @@
         <br />
         <br />
         <br />
-        <!-- Page Title -->
-      
-        <div  class="page-title" data-aos="fade">
-            <nav  class="breadcrumbs">
-                <div class="container">
-                    <ol>
-                        <!-- Breadcrumb links -->
-                        <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                        <li><a asp-action="Admin" asp-controller="Account">Profile</a></li>
-                        @* <li><a asp-action="@ViewData["ActionName"]" asp-controller="Admin">@ViewData["ActionName"]</a></li>*@
-                        <li class="current">@ViewData["ActionName"]</li>
-                        <li class="current">@ViewData["Title"]</li> <!-- Current Page -->
-                    </ol>
-                </div>
-            </nav>
-        </div>
+     
       
 
 
