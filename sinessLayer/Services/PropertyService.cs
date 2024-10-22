@@ -5,7 +5,6 @@ using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
