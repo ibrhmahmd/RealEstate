@@ -646,6 +646,28 @@ namespace PresentationLayer.Controllers
             return RedirectToAction("ListContracts");
         }
 
+
+        public async Task<IActionResult> Decline(Guid id)
+        {
+            try
+            {
+                await _contractService.DeclineContract(id);
+                await _contractService.TerminateAsync(id);
+                TempData["SuccessMessage"] = "Contract Accepted successfully.";
+            }
+            catch (KeyNotFoundException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while Accepting the contract.";
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("ListContracts");
+        }
+
+
         //Developer
         public async Task<IActionResult> DeveloperList(int pageNumber = 1, int pageSize = 5)
         {

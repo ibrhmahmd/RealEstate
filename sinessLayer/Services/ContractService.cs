@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BusinessLayer.Services
 {
@@ -138,15 +139,18 @@ namespace BusinessLayer.Services
         {
             // AutoMapper to map ContractDTO to Contract entity
             var contract = _mapper.Map<Contract>(contractDto);
-            contract.CreatedOn = DateTime.Now;
             contract.UpdatedOn = DateTime.Now;
 
             await _unitOfWork.ContractsRepository.InsertAsync(contract);
             await _unitOfWork.SaveAsync();
+            await _propertyService.PropertyNotAvailbleAsync(contract.PropertyId);
 
             // Return the mapped ContractDTO (this might return a contract with an ID if you need it)
             return _mapper.Map<ContractDTO>(contract);
         }
+
+
+
 
 
         // Update a contract
@@ -183,11 +187,27 @@ namespace BusinessLayer.Services
 
             // Assuming PropertyOccupiedAsync sets the property as occupied
             await _propertyService.PropertyOccupiedAsync(contract.PropertyId, contract.OccupantId);
-
+            await _propertyService.PropertyNotAvailbleAsync(contract.PropertyId);
             await _unitOfWork.ContractsRepository.Accept(Id);
             await _unitOfWork.SaveAsync();
         }
 
+        public async Task DeclineContract(Guid Id)
+        {
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(Id);
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {Id} not found.");
+            }
+
+            await _propertyService.PropertyAvailbleAsync(contract.PropertyId);
+            contract.DeclienedOn= DateTime.Now;
+            contract.IsDecliened = true;
+            contract.UpdatedOn = DateTime.Now;
+            
+            await _unitOfWork.ContractsRepository.UpdateAsync(contract);
+            await _unitOfWork.SaveAsync();
+        }
 
 
         // Soft delete a contract
@@ -216,6 +236,7 @@ namespace BusinessLayer.Services
 
             // Set the IsTerminated property to true
             contract.IsTerminated = true;
+            await _propertyService.PropertyAvailbleAsync(contract.PropertyId);
 
             // Save changes to the database
             await _unitOfWork.SaveAsync();
@@ -300,6 +321,7 @@ namespace BusinessLayer.Services
                 PropertyName = property.Name,
             };
         }
+
         private void ProcessContractByStatus(ContractDTO contractModel, Property property)
         {
             switch (property.Status.Value)

@@ -99,7 +99,6 @@ namespace PresentationLayer.Controllers
 
 
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ContractDTO contractDto)
@@ -180,6 +179,7 @@ namespace PresentationLayer.Controllers
             }
         }
 
+
         public async Task<IActionResult> DownloadContractFile()
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "properties", "Residential Lease Agreement.pdf");
@@ -193,6 +193,7 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory, contentType, fileName);
         }
+
 
 
         public async Task<IActionResult> PaymentDetails(Guid id)

@@ -3,23 +3,36 @@
     ViewBag.Title = "Home Page - EstateAgency";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <!-- Hero Section -->
 <section id="hero" class="hero section dark-background">
-
     <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-
-        @foreach (var property in Model.Items)
+        @if (Model.Items.Any())
         {
-            var imageUrl = Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl);
-            <div class="carousel-item @(property == Model.Items.First() ? "active" : "")">
-                <img style="width:2000px;" src="@imageUrl" class="img-fluid" alt="@property.Name" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
+            foreach (var property in Model.Items)
+            {
+                var imageUrl = Url.Content("~/properties/propertypicture/" + property.PropertyPictureUrl);
+                <div class="carousel-item @(property == Model.Items.First() ? "active" : "")">
+                    <img style="width:2000px;" src="@imageUrl" class="img-fluid" alt="@property.Name" onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
+                    <div class="carousel-container">
+                        <div>
+                            <p>@property.Location</p>
+                            <h2><span>789</span> @property.Location</h2>
+                            <a href="@Url.Action("Details", "Properties", new { id = property.Id })" class="btn-get-started">
+                                @property.Status | @property.Price.ToString("C", new System.Globalization.CultureInfo("en-EG"))
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="carousel-item active">
+                <img style="width:2000px;" src="@Url.Content("~/properties/propertypicture/default.jpeg")" class="img-fluid" alt="Default Image" />
                 <div class="carousel-container">
                     <div>
-                        <p>@property.Location</p>
-                        <h2><span>789</span> @property.Location</h2>
-                        <a href="@Url.Action("Details", "Properties", new { id = property.Id })" class="btn-get-started">
-                            @property.Status | @property.Price.ToString("C", new System.Globalization.CultureInfo("en-EG"))
-                        </a>
+                        <h2>No Properties Available</h2>
                     </div>
                 </div>
             </div>
@@ -38,11 +51,14 @@
             {
                 <li data-bs-target="#hero-carousel" data-bs-slide-to="@i" class="@(i == 0 ? "active" : "")"></li>
             }
+            @if (!Model.Items.Any())
+            {
+                <li data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"></li>
+            }
         </ol>
-
     </div>
-
 </section>
+
 
 
 <!-- Services Section -->

@@ -4,6 +4,7 @@ using BusinessLayer.UnitOfWork.Interface;
 using DataAccessLayer.Entities;
 using DataAccessLayer.GenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using System;
 using System.Collections.Generic;
@@ -38,8 +39,10 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
         {
              var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
-
-            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            var filteredProperties = propertiesPaged.Items
+              .Where(property => property.IsDeleted ==false)
+              .ToList();
+            var propertyDTOs = filteredProperties.Select(property => new PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -62,8 +65,7 @@ namespace BusinessLayer.Services
             };
         }
 
-
-
+  
 
 
         public async Task<PagedResult<PropertyDTO>> GetAvailblePropertiesAsync(int pageNumber, int pageSize)
@@ -205,9 +207,9 @@ namespace BusinessLayer.Services
 
 
 
-        public async Task PropertyOccupiedAsync(Guid Contractid, Guid UserId)
+        public async Task PropertyOccupiedAsync(Guid propertyId, Guid UserId)
         {
-            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(Contractid);
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
 
             if (selectedProperty != null)
             {
@@ -218,6 +220,35 @@ namespace BusinessLayer.Services
                 await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
 
                 // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task PropertyNotAvailbleAsync(Guid propertyId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = false;
+                selectedProperty.UpdatedOn = DateTime.Now;
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
+                // Save changes to the database
+                await _unitOfWork.SaveAsync();
+            }
+        }
+        public async Task PropertyAvailbleAsync(Guid propertyId)
+        {
+            var selectedProperty = await _unitOfWork.PropertiesRepository.GetByIdAsync(propertyId);
+
+            if (selectedProperty != null)
+            {
+                selectedProperty.IsAvailable = true;
+                selectedProperty.UpdatedOn = DateTime.Now;
+                selectedProperty.IsOccupied = false;
+                await _unitOfWork.PropertiesRepository.UpdateAsync(selectedProperty);
+
                 await _unitOfWork.SaveAsync();
             }
         }

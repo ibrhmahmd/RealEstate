@@ -322,7 +322,7 @@ namespace PresentationLayer.Controllers
             if (ModelState.IsValid)
             {
                 await _propertyService.CreatePropertyAsync(propertyDto);
-                return RedirectToAction("ListProperties");
+                return RedirectToAction("Index" ,  "Home");
             }
 
             // Reload lists for the form in case of validation failure.

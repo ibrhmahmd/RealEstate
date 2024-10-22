@@ -198,6 +198,7 @@ namespace BusinessLayer.Services
                 payments.Add(new PaymentDTO
                 {
                     Id = Guid.NewGuid(),
+                    ReferenceNumber = Guid.NewGuid().ToString(),
                     Occupantname = contractDto.Occupantname,
                     PropertyName = contractDto.PropertyName,
                     ContractId = contractDto.Id,
@@ -205,7 +206,6 @@ namespace BusinessLayer.Services
                     Amount = contractDto.InitialPayment.Value,
                     Status = PaymentStatus.Pending,
                     PaymentMethod = "Initial Payment",
-                    ReferenceNumber = Guid.NewGuid().ToString(),
                     LateFee = contractDto.RecurringPaymentAmount * 12 / 100,
                 });
             }
