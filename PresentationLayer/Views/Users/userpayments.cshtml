@@ -46,7 +46,7 @@
             @if (Model.Items.Any())
             {
                 <div class="header-container">
-                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Properties..." />
+                    <input type="text" id="searchInput" class="search-bar" placeholder="Search Payments..." />
                 </div>
             }
             <section class="bg-white rounded shadow-md p-6">
@@ -54,7 +54,7 @@
                     @if (!Model.Items.Any())
                     {
                         <div class="alert alert-success" role="alert">
-                            No properties found for this user.
+                            No Payments found for this user.
                         </div>
                     }
                     else
