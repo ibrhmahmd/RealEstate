@@ -36,6 +36,9 @@ namespace BusinessLayer.Services
             {
                 Id = payment.Id,
                 PaymentDate = payment.PaymentDate,
+                PropertyName = payment.PropertyName,
+                ReferenceNumber = payment.ReferenceNumber,
+                Occupantname = payment.Occupantname,
                 Amount = payment.Amount,
                 ContractId = payment.ContractId,
                 PaymentMethod = payment.PaymentMethod,
@@ -59,6 +62,9 @@ namespace BusinessLayer.Services
             {
                 Id = payment.Id,
                 PaymentDate = payment.PaymentDate,
+                PropertyName = payment.PropertyName,
+                ReferenceNumber = payment.ReferenceNumber,
+                Occupantname = payment.Occupantname,
                 Amount = payment.Amount,
                 ContractId = payment.ContractId,
                 PaymentMethod = payment.PaymentMethod,

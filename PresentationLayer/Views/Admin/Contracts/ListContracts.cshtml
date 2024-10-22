@@ -54,9 +54,11 @@
                                 <a asp-action="Accept" asp-controller="Admin" asp-route-Id="@contract.Id"  class="btn btn-custom btn-edit">
                                     <i class="fas fa-check"></i> Accept
                                 </a>
-                                <a asp-action="Decline" asp-controller="Admin" asp-route-Id="@contract.Id" class="btn btn-custom btn-edit">
-                                    <i class="fas fa-check"></i> Decline
-                                </a>
+<a asp-action="Decline" asp-controller="Admin" asp-route-id="@contract.Id" style="background-color: red;" class="btn btn-custom btn-edit">
+    <i class="fas fa-times"></i> Decline
+</a>
+
+
                             </td>
                         </tr>
                     }
@@ -183,15 +185,15 @@
                         <p>Viewe Archived.</p>
                     </div>
                 </div><!-- End Service Item -->
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+ <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
                     <div class="service-item position-relative">
                         <div class="icon">
                             <i class="bi bi-easel"></i>
                         </div>
-                        <a href="@Url.Action("TerminatedContractsList", "Admin")" class="stretched-link">
-                            <h3>Terminated</h3>
+                        <a href="@Url.Action("ListProperties", "Admin")" class="stretched-link">
+                            <h3>Properties</h3>
                         </a>
-                        <p>Review Declined Contracts </p>
+                        <p>CRUD on Properties</p>
                     </div>
                 </div><!-- End Service Item -->
             </div>
