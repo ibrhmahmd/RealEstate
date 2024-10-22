@@ -36,15 +36,14 @@
             flex: 1;
             margin-right: 10px;
             padding: 10px 15px;
-            border: 2px solid #003366;
-          
+            border: 2px solid rgb(46,202,106);
             border-radius: 20px;
             outline: none;
             transition: box-shadow 0.3s ease-in-out;
         }
 
             .search-bar:focus {
-                box-shadow: 0 0 10px rgba(0, 51, 102, 0.5);
+                box-shadow: 0 0 10px rgb(46,202,106);
             }
 
         .table-container {
@@ -66,11 +65,53 @@
         .header-title {
             font-size: 24px;
             font-weight: bold;
-            color: #003366;
+            color: rgb(46,202,106);
+        }
+
+
+        .sidebar-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .custom-green {
+            background-color: rgb(46,202,106);
+        }
+
+        /* Table styling */
+        .table {
+            background-color: #f8f9fa; /* Light background for the table */
+        }
+
+
+            .table th {
+                background-color: rgb(46,202,106);
+                color: white;
+                text-align: center;
+            }
+
+            .table td {
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .table tbody tr:nth-child(odd) {
+                background-color: #f9f9f9;
+            }
+
+            .table tbody tr:nth-child(even) {
+                background-color: #e0f7fa;
+            }
+
+
+        .header-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: rgb(46,202,106); /* Title color */
         }
 
         .btn-add {
-            background-color: #003366;
+            background-color: rgb(46,202,106); /* Button color */
             color: white;
             border: none;
             border-radius: 20px;
@@ -79,27 +120,55 @@
         }
 
             .btn-add:hover {
-                background-color: #002244;
+                background-color: rgb(46,202,106); /* Darker green on hover */
             }
 
-        .table th {
-            background-color: #003366;
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+        }
+
+        .page-item {
+            margin: 0 5px;
+        }
+
+        .pagination .page-link {
+            color: rgb(46,202,106);
+            background-color: #ffffff;
+            border: 1px solid rgb(46,202,106);
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: rgb(46,202,106);
             color: white;
-            text-align: center;
         }
 
-        .table td {
-            vertical-align: middle;
-            text-align: center;
+        .pagination .page-link:hover {
+            background-color: rgb(46,202,106);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .table tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
+
+        .btn-add {
+  
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
         }
 
-        .table tbody tr:nth-child(even) {
-            background-color: #e0f7fa;
-        }
+            .btn-add:hover {
+                background-color: darkgreen;
+                color:white;
+            }
+
+     
 
         .btn-custom {
             display: inline-block;
@@ -109,68 +178,72 @@
             color: white;
         }
 
-        .btn-edit {
-            background-color: #0056b3;
-        }
+
 
         .btn-delete {
-            background-color: #dc3545;
+            background-color: rgb(255, 82, 82); /* Softer red for delete button */
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 7px 10px;
+            transition: background-color 0.3s ease;
         }
 
+            .btn-delete:hover {
+                background-color: rgb(220, 53, 69); /* Darker red on hover */
+            }
+
         .btn-details {
-            background-color: #17a2b8;
+            background-color: rgb(46,202,106);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
         }
+
+         .btn-details:hover {
+                background-color: #28a37f;
+                color: white; /* Darker gold on hover */
+            }
+
+
+
+        .btn-success {
+            background-color: lightseagreen;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 7px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-sucess:hover {
+            background-color: deepskyblue;
+         
+                color: white; /* Darker gold on hover */
+            }
+
+        .btn-edit {
+            background-color: rgb(46,202,106);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 7px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-edit:hover {
+                background-color: #28a37f;
+            color: white; /* Darker gold on hover */
+        }
+        /* Existing styles here */
+
 
         .btn-custom i {
             margin-right: 5px;
         }
 
-    
-        .table-container {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-
-            margin-top: 20px;
-        }
-
-        .page-item {
-            margin: 0 5px;
-        }
-
-        .page-link {
-            color: #003366; /* Primary color */
-            background-color: #ffffff;
-            border: 2px solid #003366;
-            border-radius: 20px;
-
-            text-decoration: none;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .page-item.active .page-link {
-            background-color: #003366;
-            color: white;
-        }
-
-        .page-item.disabled .page-link {
-            color: #6c757d;
-            background-color: #e9ecef;
-            border-color: #dee2e6;
-        }
-
-        .page-link:hover {
-            background-color: #002244; /* Darker on hover */
-            color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
 
         .custom-card-container {
             margin-top: 50px;
