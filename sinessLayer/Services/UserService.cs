@@ -489,7 +489,7 @@ namespace BusinessLayer.Services
             var propertyIds = pagedContracts.Items.Select(c => c.PropertyId).ToList();
 
             var propertiesQuery = _context.Properties
-                .Where(p => propertyIds.Contains(p.Id) && p.IsOccupied == true)
+                .Where(p => propertyIds.Contains(p.Id) && p.IsOccupied == true && p.IsDeleted==false)
                 .AsQueryable();
 
             var totalItems = pagedContracts.TotalRecords;

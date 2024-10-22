@@ -37,6 +37,7 @@ namespace BusinessLayer.Services
                 Id = contract.Id,
                 ContractType = contract.ContractType,
                 AgentId = contract.AgentId,
+                Document=contract.Document,
                 StartDate = contract.StartDate,
                 EndDate = contract.EndDate,
                 TotalAmount = contract.TotalAmount,

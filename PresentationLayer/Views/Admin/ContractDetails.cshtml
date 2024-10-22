@@ -20,6 +20,10 @@
             height: auto; /* Allow the card to grow automatically based on content */
             padding: 20px; /* Add more padding inside the card */
         }
+
+        .custom-green {
+            background-color: rgb(46,202,106);
+        }
     </style>
 }
 
@@ -32,7 +36,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Contract Details</h1>
+            <h1 class="header-title" style="color: rgb(46,202,106)">Contract Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -63,14 +67,15 @@
                             </div>
 
                         </div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-pagination"></div>
+                    
                     </div>
-                
-                    <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
-					<br /><br />
+                    <br />
 
+                    <a style="margin-left:320px" asp-action="DownloadFileadmin"
+                       asp-controller="Admin"
+                       asp-route-contractId="@Model.Id" class="ml-auto custom-green text-white rounded px-4 py-2">Download</a>
+					<br /><br />
+					<br />
 				</div>   
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
@@ -94,7 +99,7 @@
                     </div>
                     <br />
 
-                    <a asp-action="ListContracts" style="margin-left:105px" asp-controller="Admin" class="btn btn-success btn-sm ">Back To List</a>
+                    <a asp-action="ListContracts" style="margin-left:90px" asp-controller="Admin" class="ml-auto custom-green text-white rounded px-4 py-2">Back To List</a>
                 </div>
             </div>
         </div>

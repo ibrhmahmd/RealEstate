@@ -41,7 +41,7 @@ namespace PresentationLayer.Controllers
             ProjectService projectService,
             MyDbContext context,
             IWebHostEnvironment webHostEnvironment,
-            ILogger<ContractController> logger, 
+            ILogger<ContractController> logger,
             UserManager<User> userManager
             )
         {
@@ -226,7 +226,7 @@ namespace PresentationLayer.Controllers
                     TotalRecords = pagedUsers.TotalRecords
 
                 };
-                return View("ListUsers",viewModel);
+                return View("ListUsers", viewModel);
             }
             return Unauthorized();
         }
@@ -386,12 +386,12 @@ namespace PresentationLayer.Controllers
             {
                 // Upload the image and get the file name.
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
-                propertyDto.PropertyPictureUrl = fileName; 
+                propertyDto.PropertyPictureUrl = fileName;
             }
             else
             {
                 // No file uploaded, set default image path.
-                propertyDto.PropertyPictureUrl = "~/Properties/PropertyPicture/default.jpg"; 
+                propertyDto.PropertyPictureUrl = "~/Properties/PropertyPicture/default.jpg";
             }
 
             // Map AddressId to Location if available.
@@ -455,7 +455,7 @@ namespace PresentationLayer.Controllers
                 var fileName = UploadFile.UploadImage("PropertyPicture", propertyDto.PropertyPicture);
                 propertyDto.PropertyPictureUrl = fileName;
             }
-       
+
             else
             {
                 // If no new picture is uploaded, keep the existing URL
@@ -522,7 +522,7 @@ namespace PresentationLayer.Controllers
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)
-            { 
+            {
                 return NotFound();
             }
             try
@@ -826,6 +826,37 @@ namespace PresentationLayer.Controllers
             var fileName = Path.GetFileName(path);
             return File(memory, contentType, fileName);
         }
+        [HttpGet] 
+        public async Task<IActionResult> DownloadFileadmin(Guid contractId)
+        {
+            var contract = await _contractService.GetContractByIdAsync(contractId);
+
+            if (contract == null || string.IsNullOrEmpty(contract.Document))
+            {
+                _logger.LogWarning("Contract not found or document missing for contract ID: {contractId}", contractId);
+                return NotFound("Contract not found or document missing.");
+            }
+
+            var path = Path.Combine("wwwroot", "properties", "contracts", contract.Document);
+
+            if (!System.IO.File.Exists(path))
+            {
+                _logger.LogWarning("File not found at path: {path}", path);
+                return NotFound("File not found.");
+            }
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "application/pdf"; 
+            var fileName = Path.GetFileName(path); 
+
+            // Return the file to the user
+            return File(memory, contentType, fileName);
+        }
+
 
     }
 }
