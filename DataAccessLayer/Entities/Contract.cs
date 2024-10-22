@@ -27,8 +27,8 @@ namespace DataAccessLayer.Entities
         [ForeignKey("PropertyId")]
         public virtual Property Property { get; set; }
 
-        [ForeignKey("TenantId")]
-        public virtual User? Occupant { get; set; } // Renamed User to Tenant
+        [ForeignKey("OccupantId")]
+        public virtual User? Occupant { get; set; }
 
         [ForeignKey("AgentId")]
         public virtual User? Agent { get; set; } // Navigation property for the Agent

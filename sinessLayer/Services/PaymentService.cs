@@ -198,6 +198,8 @@ namespace BusinessLayer.Services
                 payments.Add(new PaymentDTO
                 {
                     Id = Guid.NewGuid(),
+                    Occupantname = contractDto.Occupantname,
+                    PropertyName = contractDto.PropertyName,
                     ContractId = contractDto.Id,
                     PaymentDate = contractDto.StartDate,
                     Amount = contractDto.InitialPayment.Value,

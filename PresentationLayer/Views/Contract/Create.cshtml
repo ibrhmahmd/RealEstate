@@ -268,35 +268,39 @@
             formData.append('OccupantId', $('#OccupantId').val());
             formData.append('PropertyLocation', $('#PropertyLocation').val());
             formData.append('PropertyName', '@Model.PropertyName');
+            formData.append('Occupantname', '@Model.Occupantname');
+            formData.append('Period', '@Model.Period');
+            formData.append('TotalAmount', '@Model.TotalAmount');
             formData.append('ContractType', $('#ContractType').val());
             formData.append('StartDate', startDate);  // Append formatted startDate
             formData.append('EndDate', endDate);  // Append formatted endDate
+
 
             // Debugging FormData contents
             for (var pair of formData.entries()) {
                 console.log(pair[0] + ': ' + pair[1]);
             }
 
-            $.ajax({
-                url: '@Url.Action("Create", "Contract")',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.success) {
-                        alert('Contract created successfully!');
-                        $('#ContractFilePath').val(response.filePath);
-                        $('#downloadPdfBtn').prop('disabled', false);
-                    } else {
-                        alert('Error creating contract: ' + response.message);
+              $.ajax({
+                    url: '@Url.Action("Create", "Contract")',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Contract created successfully!');
+                            $('#ContractFilePath').val(response.filePath);
+                            $('#downloadPdfBtn').prop('disabled', false);
+                        } else {
+                            alert('Error creating contract: ' + response.message);
+                        }
+                    },
+                    error: function (error) {
+                        alert('Error creating contract: ' + error.responseText);
                     }
-                },
-                error: function (error) {
-                    alert('Error creating contract: ' + error.responseText);
-                }
+                });
             });
-        });
 
         $("#downloadPdfBtn").click(function () {
             // Collect necessary data

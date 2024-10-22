@@ -85,6 +85,7 @@ namespace PresentationLayer.Controllers
                 {
                     var contractModel = await _contractService.ProcessContractAsync(propertyId.Value);
                     contractModel.Occupantname = user.UserName;
+                    contractModel.Id = Guid.NewGuid();
                     return View("~/Views/Contract/Create.cshtml", contractModel);
                 }
                 catch (KeyNotFoundException)
@@ -152,7 +153,7 @@ namespace PresentationLayer.Controllers
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Error creating contract for user {UserId}.", contractDto.OccupantId);
-                        ModelState.AddModelError("", "An error occurred while creating the contract. Please try again later.");
+                        ModelState.AddModelError("ContractCreationError", "An error occurred while creating the contract. Please try again later.");
                         return View(contractDto);
                     }
                 }
