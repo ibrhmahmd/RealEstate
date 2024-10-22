@@ -16,6 +16,7 @@ namespace BusinessLayer.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly PropertyService _propertyService;
+        private readonly MyDbContext _Context;
         private readonly ILogger<ContractService> _logger;
 
         public ContractService(IUnitOfWork unitOfWork, IMapper mapper, PropertyService propertyService, ILogger<ContractService> logger)
@@ -204,9 +205,22 @@ namespace BusinessLayer.Services
 
         public async Task TerminateAsync(Guid id)
         {
-            await _unitOfWork.ContractsRepository.Terminate(id);
+            // Retrieve the contract using the provided ID
+            var contract = await _unitOfWork.ContractsRepository.GetByIdAsync(id);
+
+            // Check if the contract exists
+            if (contract == null)
+            {
+                throw new KeyNotFoundException($"Contract with ID {id} not found.");
+            }
+
+            // Set the IsTerminated property to true
+            contract.IsTerminated = true;
+
+            // Save changes to the database
             await _unitOfWork.SaveAsync();
         }
+
 
 
 
