@@ -38,8 +38,10 @@ namespace BusinessLayer.Services
         public async Task<PagedResult<PropertyDTO>> GetLatestPropertiesAsync(int count)
         {
              var propertiesPaged = await _unitOfWork.PropertiesRepository.GetLatestPropertiesAsync(3, 1, 3);
-
-            var propertyDTOs = propertiesPaged.Items.Select(property => new PropertyDTO
+            var filteredProperties = propertiesPaged.Items
+              .Where(property => property.IsDeleted ==false)
+              .ToList();
+            var propertyDTOs = filteredProperties.Select(property => new PropertyDTO
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -62,8 +64,7 @@ namespace BusinessLayer.Services
             };
         }
 
-
-
+  
 
 
         public async Task<PagedResult<PropertyDTO>> GetAvailblePropertiesAsync(int pageNumber, int pageSize)
