@@ -29,6 +29,11 @@
             <a asp-controller="users" asp-action="ListContracts" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
                 <img src="~/assets/img/partnership.png" width="27px" title="List Of Contracts" alt="Contract" />
             </a>
+                                     <a asp-controller="users" asp-action="userpayments" asp-route-id="@Model.UserId" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
+       <div class="icon">
+                                <i style="width:40px; color:black" class="bi bi-cash-coin"></i>
+                            </div>
+                </a>
             @if (User.IsInRole("Admin"))
             {
                 <a asp-controller="admin" asp-action="listusers" class="sidebar-icon bg-gray-200 rounded-full flex justify-center items-center mb-4">
