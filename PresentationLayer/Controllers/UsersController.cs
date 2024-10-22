@@ -200,7 +200,7 @@ namespace PresentationLayer.Controllers
             return Guid.TryParse(userIdString, out Guid userId) ? userId : (Guid?)null;
         }
 
-        public async Task<IActionResult> ListContracts(Guid Id, int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListContracts(Guid Id, int pageNumber = 1, int pageSize = 10)
         {
             if (Id == null)
             {
@@ -221,7 +221,7 @@ namespace PresentationLayer.Controllers
             return View(pagedListViewModel);
         }
 
-        public async Task<IActionResult> ListProperties(Guid Id, int pageNumber = 1, int pageSize = 5)
+        public async Task<IActionResult> ListProperties(Guid Id, int pageNumber = 1, int pageSize = 10)
         {
             if (Id == null)
             {
@@ -238,6 +238,7 @@ namespace PresentationLayer.Controllers
             };
             return View(pagedListViewModel);
         }
+
 
 
         public async Task<IActionResult> ListPropertiesOWNED(int pageNumber = 1, int pageSize = 5)
