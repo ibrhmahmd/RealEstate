@@ -13,9 +13,10 @@ namespace BusinessLayer.DTOModels
 		public Guid PropertyId { get; set; }
 
 		[Required]
-		public Guid OccupantId { get; set; } 
-
-		public Guid? AgentId { get; set; } 
+		public Guid OccupantId { get; set; }
+        [StringLength(50)]
+        public string Occupantname { get; set; }
+        public Guid? AgentId { get; set; } 
 
 		[Required]
 		public Guid PaymentMethodId { get; set; } 
@@ -57,6 +58,10 @@ namespace BusinessLayer.DTOModels
         public bool IsFurnished { get; set; } = false; // Is the property furnished?
         public bool IsAccepted { get; set; } = false;
         public DateTime AcceptedOn { get; set; }
+
+        public bool IsDecliened { get; set; } = false;
+        public DateTime DeclienedOn { get; set; }
+
 
         [Required, MaxLength(200)]
 		public string PropertyLocation { get; set; } // Location of the property

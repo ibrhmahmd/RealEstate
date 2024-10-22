@@ -51,6 +51,29 @@ namespace BusinessLayer.Services
                 TotalRecords = paymentsPaged.TotalRecords
             };
         }
+        public async Task<PagedResult<PaymentDTO>> GetGroupedPaymentsByContractAsync(int pageNumber, int pageSize)
+        {
+            var paymentsPaged = await _unitOfWork.PaymentsRepository.GetAllPagedAsync(pageNumber, pageSize);
+
+            var PaymentDTOs = paymentsPaged.Items.Select(payment => new PaymentDTO
+            {
+                Id = payment.Id,
+                PaymentDate = payment.PaymentDate,
+                Amount = payment.Amount,
+                ContractId = payment.ContractId,
+                PaymentMethod = payment.PaymentMethod,
+                Status = payment.Status,
+
+
+            }).ToList();
+            return new PagedResult<PaymentDTO>
+            {
+                Items = PaymentDTOs,
+                CurrentPage = paymentsPaged.CurrentPage,
+                PageSize = paymentsPaged.PageSize,
+                TotalRecords = paymentsPaged.TotalRecords
+            };
+        }
 
 
 
@@ -200,6 +223,8 @@ namespace BusinessLayer.Services
                         Id = Guid.NewGuid(),
                         ContractId = contractDto.Id,
                         PaymentDate = nextPaymentDate,
+                        Occupantname = contractDto.Occupantname,
+                        PropertyName = contractDto.PropertyName,
                         Amount = contractDto.RecurringPaymentAmount.Value,
                         Status = PaymentStatus.Pending,
                         PaymentMethod = "Recurring Payment",
@@ -242,7 +267,6 @@ namespace BusinessLayer.Services
             }
             return totalPayments > 0 ? totalPayments : 0; // Ensure non-negative result
         }
-
 
         private DateTime GetNextPaymentDate(DateTime currentDate, string frequency)
         {
