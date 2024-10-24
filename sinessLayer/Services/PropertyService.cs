@@ -22,7 +22,6 @@ namespace BusinessLayer.Services
             _context = dbContext;
         }
 
-
         // Get all properties
         public async Task<PagedResult<PropertyDTO>> GetAllPropertiesAsync(int pageNumber, int pageSize)
         {

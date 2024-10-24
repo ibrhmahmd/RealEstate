@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BusinessLayer.DTOModels.PaymentDTO>; 
+﻿@model IEnumerable<BusinessLayer.DTOModels.PaymentDTO>
 
 @{
     ViewData["Title"] = "Review Contract Payments";
@@ -15,38 +15,52 @@
         <p>Your contract has been successfully saved and is now waiting for admin approval.</p>
     </div>
 
-<div class="container">
-    <h2 class="header-title">Review Contract Payments</h2>
-    <div class="container table-container">
-
-        <table class="table table-hover table-bordered" id="PaymentTable">
-            <thead>
-                <tr>
-                    <th>Payment Date</th>
-                    <th>Amount</th>
-                    <th>Payment Method</th>
-                    <th>Contract</th>
-                </tr>
-            </thead>
-            <tbody id="paymentTable">
-                @foreach (var payment in Model)
-                {
-                    <tr onclick="location.href='@Url.Action("paymentdetails", "Contract", new { Id = payment.Id })'" style="cursor: pointer;">
-                        <td>@payment.PaymentDate</td>
-                        <td>@payment.Amount</td>
-                        <td>@payment.PaymentMethod</td>
-                        <td>@payment.ContractId</td>
-
+    <div class="container">
+        <h2 class="header-title">Review Contract Payments</h2>
+        <div class="container table-container">
+            <table class="table table-hover table-bordered" id="PaymentTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Payment Date</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Contract</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <a asp-action="Details" asp-controller="Contract" asp-route-id="@Model.FirstOrDefault()?.ContractId" class="ml-auto custom-green text-white rounded px-4 py-2">Start Contract</a>
+                </thead>
+                <tbody id="paymentTable">
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var payment in Model)
+                        {
+                    @*         <tr onclick="location.href='@Url.Action("paymentdetails", "Contract", new { Id = payment.Id })'" style="cursor: pointer;"> *@
+                        <tr>
+                                <td>@payment.PaymentDate.ToString("yyyy-MM-dd")</td>
+                                <td>@payment.Amount.ToString("C")</td>
+                                <td>@payment.PaymentMethod</td>
+                                <td>@payment.ContractId</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No payments available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    @if (Model != null && Model.Any())
+                    {
+                        <a asp-action="Details" asp-controller="Contract" asp-route-id="@Model.FirstOrDefault()?.ContractId" class="ml-auto custom-green text-white rounded px-4 py-2">Start Contract</a>
+                    }
+                    else
+                    {
+                        <span>No contract found to start</span>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-

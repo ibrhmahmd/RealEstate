@@ -162,6 +162,11 @@ namespace PresentationLayer.Controllers
             TempData["ErrorMessage"] = "You need to be Verified First";
             return View(TempData);
         }
+        public async Task<IActionResult> ReviewContractPayments()
+        {
+            return View();
+        }
+
 
 
 
