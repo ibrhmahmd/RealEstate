@@ -151,8 +151,8 @@
         <div class="header-container">
             <h1 class="header-title" style="color: rgb(46,202,106)">Contract Details</h1>
 
-        </div> <div class="container" data-aos="fade-up">
-            <div class="row">
+             </div> <div class="container" data-aos="fade-up">
+                <div class="row">
                 <div class="col-lg-9" data-aos="fade-up">
                     <div class="portfolio-details-slider swiper init-swiper">
                         <script type="application/json" class="swiper-config">
@@ -185,11 +185,10 @@
 
                     <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
 					<br /><br />
-                        <a asp-action="DownloadFile" style="margin-left:330px" asp-controller="Admin" class="btn btn-success ">Download</a>
-    <br /><br />
 
-</div>
-				</div>   
+
+                  </div>
+				
                 <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card">
                         <div class="card-header">
@@ -214,16 +213,15 @@
 
                         </div>
                     </div>
-                    <br />
-                    <a asp-action="Terminate"style="margin-left: 105px; background-color: #dc3545; border-color: #dc3545;"asp-controller="Admin"asp-route-Id="@Model.Id"class="btn btn-danger btn-sm text-white"><i class="fas fa-trash"></i> Terminate</a>
-                    <br />
-                    <br />
+            
+      
 
                     <a asp-action="ListContracts" style="margin-left:80px" asp-controller="Admin" class="btn-back-to-list">Back To List</a>
-                </div>
+				</div>
+			</div>
             </div>
-        </div>
-    </div>
+       </div>
+ 
 
 }
 

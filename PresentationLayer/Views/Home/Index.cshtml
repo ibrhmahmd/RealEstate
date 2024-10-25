@@ -109,7 +109,7 @@
                 @* Check user role and redirect accordingly *@
                 @if (User.IsInRole("Admin"))
                 {
-                    <a href="@Url.Action("ListContracts", "Users")" class="stretched-link">
+                       <a href="@Url.Action("ListContracts", "Admin")" class="stretched-link">
                         <h3>Manage contracts</h3>
                     </a>
                 }
