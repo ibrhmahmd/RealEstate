@@ -18,16 +18,15 @@
                     <div class="row d-flex justify-content-center text-center">
                         <div class="col-lg-8">
                             <h1>@ViewData["Title"]</h1>
-                            <p class="mb-0"></p>
                         </div>
                     </div>
                 </div>
             </div>
-           
         </div><!-- End Page Title -->
-        <!-- Real Estate 2 Section -->
+        <!-- Real Estate Section -->
         <section id="real-estate-2" class="real-estate-2 section">
             <div class="container" data-aos="fade-up">
+                <!-- Property Images Slider -->
                 <div class="portfolio-details-slider swiper init-swiper">
                     <script type="application/json" class="swiper-config">
                         {
@@ -56,88 +55,63 @@
                                  onerror="this.onerror=null; this.src='@Url.Content("~/properties/propertypicture/default.jpeg")';" />
                         </div>
                     </div>
-
-
-
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
                     <div class="swiper-pagination"></div>
-                </div>
-
+                </div><!-- End Property Images Slider -->
+                <!-- Property Details and Tabs -->
                 <div class="row justify-content-between gy-4 mt-4">
                     <div class="col-lg-8" data-aos="fade-up">
                         <div class="portfolio-description">
-                            <h2>This is an example of property details</h2>
-                            <p>Autem ipsum nam porro corporis rerum. Quis eos dolorem eos itaque inventore commodi labore quia quia.</p>
+                            <h2>Property Details</h2>
+                     
                         </div>
-                        <!-- End Portfolio Description -->
 
-
-
-                        <!-- Tabs -->
+                        <!-- Tabs Navigation -->
                         <ul class="nav nav-pills mb-3">
                             <li><a class="nav-link" data-bs-toggle="pill" href="#location-tab">Location</a></li>
-                            <li><a class="nav-link" data-bs-toggle="pill" href="#floor-plans-tab">Floor Plans</a></li>
-                            <li><a class="nav-link active" data-bs-toggle="pill" href="#video-tab">Video</a></li>
+                    
                         </ul><!-- End Tabs -->
-
-
                         <!-- Tab Content -->
                         <div class="tab-content">
-                            <div class="tab-pane fade  show active" id="location-tab">
-                                <!-- Google Maps Embed -->
-                                <iframe style="border:0; width: 100%; height: 400px;"
-@*                                         src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=@Model.Latitude,@Model.Longitude"
- *@                                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus" 
-                                frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            <!-- Location Tab -->
+                            <div class="tab-pane fade show active" id="location-tab">
+                                <iframe style="border:0; width: 100%; height: 580px;"
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11017062.647113614!2d25.136099399999998!3d26.820553!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x145838f62cfbf791%3A0x240d6e8b84536cd1!2zRWd5cHQ!5e0!3m2!1sen!2seg!4v1676961268712!5m2!1sen!2seg"
+                                        frameborder="0"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
                             </div><!-- End Location Tab -->
-                            <div class="tab-pane fade" id="floor-plans-tab">
-                                <img src="~/assets/img/floor-plan.jpg" alt="" class="img-fluid">
-                            </div><!-- End Floor Plans Tab -->
-                            <div class="tab-pane fade" id="video-tab">
-                                <!-- Video content -->
-                                <iframe width="100%" height="400" src="https://www.youtube.com/embed/example_video_id" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                            <!-- End Video Tab -->                           
+            
                         </div><!-- End Tab Content -->
                     </div>
 
-
-
+                    <!-- Property Info -->
                     <div class="col-lg-3" data-aos="fade-up" data-aos-delay="100">
                         <div class="portfolio-info">
-                            <h3>info</h3>
+                            <h3>Property Info</h3>
                             <ul>
-                                <li><strong>Property :</strong> @Model.Name</li>
-                                <li><strong>Price:</strong> <span>@Model.Price</span></li>
+                                <li><strong>Property:</strong> @Model.Name</li>
+                                <li><strong>Price:</strong> <span>@Model.Price.ToString("C", System.Globalization.CultureInfo.CreateSpecificCulture("en-EG"))</span></li>
                                 <li><strong>Rooms:</strong> @Model.Rooms</li>
-                                <li>
-                                    <strong>Furnished:</strong>
-                                    @{
-                                        if (Model.IsFUrnished == true)
-                                        {
-                                            @:YES
-                                        }
-                                        else
-                                        {
-                                            @:NO
-                                        }
-                                    }
-                                </li>
+                                <li><strong>Furnished:</strong> @(Model.IsFUrnished ? "YES" : "NO")</li>
                                 <li><strong>Location:</strong> @Model.Location</li>
-                                <li><strong>Type:</strong>  @Model.Type</li>
-                                <li><strong>Listed For:</strong>  @Model.Status</li>
+                                <li><strong>Type:</strong> @Model.Type</li>
+                                <li><strong>Listed For:</strong> @Model.Status</li>
                                 <li><strong>Area:</strong> <span>@Model.Area m<sup>2</sup></span></li>
                                 <li><strong>Project:</strong> <span>@Model.PropertyProject</span></li>
-                                <li><strong>Currently :</strong> <span>@(Model.IsOccupied ? "Occupied" : "Free")</span></li>
+                                <li><strong>Currently:</strong> <span>@(Model.IsOccupied ? "Occupied" : "Free")</span></li>
                             </ul>
                             <!-- Open Contract Button -->
-                            <a class="ml-auto custom-green text-white rounded px-3 py-2" href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" >Open Contract</a>
+                            <a class="ml-auto custom-green text-white rounded px-3 py-2" href="@Url.Action("Create", "Contract", new { propertyId = Model.Id })" aria-label="Open contract for property">
+                                Open Contract
+                            </a>
                         </div>
                     </div>
-                </div>
+                </div><!-- End Property Details and Tabs -->
             </div>
-        </section><!-- /Real Estate 2 Section -->
+        </section><!-- End Real Estate Section -->
     </main>
 }
 
