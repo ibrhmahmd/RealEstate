@@ -32,7 +32,7 @@
 
 
         <div class="header-container">
-            <h1 class="header-title" style="color:darkgreen">Payment Details</h1>
+            <h1 class="header-title" style="color: rgb(46,202,106);">Payment Details</h1>
 
         </div> <div class="container" data-aos="fade-up">
             <div class="row">
@@ -83,7 +83,8 @@
                             </div>
                         </div>
                         <br />
-             <button class="btn btn-success"
+                        <a asp-action="userpayments" style="margin-left:490px" asp-controller="users" class="btn btn-edit" asp-route-id="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value">Back To List</a>
+             <button class="btn btn-edit"
                                 onclick="window.location.href='@Url.Action("GeneratePaymentPDF", "Contract", new { paymentId = Model.Id })'">
                             <i class="bi bi-download"></i> Download Invoice
                         </button>
