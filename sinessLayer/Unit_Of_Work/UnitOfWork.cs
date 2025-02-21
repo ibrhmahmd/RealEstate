@@ -11,20 +11,18 @@ namespace DataAccessLayer.UnitOfWork
     public class UnitOfWork : IUnitOfWork
     {
         private readonly MyDbContext _context;
-
         private IRepositoryBase<Address> _addresses;
         private IRepositoryBase<Contract> _contracts;
         private IRepositoryBase<Payment> _payments;
         private IRepositoryBase<Property> _properties;
         private IRepositoryBase<User> _users;
         private IRepositoryBase<DeveloperCompany> _developerCompanies;
-        private IRepositoryBase<Project> _projrcts;
+        private IRepositoryBase<Project> _projects;
 
         public UnitOfWork(MyDbContext context)
         {
             _context = context;
         }
-
 
 
         public IRepositoryBase<DeveloperCompany> DeveloperCompaniesRepository
@@ -35,11 +33,13 @@ namespace DataAccessLayer.UnitOfWork
             }
         }
 
+
+
         public IRepositoryBase<Project> ProjectsRepository
         {
             get
             {
-                return _projrcts ??= new RepositoryBase<Project>(_context);
+                return _projects ??= new RepositoryBase<Project>(_context);
             }
         }
 
@@ -78,7 +78,7 @@ namespace DataAccessLayer.UnitOfWork
 
         public IRepositoryBase<Payment> PaymentsRepository
         {
-            get
+            get 
             {
                 return _payments ??= new RepositoryBase<Payment>(_context);
             }
@@ -93,5 +93,6 @@ namespace DataAccessLayer.UnitOfWork
         {
             _context.Dispose(); // Clean up resources
         }
+
     }
 }

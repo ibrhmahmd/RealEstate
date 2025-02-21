@@ -248,7 +248,33 @@ namespace DataAccessLayer.GenericRepository
 
 
 
-        // Soft delete an entity by setting IsDeleted to true
+        //// Soft delete an entity by setting IsDeleted to true
+        //public async Task SoftDeleteAsync(Guid id)
+        //{
+        //    try
+        //    {
+        //        var entity = await GetByIdAsync(id);
+        //        if (entity != null)
+        //        {
+        //            // Assuming the entity has an IsDeleted property
+        //            var deletedEntity = entity as dynamic; // Use dynamic to access the IsDeleted property
+        //            deletedEntity.IsDeleted = true; // Set IsDeleted to true
+        //            deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
+
+        //            await SaveChangesAsync();
+        //        }
+        //        else
+        //        {
+        //            throw new Exception("Entity not found for soft deletion.");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception($"An error occurred during soft deletion for entity with ID {id}.", ex);
+        //    }
+        //}
+
+        // Soft delete an entity by setting IsAvailable to false (or equivalent soft delete marker)
         public async Task SoftDeleteAsync(Guid id)
         {
             try
@@ -256,12 +282,29 @@ namespace DataAccessLayer.GenericRepository
                 var entity = await GetByIdAsync(id);
                 if (entity != null)
                 {
-                    // Assuming the entity has an IsDeleted property
-                    var deletedEntity = entity as dynamic; // Use dynamic to access the IsDeleted property
-                    deletedEntity.IsDeleted = true; // Set IsDeleted to true
-                    deletedEntity.DeletedOn = DateTime.UtcNow; // Optional: Track the deletion date
+                    // Check if the entity has the 'IsAvailable' property (assuming soft delete works with this field)
+                    var entityType = entity.GetType();
+                    var isAvailableProperty = entityType.GetProperty("IsAvailable");
 
-                    await SaveChangesAsync();
+                    if (isAvailableProperty != null)
+                    {
+                        // Set IsAvailable to false to "soft delete" the entity
+                        isAvailableProperty.SetValue(entity, false);  // Soft delete logic here
+
+                        // Optionally, track when the entity was deleted, if needed
+                        var deletedOnProperty = entityType.GetProperty("DeletedOn");
+                        if (deletedOnProperty != null)
+                        {
+                            deletedOnProperty.SetValue(entity, DateTime.UtcNow);
+                        }
+
+                        // Save the changes to the database
+                        await SaveChangesAsync();
+                    }
+                    else
+                    {
+                        throw new Exception("Entity does not have an 'IsAvailable' property to mark as deleted.");
+                    }
                 }
                 else
                 {
@@ -270,6 +313,7 @@ namespace DataAccessLayer.GenericRepository
             }
             catch (Exception ex)
             {
+                // Log the exception (use your logging mechanism, e.g., _logger.LogError)
                 throw new Exception($"An error occurred during soft deletion for entity with ID {id}.", ex);
             }
         }
